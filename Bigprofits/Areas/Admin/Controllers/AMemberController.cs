@@ -150,7 +150,7 @@ namespace Bigprofits.Areas.Admin.Controllers
         [HttpGet("member-update/{id}")]
         public async Task<IActionResult> MemberUpdate(string id)
         {
-            var data = await context.MemberInfos.Where(x => x.MemberId == id).FirstOrDefaultAsync();
+            var data = await context.MemberInfos.Where(x => x.MemberId == id || x.MemId == Convert.ToInt32(id)).FirstOrDefaultAsync();
             if (data != null)
             {
                 ViewBag.mobile = commonMethods.Decrypt(data.MemMobile!);
@@ -191,15 +191,15 @@ namespace Bigprofits.Areas.Admin.Controllers
                     await context.SaveChangesAsync();
 
                     TempData["msg"] = preMsg + "Detail successfully updated";
-                    return Redirect($"/britglbl253adpnl/Member-Update?MemId={info.MemId}");
+                    return Redirect($"/britglbl253adpnl/Member-Update/{info.MemId}");
                 }
             }
             catch (Exception)
             {
                 TempData["msg"] = "Exception message, please contact to admin";
-                return Redirect($"/britglbl253adpnl/Member-Update?MemId={info.MemId}");
+                return Redirect($"/britglbl253adpnl/Member-Update/{info.MemId}");
             }
-            return Redirect($"/britglbl253adpnl/Member-Update?MemId={info.MemId}");
+            return Redirect($"/britglbl253adpnl/Member-Update/{info.MemId}");
         }
 
         [HttpGet]

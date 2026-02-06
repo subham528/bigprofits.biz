@@ -45,7 +45,7 @@ namespace Bigprofits.Controllers
         }
 
         [HttpPost("account/sign-in")]
-        public async Task<IActionResult> LoginPost()
+        public async Task<IActionResult> Login()
         {
             string Walletaddress = Request.Form["WalletAddress"].ToString().Trim();
             if (Walletaddress == "")
