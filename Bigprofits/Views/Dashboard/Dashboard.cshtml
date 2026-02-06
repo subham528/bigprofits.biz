@@ -1,0 +1,786 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Microsoft.Extensions.Configuration;
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+	ViewData["Title"] = "Dashboard";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+	CommonMethods lib = new CommonMethods(configuration!);
+	dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
+	var isActive = income.memActive == 1;
+	var bgColorClass = isActive ? "bg-success text-white" : "bg-danger text-white";
+	var statusText = isActive ? "Active" : "Inactive";
+}
+<style>
+	.card-animated {
+		transition: transform 0.4s ease, box-shadow 0.4s ease;
+	}
+
+		.card-animated:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+		}
+
+	.animated-number {
+		animation: countUp 1.5s ease-out forwards;
+		opacity: 0;
+	}
+</style>
+
+<div class="row mb-4">
+	<div class="col-auto">
+		<div class="avatar avatar-50 shadow rounded-10">
+			<img src="~/assets/img/logo.png" alt="Rotating Logo" style="width: 146px;" class="mw-100 rotating-img" />
+		</div>
+	</div>
+	<div class="col align-self-center ps-0">
+		<h4 class="text-color-theme"><span class="fw-normal">Hi</span>, </h4>
+		<p class="text-muted">@ViewBag.memberId</p>
+	</div>
+</div>
+
+<div class="row mb-4">
+	<div class="col-md-6 mb-3">
+		<div class="card border-0 shadow-sm rounded-4 bg-light h-100">
+			<div class="card-body px-4 py-3">
+				<p class="mb-2"><i class="bi bi-person-circle me-1 text-white"></i> <small class="text-muted">Left Referral Link</small></p>
+
+				<div class="input-group input-group-sm" style="min-width: 240px;">
+					<input type="text" class="form-control border-primary bg-white" id="txtRefLinkLeft" value='@TempData["LeftLink"]' readonly />
+					<button class="btn btn-outline-primary" onclick="copyText('txtRefLinkLeft')"> <i class="bi bi-clipboard"></i></button>
+					<a href="@TempData["LeftLink"]" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-box-arrow-up-right"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6 mb-3">
+		<div class="card border-0 shadow-sm rounded-4 bg-light h-100">
+			<div class="card-body px-4 py-3">
+				<p class="mb-2"><i class="bi bi-person-circle me-1 text-white"></i> <small class="text-muted">Right Referral Link</small></p>
+
+				<div class="input-group input-group-sm" style="min-width: 240px;">
+					<input type="text" class="form-control border-primary bg-white" id="txtRefLinkLeft" value='@TempData["RightLink"]' readonly />
+					<button class="btn btn-outline-primary" onclick="copyText('txtRefLinkLeft')"> <i class="bi bi-clipboard"></i></button>
+					<a href="@TempData["RightLink"]" target="_blank" class="btn btn-outline-success btn-sm"><i class="bi bi-box-arrow-up-right"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row mb-3">
+	<div class="col-12 px-0">
+		<div class="swiper-container cardswiper">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide">
+					<div class="card">
+						<div class="card-body">
+							<div class="row mb-3">
+								<div class="col-auto align-self-center">
+									<img src="~/assets/img/masterocard.png" alt="">
+								</div>
+								<div class="col align-self-center text-end">
+									<p class="small">
+										<span class="text-uppercase size-10">Income</span><br>
+										<span class="text-muted">Total Income</span>
+									</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<h4 class="fw-normal mb-2">
+										@income.totalIncome?.ToString("0.00")
+										<span class="small text-muted">$</span>
+									</h4>
+
+									<p class="text-muted size-12">Total Income</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="swiper-slide">
+					<div class="card dark-bg">
+						<div class="card-body">
+							<div class="row mb-3">
+								<div class="col-auto align-self-center">
+									<img src="~/assets/img/masterocard.png" alt="">
+								</div>
+								<div class="col align-self-center text-end">
+									<p class="small">
+										<span class="text-uppercase size-10">Team</span><br>
+										<span class="text-muted">Team</span>
+									</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<h4 class="fw-normal mb-2">
+										@income.withdrawal?.ToString("0.00")
+										<span class="small text-muted">$</span>
+									</h4>
+
+									<p class="text-muted size-12">Total Team</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="swiper-slide">
+					<div class="card">
+						<div class="card-body">
+							<div class="row mb-3">
+								<div class="col-auto align-self-center">
+									<img src="~/assets/img/masterocard.png" alt="">
+								</div>
+								<div class="col align-self-center text-end">
+									<p class="small">
+										<span class="text-uppercase size-10">Withdrawal</span><br>
+										<span class="text-muted">Withdrawal</span>
+									</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<h4 class="fw-normal mb-2">
+										@income.withdrawal?.ToString("0.00")
+										<span class="small text-muted">$</span>
+									</h4>
+
+									<p class="text-muted size-12">Withdrawal</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="swiper-slide">
+					<div class="card theme-radial-gradient border-0">
+						<div class="card-body">
+							<div class="row mb-3">
+								<div class="col-auto align-self-center">
+									<i class="bi bi-wallet2"></i>Available Balance
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<h4 class="fw-normal mb-2">
+										@income.available?.ToString("0.00")
+										<span class="small text-muted">$</span>
+									</h4>
+									<p class="text-muted size-12">Available Blance</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="swiper-slide">
+					<div class="card">
+						<div class="card-body">
+							<div class="row mb-3">
+								<div class="col-auto align-self-center">
+									<img src="~/assets/img/masterocard.png" alt="">
+								</div>
+								<div class="col align-self-center text-end">
+									<p class="small">
+										<span class="text-uppercase size-10">Topup Wallet</span><br>
+										<span class="text-muted">Topup Wallet</span>
+									</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<h4 class="fw-normal mb-2">
+										@income.AW_Available?.ToString("0.00")
+										<span class="small text-muted">$</span>
+									</h4>
+
+									<p class="text-muted size-12">Topup Wallet</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.rotating-img {
+		animation: rotate360 5s linear infinite;
+	}
+
+	.live-rate-animated {
+		animation: pulseText 2s ease-in-out infinite;
+		color: #fff;
+	}
+</style>
+
+
+<div class="row mb-3">
+	<div class="col">
+		<h6 class="title">Saving Targets</h6>
+	</div>
+	<div class="col-auto">
+	</div>
+</div>
+
+@* <div class="row mb-4">
+	<div class="col-6 col-md-4 col-lg-3">
+		<div class="card mb-3">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto">
+						<div class="circle-small">
+							<div id="circleprogressone"></div>
+							<div class="avatar avatar-30 alert-primary text-primary rounded-circle">
+								<i class="bi bi-globe"></i>
+							</div>
+						</div>
+					</div>
+					<div class="col-auto align-self-center ps-0">
+						<p class="small mb-1 text-muted"> Debit</p>
+						<p>$@income.AW_Debit?.ToString("0.00")<span class="small"></span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-4 col-lg-3">
+		<div class="card mb-3">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto">
+						<div class="circle-small">
+							<div id="circleprogresstwo"></div>
+							<div class="avatar avatar-30 alert-success text-success rounded-circle">
+								<i class="bi bi-cash-stack"></i>
+							</div>
+						</div>
+					</div>
+					<div class="col-auto align-self-center ps-0">
+						<p class="small mb-1 text-muted">Credited</p>
+						<p>$@income.AW_Credit?.ToString("0.00")<span class="small"></span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-md-4 col-lg-6">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto">
+						<div class="avatar avatar-40 alert-danger text-danger rounded-circle">
+							<i class="bi bi-house"></i>
+						</div>
+					</div>
+					<div class="col align-self-center ps-0">
+						<div class="row mb-2">
+							<div class="col">
+								<p class="small text-muted mb-0"> Withdrawal</p>
+								<p>$@income.withdrawal?.ToString("0.00")</p>
+							</div>
+
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> *@
+
+<div class="row mb-3">
+	<div class="col-12 col-md-4">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-warning text-white shadow-sm rounded-10-end">
+							<i class="bi bi-star"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">Active Direct</p>
+						<p>@income.activeDirect</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-md-4">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-success text-white shadow-sm rounded-10-end">
+							<i class="bi bi-cash-stack"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">InActive Direct</p>
+						<p>@income.inactiveDirect</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-md-4">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-warning text-white shadow-sm rounded-10-end">
+							<i class="bi bi-star"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">Total Team</p>
+						<p>@income.team</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row mb-3">
+	<div class="col-12 col-md-4">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-warning text-white shadow-sm rounded-10-end">
+							<i class="bi bi-star"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">Left Team  Bussiness</p>
+						<p>$ @income.LPoints</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-md-4">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-success text-white shadow-sm rounded-10-end">
+							<i class="bi bi-cash-stack"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">Right Team  Bussiness</p>
+						<p>$ @income.RPoints</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-md-4">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-warning text-white shadow-sm rounded-10-end">
+							<i class="bi bi-star"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">Total Matching</p>
+						<p>$ @income.PPoints</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row mb-3">
+	<div class="col-12 col-md-3">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-warning text-white shadow-sm rounded-10-end">
+							<i class="bi bi-star"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">Investment</p>
+						<p>$@income.lvl1.ToString("0.00")</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-md-3">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-success text-white shadow-sm rounded-10-end">
+							<i class="bi bi-cash-stack"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">Total Team Bussiness</p>
+						<p>$@income.teamBiz?.ToString("0.00")</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-md-3">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-success text-white shadow-sm rounded-10-end">
+							<i class="bi bi-cash-stack"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">Today Team Bussiness</p>
+						<p>$ @income.todayBiz?.ToString("0.00")</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-md-3">
+		<div class="card shadow-sm mb-2">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-auto px-0">
+						<div class="avatar avatar-40 bg-warning text-white shadow-sm rounded-10-end">
+							<i class="bi bi-star"></i>
+						</div>
+					</div>
+					<div class="col">
+						<p class="text-muted size-12 mb-0">Available Balance</p>
+						<p>$@income.available?.ToString("0.00")</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@* <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+		<div class="card mb-4 shadow-sm">
+			<div class="card-body text-center">
+				<div class="row align-items-center ">
+					<a href="profile " class="col">
+						<figure class="avatar avatar-100 mx-auto mb-3 rounded-circle">
+							<img src="~/assets/img/logo.png" alt="Rotating Logo"
+								 style="width: 146px;" class="mw-100 rotating-img" />
+						</figure>
+					</a>
+				</div>
+				<p class="text-small text-muted small">@ViewBag.memberId</p>
+				<p class="text-small small @bgColorClass p-1 px-2 rounded d-inline-block">
+					@statusText
+				</p>
+				<p class="mb-4">
+					@lib.Decrypt(income.memMobile.ToString())<br />
+					@lib.Decrypt(income.memEmail.ToString())<br />
+
+				</p>
+
+				<div class="row">
+					<div class="col d-grid">
+						Registered On  <button class="btn btn-default shadow-sm">@income.memReg</button>
+					</div>
+					<div class="col d-grid">
+						Activated On   <a href="#" class="btn btn-default shadow-sm">@ViewBag.postdate</a>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer text-center">
+				Current  Package:  $@income.memPackageValue.ToString("0.00")
+				Total  Package:  $@income.lvl1.ToString("0.00")
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+		<div class="card mb-4 @(income.RwrdIncome == null || Convert.ToDecimal(income.RwrdIncome) == 0 ? "bg-danger" : "bg-success") text-white shadow-sm">
+			<div class="card-body text-center">
+				<h5 class="card-title">🎁 Reward</h5>
+
+				@if (income.RwrdIncome == null || Convert.ToDecimal(income.RwrdIncome) == 0)
+				{
+					<p class="mb-1">🎯 Upcoming Reward</p>
+					<h4 class="fw-bold">--</h4>
+					<p class="text-small">Achievement: --</p>
+				}
+				else
+				{
+					<p class="mb-1">Congratulations!</p>
+					<p class="mb-1">@income.reward</p>
+					<h4 class="fw-bold">$ @income.RwrdIncome</h4>
+					<p class="text-small">Achievement: @income.memrank</p>
+				}
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+		<div class="card mb-4 @(income.RwrdIncomes == null || Convert.ToDecimal(income.RwrdIncomes) == 0 ? "bg-danger" : "bg-success") text-white shadow-sm">
+			<div class="card-body text-center">
+				<h5 class="card-title">🎁 Salary</h5>
+
+				@if (income.RwrdIncomes == null || Convert.ToDecimal(income.RwrdIncomes) == 0)
+				{
+					<p class="mb-1">🎯 Upcoming Reward</p>
+					<h4 class="fw-bold">--</h4>
+					<p class="text-small">Achievement: --</p>
+				}
+				else
+				{
+					<p class="mb-1">Congratulations!</p>
+					<p class="mb-1">@income.rewards</p>
+					<h4 class="fw-bold">$ @income.RwrdIncomes</h4>
+					<p class="text-small">Achievement: @income.memranks</p>
+				}
+			</div>
+
+		</div>
+
+	</div>
+</div> *@
+
+
+<div class="row mb-3 mt-3">
+	<div class="col">
+		<h6 class="title">
+			Total Income<br><small class="fw-normal text-muted"> $@income.totalIncome</small>
+		</h6>
+	</div>
+
+</div>
+<div class="row mb-4">
+	<div class="col-12 px-0">
+		<ul class="list-group list-group-flush bg-none">
+
+			<li class="list-group-item">
+				<div class="row">
+					<div class="col-auto">
+						<div class="avatar avatar-50 shadow rounded-10 ">
+							<img src="~/assets/img/logo.png" alt="">
+						</div>
+					</div>
+					<div class="col align-self-center ps-0">
+						<p class="text-color-theme mb-0">ROI</p>
+							<p class="text-muted size-12">ROI Income</p>
+					</div>
+					<div class="col align-self-center text-end">
+						<p class="mb-0">$@income.roiIncome?.ToString("0.00")</p>
+						<p class="text-muted size-12">$@income.roiIncome?.ToString("0.00")</p>
+					</div>
+				</div>
+			</li>
+			<li class="list-group-item">
+				<div class="row">
+					<div class="col-auto">
+						<div class="avatar avatar-50 shadow rounded-10">
+							<img src="~/assets/img/logo.png" alt="">
+						</div>
+					</div>
+					<div class="col align-self-center ps-0">
+						<p class="text-color-theme mb-0">Direct Sponsor Income</p>
+						<p class="text-muted size-12">Direct Sponsor Income</p>
+					</div>
+					<div class="col align-self-center text-end">
+							<p class="mb-0">$@income.directIncome?.ToString("0.00")</p>
+							<p class="text-muted size-12">$@income.directIncome?.ToString("0.00")</p>
+					</div>
+				</div>
+			</li>
+
+
+			<li class="list-group-item">
+				<div class="row">
+					<div class="col-auto">
+						<div class="avatar avatar-50 shadow rounded-10">
+							<img src="~/assets/img/logo.png" alt="">
+						</div>
+					</div>
+					<div class="col align-self-center ps-0">
+						<p class="text-color-theme mb-0">Matching Income</p>
+						<p class="text-muted size-12">Matching Income</p>
+					</div>
+					<div class="col align-self-center text-end">
+						<p class="mb-0">$@income.binaryIncome?.ToString("0.00")</p>
+						<p class="text-muted size-12">$@income.binaryIncome?.ToString("0.00")</p>
+					</div>
+				</div>
+			</li>
+
+			@* <li class="list-group-item">
+				<div class="row">
+					<div class="col-auto">
+						<div class="avatar avatar-50 shadow rounded-10">
+							<img src="~/assets/img/logo.png" alt="">
+						</div>
+					</div>
+					<div class="col align-self-center ps-0">
+						<p class="text-color-theme mb-0">Reward Bonus</p>
+						<p class="text-muted size-12">Reward Bonus</p>
+					</div>
+					<div class="col align-self-center text-end">
+						<p class="mb-0">$@income.RewardIncome?.ToString("0.00")</p>
+						<p class="text-muted size-12">$@income.RewardIncome?.ToString("0.00")</p>
+					</div>
+				</div>
+			</li> *@
+			<li class="list-group-item">
+				<div class="row">
+					<div class="col-auto">
+						<div class="avatar avatar-50 shadow rounded-10">
+							<img src="~/assets/img/logo.png" alt="">
+						</div>
+					</div>
+					<div class="col align-self-center ps-0">
+						<p class="text-color-theme mb-0">Rank Matching Income</p>
+							<p class="text-muted size-12">Rank Matching Income</p>
+					</div>
+					<div class="col align-self-center text-end">
+							<p class="mb-0">$@income.salary?.ToString("0.00")</p>
+							<p class="text-muted size-12">$@income.salary?.ToString("0.00")</p>
+					</div>
+				</div>
+			</li>
+			@*  <li class="list-group-item">
+                <div class="row">
+                    <div class="col-auto">
+                        <div class="avatar avatar-50 shadow rounded-10 ">
+                            <img src="~/assets/img/logo.png" alt="">
+                        </div>
+                    </div>
+                    <div class="col align-self-center ps-0">
+                        <p class="text-color-theme mb-0">Roi Income</p>
+                        <p class="text-muted size-12">Roi Income</p>
+                    </div>
+                    <div class="col align-self-center text-end">
+                        <p class="mb-0">$@income.roiIncome?.ToString("0.00")</p>
+                        <p class="text-muted size-12">$@income.roiIncome?.ToString("0.00")</p>
+                    </div>
+                </div>
+            </li>
+
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-auto">
+                        <div class="avatar avatar-50 shadow rounded-10">
+                            <img src="~/assets/img/logo.png" alt="">
+                        </div>
+                    </div>
+                    <div class="col align-self-center ps-0">
+                        <p class="text-color-theme mb-0">Direct Income</p>
+                        <p class="text-muted size-12">Direct Income</p>
+                    </div>
+                    <div class="col align-self-center text-end">
+                        <p class="mb-0">$@income.Sponsorincome?.ToString("0.00")</p>
+                        <p class="text-muted size-12">$@income.Sponsorincome?.ToString("0.00")</p>
+                    </div>
+                </div>
+            </li>
+
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-auto">
+                        <div class="avatar avatar-50 shadow rounded-10">
+                            <img src="~/assets/img/logo.png" alt="">
+                        </div>
+                    </div>
+                    <div class="col align-self-center ps-0">
+                        <p class="text-color-theme mb-0">Non Working  Income</p>
+                        <p class="text-muted size-12">Non Working  Income</p>
+                    </div>
+                    <div class="col align-self-center text-end">
+                        <p class="mb-0"> $@income.matrixlevelincome?.ToString("0.00")</p>
+                        <p class="text-muted size-12"> $@income.matrixlevelincome?.ToString("0.00")</p>
+                    </div>
+                </div>
+            </li>
+
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-auto">
+                        <div class="avatar avatar-50 shadow rounded-10">
+                            <img src="~/assets/img/logo.png" alt="">
+                        </div>
+                    </div>
+                    <div class="col align-self-center ps-0">
+                        <p class="text-color-theme mb-0">Reward Income</p>
+                        <p class="text-muted size-12">Reward Income</p>
+                    </div>
+                    <div class="col align-self-center text-end">
+                        <p class="mb-0">@income.matrixDirect</p>
+                        <p class="text-muted size-12">@income.matrixDirect</p>
+                    </div>
+                </div>
+            </li> *@
+		</ul>
+	</div>
+</div>
+
+
+
+@section Scripts {
+	@if (TempData["daily"] != null)
+	{
+		<script>
+			Swal.fire({
+				title: '@TempData["daily"]',
+				showClass: {
+					popup: 'animate__animated animate__fadeInDown'
+				},
+				hideClass: {
+					popup: 'animate__animated animate__fadeOutUp'
+				}
+			})
+		</script>
+
+		// <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;" >  @ViewBag.daily </div>
+	}
+
+	<script>
+		$(".btnRef.copy").click(function () {
+			var text = $(this).parent().find("a").attr("href");
+			var $temp = $("<input>");
+			$("body").append($temp);
+			$temp.val(text).select();
+			document.execCommand("copy");
+			$temp.remove();
+			alert('Link copied to clipboard!');
+		})
+		$(".btnRef.open").click(function () {
+			window.open($(this).parent().find("a").attr("href"))
+		})
+
+
+		$('[data-countdown]').each(function () {
+			var $this = $(this), finalDate = $(this).data('countdown');
+			$this.countdown(finalDate, function (event) {
+				//var totalHours = event.offset.totalDays * 24 + event.offset.hours;
+				//$(this).html(event.strftime(totalHours + ':%M:%S'));
+				$this.html(event.strftime('%H:%M:%S'));
+				//$this.html(event.strftime('%H:%M:%S'));
+			});
+		});
+
+	</script>
+}

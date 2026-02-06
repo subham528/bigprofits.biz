@@ -1,0 +1,121 @@
+﻿@using System.Data
+@using Microsoft.Extensions.Configuration;
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "DINP TOKEN History";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+
+    var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+    CommonMethods lib = new CommonMethods(configuration!);
+}
+
+<div class="page-heading">
+    <section class="section">
+        <div class="card">
+            <div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
+                DNIP TOKEN History
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap" id="datatable">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                Sno
+                            </th>
+                             <th>
+                                 Member Id
+                                </th>
+                              
+                            <th>
+                                Member Package
+                            </th>
+                            <th>
+                                Rate
+                            </th>
+                            <th>
+                                DNIP Token
+                            </th>
+                            <th>
+                             Status
+                            </th>
+                            <th>
+                                Hashid
+                            </th>
+                            <th>
+                                ReuestDate
+                            </th>
+                            <th>
+                                Approve Date
+                            </th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+
+                            <tr>
+                                <td>@sno2</td>
+                                <td>@row["memberid"]</td>
+                               
+                                <td>@(Convert.ToDecimal(row["price"]).ToString("0.##") + " USDT")</td>
+
+                                <td>@row["quantity"]</td>
+                                <td>@($"{Convert.ToDecimal(row["tokenAmount"]).ToString("0")} DINP")</td>
+                               
+
+
+
+
+
+                                <td>
+                                    @if (row["ustatus"].ToString() == "1")
+                                    {
+                                        <span class="badge bg-success">Success</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    }
+                                </td>
+                                <td>  <a href='https://bscscan.com/tx/@row["hashId"]' target="_blank">View</a></td>
+                                <td>@row["udate"]</td>
+                                <td>@row["adate"]</td>
+
+
+
+                            </tr>
+                            sno2++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+
+
+@section Scripts {
+        <script>
+
+            $("#dt").hide()
+
+            $('#datatable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'excel', 'pdf', 'print'
+                ]
+            });
+
+        </script>
+}

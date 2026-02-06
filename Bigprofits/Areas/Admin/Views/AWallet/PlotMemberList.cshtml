@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Bigprofits.Models.CmitRequest>
+
+@{
+    ViewData["Title"] = "plot member List";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                Plot member List
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap text-center" id="table1">
+                    <thead>
+                        <tr>
+                            <th>
+                                Sno
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MemberId)
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                               Amount 
+                            </th>
+                            <th>
+                               Plot
+                            </th>
+                            @* <th>
+                               Remark
+                            </th> *@
+                            <th>
+                               Date
+                            </th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @sno
+                                    @{
+                                        sno++;
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MemberId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MemberId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CmitReqAmount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PlanType)
+                                </td>
+                                @* <td>
+                                    @Html.DisplayFor(modelItem => item.Remark)
+                                </td> *@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CmitSdate)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+

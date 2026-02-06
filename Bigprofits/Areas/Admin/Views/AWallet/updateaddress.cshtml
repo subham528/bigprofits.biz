@@ -1,0 +1,81 @@
+﻿@* @model Bigprofits.Models.BeneficiaryList
+@{
+    ViewData["Title"] = "updateaddress";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+
+    int i = 1;
+}
+
+<style>
+    textarea{
+        resize: initial;
+    }
+</style>
+
+<!-- Row start-->
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-body">
+                <form asp-controller="AWallet" asp-action="updateaddress" method="post">
+                    <div class="form-group">
+                        <label class="control-label">Select Currency</label>
+                        <select asp-for="BenPan" class="form-control" onchange="FnCalPayAmount()">
+                            <option value="0">Select Currency</option>
+                            <option value="INR">INR</option>
+                            <option value="USDT">USDT</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address / UPI</label>
+                        <input class="form-control" asp-for="BenAadhar" placeholder="Enter yourAddress" type="text">
+                    </div>
+
+                    <div class="form-group text-center mt-3">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div> 
+    </div>
+
+    <div class="col-md-12 mt-3">
+        <h3>Update History</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sno</th>
+                        <th>Address / UPI</th>
+                        <th>Currency</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.recordes)
+                    {
+                        <tr class="">
+                            <td>@i</td>
+                            <td><textarea class="form-control" rows="2" cols="20">@item.BenAadhar</textarea></td>
+                            <td>@item.BenPan</td>
+                            <td>@String.Format("{0:dd/MMM/yyyy hh:mm tt}", item.AddDate)</td>
+                        </tr>
+                        i++;
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+ *@

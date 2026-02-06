@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Closing";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+<h3 style="text-align:center;padding: 5px;border-radius: 10px;"> DAILY CLOSING </h3>
+<hr />
+
+@if (ViewBag.clo != null)
+{
+    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> Last Closing - @ViewBag.clo </div>
+}
+
+<div class="row mt-4">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        @if (TempData["msg"] != null)
+        {
+            <div class="alert alert-danger">@TempData["msg"]</div>
+        }
+
+        <form asp-action="DailyClosingPost" asp-route-type="@ViewBag.type" method="post">
+            <div class="form-group mb-3">
+                <label class="form-label">ROI Percentage (%)</label>
+                <input name="rate" class="form-control" value="@ViewBag.rate" />
+            </div>
+
+            <div class="form-group text-center">
+                <input type="submit" value="@ViewBag.type CLOSING" style="padding: 12px;" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+
+}
+

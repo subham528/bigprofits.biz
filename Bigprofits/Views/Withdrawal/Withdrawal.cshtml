@@ -1,0 +1,206 @@
+﻿@model Bigprofits.Models.MemberInfo
+@using Microsoft.Extensions.Configuration;
+@using Bigprofits.Common;
+@{
+	ViewData["Title"] = "Withdrawal";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	//decimal num = ViewBag.NumValue;
+	var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+	CommonMethods lib = new CommonMethods(configuration!);
+}
+<div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;" id="showmsg"></div>
+
+@if (TempData["msg"] != null)
+{
+	<div class="alert alert-danger"> @Html.Raw(TempData["msg"]) </div>
+}
+
+@if (TempData["success"] != null && ViewBag.pendingWid == null)
+{
+	<div class="alert alert-success">@TempData["success"]</div>
+}
+
+@if (ViewBag.pendingWid != null)
+{
+	<div class="col-12 px-4">
+		<div class="alert alert-warning text-white" role="alert">
+			<h4 class="alert-heading">Couldn't send withdrawal!</h4>
+			<p>It looks like the blockchain API failed to send the withdrawal amount in your wallet. Don't worry, your money is as safe as house.</p>
+			<hr>
+			<p class="mb-0">Let's try sending the money again. <button class="btn btn-success" id="btnWid" onclick="sendWithdrawal()">Try again</button></p>
+		</div>
+	</div>
+}
+
+<div class="col-12 px-4">
+	<!-- Start-->
+	<div class="card shadow-lg rounded-lg mb-4">
+		<div class="card-header bg-primary py-3 text-center">
+			<h6 class="m-0 font-weight-bold  text-lg" style="color:green">WITHDRAWAL</h6>
+		</div>
+
+		<div class="card-body">
+			<form asp-action="Withdrawal" method="post">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+				<!-- Wallet Address -->
+				@* <div class="mb-3">
+                    <label class="text-sm font-semibold">Wallet Address USDT (BEP-20)</label>
+                    <input value="@lib.Decrypt(ViewBag.memaddress)" class="form-control w-full" disabled />
+                </div> *@
+
+				<!-- Available Balance -->
+				<div class="mb-3">
+					<label class="text-sm font-semibold">Available Balance</label>
+					<input value="@ViewBag.NumValue USDT" readonly class="form-control w-full" />
+				</div>
+
+				<!-- Enter Amount -->
+				<div class="mb-3">
+					<label class="text-sm font-semibold">Enter Amount</label>
+					<input id="WdrlAmount" name="WdrlAmount" class="form-control w-full" placeholder="Min 10 & mul of 1" />
+				</div>
+
+				<!-- Amount After Deduction -->
+				<div class="mb-3">
+					<label class="text-sm font-semibold">Amount (After Deduction)</label>
+					<input id="txtAmountFinal" class="form-control w-full" value="0" readonly />
+				</div>
+
+				<!-- Submit Button -->
+				<div class="text-center mt-4" id="topbtn">
+					<button type="submit" id="fndreq" class="btn bg-primary text-white w-full py-2 rounded-lg text-lg">
+						WITHDRAWAL
+					</button>
+				</div>
+
+				<!-- Processing Message -->
+				<div class="mt-3 text-center" id="processbtn">
+					<p class="text-red-600 font-bold">Processing...</p>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		$(function () {
+			$("#topbtn").show()
+			$("#processbtn").hide()
+		});
+
+		$("form").on("submit", function(){
+			$("#topbtn").hide()
+			$("#processbtn").show()
+		})
+
+		$("#WdrlAmount").keyup(function () {
+			FnCalPayAmount();
+
+			// var amount = parseFloat($("#WdrlAmount").val().trim())
+			// if (amount >= 1) {
+			//     $("#fundbtn").hide()
+			//     $("#probtn").show()
+
+			//     $.ajax({
+			//         url: "/Withdrawal/get_trx",
+			//         method: 'get',
+			//         dataType: "text",
+			//         success: function (data) {
+			//             //console.log(data);
+			//             var trxRate = parseFloat(data);
+			//             var trxAmount = parseFloat(amount * trxRate).toFixed(2)
+			//             $("#TRXAmmount").val(trxAmount)
+
+			//             $("#fundbtn").show()
+			//             $("#probtn").hide()
+			//         }
+			//     });
+			// }
+			// else {
+			//     $("#TRXAmmount").val("0")
+			// }
+		})
+
+		function FnCalPayAmount() {
+			var amount = parseFloat($("#WdrlAmount").val().trim())
+			// var usdRate = parseFloat('@ViewBag.usdRate')
+
+			if (amount != "") {
+				amount = amount - (amount * 10 / 100)
+				$("#txtAmountFinal").val(amount)
+
+				// if (currency == "USDT") $("#txtFinalAmount").val((amount / usdRate).toFixed(2) + " USDT")
+				// else $("#txtFinalAmount").val(amount + " INR")
+			}
+			else {
+				$("#txtFinalAmount").val("0")
+				$("#txtAmountFinal").val("0")
+			}
+		}
+
+		$(function () {
+			$("#FundAmount1").val("")
+			$("#Details").val("")
+			$("#fundbtn").show()
+			$("#probtn").hide()
+		});
+
+		function sendWithdrawal(){
+			var btn = $("#btnWid")
+			btn.attr("disabled", "")
+			btn.text("please wait...")
+
+			$.ajax({
+				url: "/account/withdrawal",
+		        method: "post",
+		        dataType: "Json",
+		        success: function (data) {
+		            console.log(data)
+
+		            Swal.fire({
+		                icon: (data.success ? "success" : "error"),
+						title: (data.success ? "Withdrawal Successful!" : "Withdrawal Failed!"),
+		                text: data.message,
+		            }).then(() => {
+						if (data.success) location.href = location.pathname;
+		            })
+
+					btn.removeAttr("disabled")
+					btn.text("Try again")
+		        },
+				error: function (err) {
+					Swal.fire({
+						icon: "error",
+						title: "Server offline!",
+						text: "Server offline! Please connect to admin",
+					})
+
+					btn.removeAttr("disabled")
+					btn.text("Try again")
+				}
+		    })
+		}
+	</script>
+
+	<script>
+		$(document).ready(function () {
+			if ($("#MemAcNo").val() == "" || $("#MemAcBranch").val() == "" || $("#MemAcIfsc").val() == "" || $("#MemAcBank").val() == "") {
+				$("#showmsg").html("please update Your bank detail first..! <a href='/Privacy/BankDetails' >   click here </a> to update")
+				// $("#btnsubmit").attr("disabled", "disabled");
+			}
+		});
+	</script>
+
+	@if (TempData["Ssuc"] != null)
+	{
+		<script>
+			Swal.fire({
+				icon: 'success',
+				title: 'Success',
+				html: '@Html.Raw(TempData["Ssuc"])'
+			})
+		</script>
+	}
+}

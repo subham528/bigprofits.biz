@@ -1,0 +1,102 @@
+﻿@using System.Data
+@using Microsoft.Extensions.Configuration;
+@model DataSet
+@using Bigprofits.Common;
+@{
+	ViewData["Title"] = "UpdateMember";
+	Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+
+	var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+	CommonMethods lib = new CommonMethods(configuration!);
+}
+
+@if (TempData["ssss"] != null)
+{
+	<p class="text-center text-danger"> @TempData["ssss"] </p>
+}
+
+<div class="page-heading">
+	<section class="section">
+		<div class="card">
+			<div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+				ACTIVATE MEMBER
+			</div>
+			<div class="card-body mt-3 overflow-auto">
+				<table class="table table-responsive text-nowrap" id="table1">
+					<thead>
+						<tr>
+							<th>
+								Sno
+							</th>
+							<th>
+								Member
+							</th>
+							<th>
+								Username
+							</th>
+							<th>
+								Password
+							</th>
+							<th>
+								Sponsor
+							</th>
+							<th>
+								Mobile
+							</th>
+							<th>
+								Email
+							</th>
+							<th>
+								Wal. Addres
+							</th>
+							<th>
+								Registered on
+							</th>
+							<th>
+								Status
+							</th>
+							<th>
+								Updated on
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						@{
+							int sno2 = 1;
+						}
+
+						@foreach (DataRow row in Model.Tables[0].Rows)
+						{
+							<tr>
+								<td>@sno2</td>
+								<td>@row["memName"]/@row["memberid"]</td>
+								<td>@row["memLogId"]</td>
+								<td>@lib.Decrypt(row["memLogPass"].ToString()!)</td>
+								<td>@row["spoId"]/@row["spoName"]</td>
+								<td>@lib.Decrypt(row["memMobile"].ToString()!)</td>
+								<td>@lib.Decrypt(row["memEmail"].ToString()!)</td>
+								<td>@lib.Decrypt(row["memAddress"].ToString()!)</td>
+								<td>@row["memReg"]</td>
+								<td>
+									@if (row["memActive"].ToString() == "1")
+									{
+										<span style="color:green">Active</span>
+									}
+									else
+									{
+										<span style="color:red">DeActive</span>
+									}
+								</td>
+								<td>@row["PanApproveDate"]</td>
+							</tr>
+							sno2++;
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+</div>
+
+
+

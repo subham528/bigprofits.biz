@@ -1,0 +1,296 @@
+﻿@model DataSet
+@using System.Data
+@using Newtonsoft.Json
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    @@media (min-width: 1025px) {
+        .h-custom {
+            height: 100vh !important;
+        }
+    }
+
+    .buttons-container {
+        display: flex;
+        align-items: center;
+    }
+
+        .buttons-container button {
+            padding: 0 10px;
+        }
+
+        .buttons-container input {
+            text-align: center;
+            width: 50px;
+            margin: 0 5px;
+        }
+
+    .d-flex.align-items-center .btn {
+        margin: 0 2px;
+    }
+
+    @@keyframes growAndShrink {
+        0%, 100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+    }
+
+    .wallet-balance-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #f3f3f9;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #e0e2e8;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+        .wallet-balance-container p {
+            font-size: 18px;
+            margin: 0; /* Remove default margin for cleaner look */
+        }
+
+    .text-primary {
+        color: #007bff; /* Primary color for balance */
+        font-size: 22px; /* Slightly larger for the wallet balance */
+        font-weight: bold; /* Emphasize the amount */
+    }
+
+    .innerLink.active {
+        animation: growAndShrink 2s infinite ease-in-out;
+        background-color: deepskyblue;
+        color: white;
+    }
+
+        .innerLink.active a {
+            color: white;
+            text-decoration: none;
+        }
+
+            .innerLink.active a:hover {
+                color: #ddd;
+            }
+</style>
+
+<div class="mt-2 text-center">
+    <div>
+        <a href="/account/products">
+            <button class="btn btn-outline-primary">
+                <i class="fa fa-shopping-cart"></i>&nbsp;Continue Shoppping
+            </button>
+        </a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        <strong>Error!! </strong>@TempData["error"]
+    </div>
+}
+
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-danger mt-3">
+        <strong>Success!! </strong>@TempData["msg"]
+    </div>
+}
+<div class="row mt-3">
+    <div class="col">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">BV</th>
+                        <th scope="col">GST</th>
+                        <th scope="col"> Total Price</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Tables.Count > 0 && Model.Tables[0].Rows.Count > 0)
+                    {
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td scope="row">
+                                    <p class="mb-2" style="font-weight: 500;">@row["Product_Name"]</p>
+                                    <div class="d-flex align-items-center">
+                                        <img src="/@row["Product_Image"]" class="img-fluid rounded-3"
+                                             style="width: 50px;" alt="Book">
+                                        <div class="flex-column ms-4">
+                                            <p class="mb-2"></p>
+                                            <p class="mb-0"></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex flex-row">
+                                        <form asp-action="UpdateQty" asp-route-Id="@row["Id"]" asp-controller="account" method="post">
+                                            <div class="buttons-container">
+                                                <button class="btn btn-outline-primary" id="quant" name="quant" value="-1">-</button>
+                                                <input type="text" class="form-control form-control-sm" value="@row["Quantity"]" style="width:50px;" readonly />
+                                                <button class="btn btn-outline-primary" id="quant" name="quant" value="1">+</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <p class="mb-0" style="font-weight: 500;">₹@String.Format("{0:0.00}", row["Price"])</p>
+                                </td>
+                                <td class="align-middle">
+                                    <p class="mb-0" style="font-weight: 500;">@row["GST"]%</p>
+                                </td>
+                                <td class="align-middle">
+                                    <p class="mb-0" style="font-weight: 500;">₹@String.Format("{0:0.00}", row["PriceWGST"])</p>
+                                </td>
+                                <td>
+                                    <form asp-action="Remove" asp-route-Id="@row["Id"]">
+                                        <button onclick="return confirm('Are you sure?')" type="submit" style="margin-top: 20px" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3">No items in your cart</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px;">
+        <div class="card-body p-4">
+            <div class="wallet-balance-container text-center">
+                <p class="mb-2">Wallet Balance</p>
+                <p class="mb-2 text-primary">₹@ViewBag.availableWallet/-</p>
+            </div>
+
+            <div class="row" style="margin-top:20px;">
+                <div class="col-lg-12">
+                    <div class="d-flex justify-content-between" style="font-weight: 500;">
+                        <p class="mb-2">Subtotal</p>
+                        <p class="text-primary mb-2">₹@ViewBag.data/-</p>
+                    </div>
+
+                    @* <div class="d-flex justify-content-between" style="font-weight: 500;">
+                    <p class="mb-2">Total Products</p>
+                    <p class="text-primary mb-2">@ViewBag.cartCount</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between" style="font-weight: 500;">
+                    <p class="mb-0">Shipping</p>
+                    <p class="text-primary mb-0">₹0.00</p>
+                    </div> *@
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-between mb-4" style="font-weight: 500;">
+                        <p class="mb-2">Total (tax included)</p>
+                        <p class="text-primary mb-2">₹@ViewBag.data/-</p>
+                    </div>
+
+                    <form method="post" asp-controller="account" asp-action="place-ordered-standalone">
+                        <div class="d-flex justify-content-between mb-4" style="font-weight: 500;">
+                            <label>Enter Member ID&nbsp;:-&nbsp;</label>
+                            <input id="Memberid" name="Memberid" type="text" class="form-control" />
+                        </div>
+
+                        <!-- Div to show the member's name or an error message -->
+                        <div style="text-align: center; padding: 5px; font-weight: 400;" id="UserName"></div>
+
+                        <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block ">
+                            <div class="d-flex justify-content-between">
+                                <span>Checkout&nbsp;-&nbsp;</span>
+                                <span>₹@ViewBag.data/-</span>
+                            </div>
+                        </button>
+                    </form><br />
+
+                    @* <div class="d-flex justify-content-between mb-4" style="font-weight: 500;">
+                    <p class="mb-2">Wallet Balance:-</p>
+                    <p class="mb-2 text-primary">₹@ViewBag.availableWallet/-</p>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+    @*  <div class="mt-5 mb-5">
+    <div>
+    <a href="/account/products">
+    <button class="btn btn-outline-primary">
+    <i class="fa fa-shopping-cart"></i>&nbsp;Continue Shoppping
+    </button>
+    </a>
+    </div>
+    </div> *@
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            // Handle keyup event
+            $("#Memberid").on("keyup", function () {
+                let memberId = $(this).val().trim();
+                if (memberId !== "") {
+                    isSponsorExist(memberId);
+                } else {
+                    // Clear the UserName div if input is cleared
+                    $("#UserName").html("").css("color", "");
+                }
+            });
+
+            // Function to check if the sponsor/member exists
+            function isSponsorExist(memberId) {
+                $.ajax({
+                    url: "/account/GetName",
+                    method: "POST",
+                    data: { memberId: memberId },
+                    success: function (data) {
+                        if (data === "No such member exist") {
+                            // Show error message in red
+                            $("#UserName").html(data).css("color", "red");
+                        } else {
+                            // Show member name in default color
+                            $("#UserName").html(data).css("color", "green");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        // Show error message in red
+                        $("#UserName").html("Error fetching member name").css("color", "red");
+                    }
+                });
+            }
+        });
+    </script>
+}
+
+
+
+

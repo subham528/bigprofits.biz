@@ -1,0 +1,138 @@
+﻿@model Bigprofits.Models.CmitRequest
+
+@{
+    ViewData["Title"] = "AddfundBp30";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dark-mode .form-control.txtAddress {
+        border: 0 !important;
+        outline: 0;
+        background: none;
+        text-align: center;
+        margin-top: 15px;
+    }
+</style>
+
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-success">@TempData["msg"]</div>
+}
+
+
+<div class="container-fluid">
+    <div class="col-md-12 mb-2 innerLinkWrap">
+        <div class="card innerLink ">
+            <a href="/account/topup-wallet-add">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-white mb-0">Add Fund </h6>
+                </div>
+            </a>
+        </div>
+        <div class="card innerLink ">
+            <a href="/account/add-wallet-fund">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-white mb-0">Add Fund From Income</h6>
+                </div>
+            </a>
+        </div>
+
+        <div class="card innerLink">
+            <a href="/account/activate-from-topup-wallet">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">Activation/ReTopUp </h6>
+                </div>
+            </a>
+        </div>
+
+        <div class="card innerLink">
+            <a href="/account/topup-history">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">My Top Up</h6>
+                </div>
+            </a>
+        </div>
+
+        @* <div class="card innerLink">
+        <a href="/account/wallet-send-fund">
+        <div class="card-body p-2 text-center">
+        <h6 class="text-dark mb-0">P2P Transfer</h6>
+        </div>
+        </a>
+        </div>
+        <div class="card innerLink">
+        <a href="/account/wallet-received-fun">
+        <div class="card-body p-2 text-center">
+        <h6 class="text-dark mb-0">P2P Recived</h6>
+        </div>
+        </a>
+        </div> *@
+
+        <div class="card innerLink">
+            <a href="/account/wallet-summary">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">Wallet History</h6>
+                </div>
+            </a>
+        </div>
+
+    </div>
+    <div class="col-10 col-sm-5">
+        <!-- Start-->
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h3  class="card-title p-0 fw-bold">Add Fund $@ViewBag.amount</h3>
+            </div>
+            <div class="card-body p-2">
+                <form asp-action="InrAmmount" asp-route-amount="@ViewBag.amount" method="post">
+                    <div class="mb-3 text-center">
+                        <h5 class="text-warning mb-2">Send <strong>@ViewBag.paybleamount INR</strong> to this address</h5>
+                        <p class="d-block mb-2 text-warning">
+                            <br />
+                            <span class="text-danger">Only INR will be accepted.</span>
+                        </p>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=yespay.smesm000019214@yesbankltd&pn=TIMEBUCKSTECHNOLOGY(OPC)PRIVATELIMITED" /> <br />
+                    </div>
+
+                   @*  <div class="mb-3">
+                        <label class="control-label">   Deposit Wallet</label>
+                        <a class="text-success" onclick="copyText('txtAddress')">&nbsp;  copy <i class="fa fa-copy"></i></a>
+                        <input type="text" id="txtAddress" value="@ViewBag.bp20address" class="form-control" />
+                    </div> *@
+                    <h4 class="text-warning mb-2" style="text-align:center">1 USDT = @ViewBag.usdt</h4>
+                    <div class="mb-3">
+                        <label class="control-label">Payable Amount</label>
+                        <input id="txtFinalAmount" asp-for="CmitReqAmount" class="form-control" value="@ViewBag.paybleamount" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="control-label">Enter Transaction/Hash ID</label>
+                        <input asp-for="HashId" class="form-control " />
+                    </div>
+
+                    <div style="text-align:center" id="fundbtn">
+                        <input type="button" id="fndreq" value="Submit Request" class="btn bg-primary text-white" />
+                    </div>
+
+                    <div class="form-group mt-3" style="text-align:center; display: none" id="probtn">
+                        <p style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> Processing... </p>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $("#fndreq").click(function () {
+            $("#fndreq").hide()
+            $("#probtn").show()
+
+            $('form').submit()
+        })
+    </script>
+}

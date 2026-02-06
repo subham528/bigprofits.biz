@@ -1,0 +1,150 @@
+﻿@model Bigprofits.Models.AddProduct
+@{
+	ViewData["Title"] = "Add Product";
+	Layout = "_AALayout";
+}
+
+@if (TempData["msg"] != null)
+{
+	<div class="alert alert-success" role="alert">
+		<strong>Success!</strong> @TempData["msg"]
+	</div>
+}
+@if (TempData["error"] != null)
+{
+	<div class="alert alert-danger" role="alert">
+		<strong>Error!</strong> @TempData["error"]
+	</div>
+}
+@if (TempData["ExceptionError"] != null)
+{
+	<div class="alert alert-danger" role="alert">
+		<strong>Error!</strong> @TempData["ExceptionError"]
+	</div>
+}
+
+<h4 class="text-center mb-3">Add New Product</h4>
+
+<div class="row">
+	<div class="col-md-8 offset-md-2">
+		<div class="card">
+			<div class="card-body">
+				<form method="post" asp-action="add-Product" asp-controller="britglbl253adpnl" enctype="multipart/form-data">
+
+					<div class="mb-3">
+						<label class="control-label">Select Category</label>
+						<select asp-for="CatId" class="form-control" required asp-items="ViewBag.CList">
+							<option selected value="">Select Category</option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label class="control-label">Select Sub Category</label>
+						<select asp-for="SubCatId" class="form-control" required>
+							<option selected value="">Select Sub Category</option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="ProductName">Product Name:</label>
+						<input type="text" asp-for="ProductName" class="form-control" required />
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="ProductDescription">Product Description</label>
+						<textarea asp-for="ProductDescription" class="form-control"></textarea>
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="ProductBv">Product BV</label>
+						<input type="number" asp-for="ProductBv" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="Price">Price</label>
+						<input id="Price" type="number" asp-for="Price" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="Gst">GST</label>
+						<input id="GST" type="text" asp-for="Gst" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="PriceWithGst">Price with GST</label>
+						<input id="Price_With_GST" style="color:red" type="text" asp-for="PriceWithGst" value="" class="form-control" readonly />
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="FinalPrice">Final Price</label>
+						<input id="Final_Price" style="color:red" type="text" asp-for="FinalPrice" value="" class="form-control" readonly />
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="Weight">Weight</label>
+						<input type="text" asp-for="Weight" placeholder="e.g. 500gm, 1kg, 500ml, 1ltr" class="form-control" />
+					</div>
+
+					<div class="mb-3">
+						<label asp-for="Product_Image">Add Product Image</label>
+						<input type="file" asp-for="Product_Image" class="form-control" required />
+					</div>
+
+					<button type="submit" class="btn btn-primary">Add Product</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+
+		// Get references to the input fields
+		const priceInput = document.getElementById('Price');
+		const gstInput = document.getElementById('GST');
+		const priceWithGSTInput = document.getElementById('Price_With_GST');
+		const finalPrice = document.getElementById('Final_Price')
+
+		// Add event listeners
+		priceInput.addEventListener('input', calculatePriceWithGST);
+		gstInput.addEventListener('input', calculatePriceWithGST);
+
+		// Function to calculate Price_With_GST
+		function calculatePriceWithGST() {
+			const basePrice = parseFloat(priceInput.value) || 0; // Get base price (default to 0 if invalid)
+			const gstPercentage = parseFloat(gstInput.value) || 0; // Get GST percentage (default to 0 if invalid)
+
+			const priceWithGST = basePrice + (basePrice * gstPercentage / 100);
+			priceWithGSTInput.value = priceWithGST.toFixed(2); // Display with 2 decimal places
+			finalPrice.value = priceWithGSTInput.value;
+		}
+
+		$("#CatId").on("change", function(){
+			var Id = $("#CatId").val()
+			if(Id != ""){
+				getSubCat(Id)
+			}
+		})
+
+		function getSubCat(catId){
+			$.ajax({
+				url: "/britglbl253adpnl/select-sub-category",
+				method: "get",
+				data: { catId: catId },
+				dataType: "text",
+				success: function (data) {
+					data = JSON.parse(data)
+					//console.log(data)
+
+					$("#SubCatId").html('<option selected value="">Select Sub Category</option>')
+					data.forEach(function (item) {
+						var option = $("<option>").val(item.subCatId).text(item.name);
+						$("#SubCatId").append(option);
+					});
+				}
+			})
+		}
+
+	</script>
+}

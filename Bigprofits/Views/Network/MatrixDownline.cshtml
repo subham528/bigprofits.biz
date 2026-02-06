@@ -1,0 +1,116 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common
+@using Microsoft.Extensions.Configuration
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+    CommonMethods lib = new CommonMethods(configuration!);
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+<style>
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table-bordered {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .bg-primary {
+        background-color: #033c40 !important;
+        color: white;
+    }
+
+    .text-black {
+        color: rgb(75, 69, 69) !important;
+    }
+
+    @@media (max-width: 768px) {
+        .table {
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+@if (TempData["msg"] != null)
+{
+    <div style="text-align: center; padding: 5px; color: #b7114e; font-weight: 900; margin-bottom: 10px" class="animate__animated animate__fadeIn">
+        @TempData["msg"]
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card animate__animated animate__fadeInUp">
+            <div class="card-header bg-primary text-center">
+                <h3 class="card-title mb-0 text-white">@ViewBag.title [@ViewBag.member]</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                        <thead class="bg-primary">
+                            <tr>
+                                <th>Sno</th>
+                                <th>Member</th>
+                                <th>Referral</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sno = 1;
+                            }
+                            @if (Model != null && Model.Tables.Count > 0 && Model.Tables[0].Rows.Count > 0)
+                            {
+                                foreach (DataRow row in Model.Tables[0].Rows)
+                                {
+                                    <tr>
+                                        <td>@sno</td>
+                                        <td>@row["DownlineMemberId"]</td>
+                                        <td>@row["refId"]</td>
+                                        <td>@(row["mdate"] != DBNull.Value ? Convert.ToDateTime(row["mdate"]).ToString("dd/MMM/yyyy hh:mm tt") : "N/A")</td>
+                                    </tr>
+                                    sno++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No downline members found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#data-table').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "pageLength": 10
+            });
+        });
+    </script>
+}

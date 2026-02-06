@@ -1,0 +1,85 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Level Income";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12 col-sm-12">
+        <div class="card ">
+            <div class="card-header">
+                <h3 class="card-title mb-0"> Total Team </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                        <thead>
+                            <tr>
+
+                                <th>
+                                    Sno
+                                </th>
+                                <th>
+                                    USER ID
+                                </th>
+                                <th>
+                                    PACKAGE
+                                </th>
+
+                                <th>
+                                    SPONSOR
+                                </th>
+                                <th>
+                                    REGISTERED ON
+                                </th>
+                                <th>
+                                    ACTIVATED ON
+                                </th>
+
+                                <th>
+                                    LEVEL
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sno2 = 1;
+                            }
+
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td>@sno2</td>
+                                    <td>@row["memLogId"]</td>
+                                    <td>@row["lvl1"]</td>
+                                    <td>@row["spoId"]</td>
+                                    <td>@row["memReg"]</td>
+                                    <td>@row["posDate"]</td>
+                                    <td>@row["lvl"]</td>
+                                   @*  <td>
+                                        @if (row["lvl"].ToString() == "1")
+                                        {
+                                            <span>DIRECT</span>
+                                        }
+                                      
+                                    </td>
+ *@
+
+
+
+
+
+                                </tr>
+                                sno2++;
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><!-- COL END -->
+</div><!-- ROW-5 END -->

@@ -1,0 +1,141 @@
+﻿@model IEnumerable<Bigprofits.Models.FundAmount>
+
+@{
+    ViewData["Title"] = "FundRequest";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                FUND REQUEST
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                @if (TempData["error"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["error"]</div>
+                }
+
+                @if (TempData["success"] != null)
+                {
+                    <div class="alert alert-success">@TempData["success"]</div>
+                }
+
+                <table class="table table-responsive" id="table1">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                Sno
+                            </th>
+                                 <th>
+                                Image
+                                </th> 
+                            <th>
+                                MemberId
+                            </th>
+                            <th>
+                                Amount
+                            </th>
+                           @*  <th>
+                              Hash ID
+                            </th> *@
+                            <th>
+                            Utr Number
+                            </th>
+                            <th>
+                              Details
+                            </th>
+                            <th>
+                               Request Date
+                            </th>
+
+                            <th>Approve </th>
+                            <th>Reject </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @sno
+                                    @{
+                                        sno++;
+                                    }
+                                </td>
+                                  <td>
+                                    @if (!string.IsNullOrEmpty(item.FromAddress))
+                                    {
+                                        <img src="~/Images/@item.FromAddress" alt="Uploaded Image" style="width:100px; height:100px;" />
+                                    }
+                                    else
+                                    {
+                                        <span>No Image</span>
+                                    }
+                                </td> 
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MemberId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Amount)
+                                </td>
+                               @*  <td>
+                                    @if (item.HashId != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => item.HashId)
+                                    }
+                                    else
+                                    {
+                                        <p class=" text-danger"> NA </p>
+                                    }
+                                </td> *@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TokenAmount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ToAddress)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Fdate)
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary" href="/britglbl253adpnl/manage-request/@item.Id/1" onclick="return confirm('Are you sure?');">Approve</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger" href="manage-request/@item.Id/2" onclick="return confirm('Are you sure?');">Reject</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

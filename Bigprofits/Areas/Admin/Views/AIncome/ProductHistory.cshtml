@@ -1,0 +1,193 @@
+﻿@model List<ProductRequest>
+@{
+    int SrNo = 1;
+    Layout = "_AALayout";
+}
+<style>
+    #backToTopBtn {
+        display: block; /* Hidden by default */
+        position: fixed; /* Fixed/sticky position */
+        bottom: 20px; /* Place the button at the bottom of the page */
+        right: 20px; /* Place the button 30px from the right */
+        z-index: 99; /* Make sure it does not overlap */
+        color: white; /* Text color */
+        cursor: pointer; /* Add a mouse pointer on hover */
+        font-size: 24px; /* Increase font size */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for background and shadow */
+    }
+
+        #backToTopBtn:hover {
+            box-shadow: 0 0 15px 5px rgba(255, 255, 255, 1.6);
+        }
+
+    #searchInput {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+
+        /* Placeholder text color */
+        #searchInput::placeholder {
+            color: black;
+        }
+
+        /* Hover effect */
+        #searchInput:hover {
+            border-color: #66afe9;
+        }
+
+        /* Focus effect */
+        #searchInput:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+
+    .styled-table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        padding: 20px;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
+        border-radius: 12px; /* Added border radius */
+        overflow: hidden; /* To apply border radius properly */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: rgba(0, 0, 0, 0.15);
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        color: darkslateblue;
+        font-weight: normal;
+    }
+
+    tr:hover {
+        background-color: rgba(10, 5, 5, 0.15);
+        transition: background-color 0.3s ease;
+    }
+
+    .fa-edit {
+        color: blue;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body mt-3 overflow-auto">
+                <table class ="table table-responsive text-nowrap" id="datatable">
+                    <thead>
+                        <tr>
+                            <th>Sr.No</th>
+                            <th>Member Id</th>
+                            <th>Order Id</th>
+                            <th>Total Products</th>
+                            <th>Items</th>
+                            <th>Total Price</th>
+                            <th>Total GST</th>
+                            <th>Final Amount</th>
+                            <th>Order Status</th>
+                            <th>Request Date</th>
+                            <th>Approved Date</th>
+                           @*  <th>Details</th> *@
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        @foreach (var agent in Model)
+                        {
+                            <tr>
+                                <td>@SrNo</td>
+                                <td>@agent.Memberid</td>
+                                <td>@agent.OrderId</td>
+                                <td>@agent.TotalProducts</td>
+                                <td>@agent.Items</td>
+                                <td>@agent.TotalPrice!.Value.ToString("0.00")</td>
+                                <td>@agent.TotalGst!.Value.ToString("0.00")</td>
+                                <td>@agent.FinalAmount!.Value.ToString("0.00")</td>
+                                @if (agent.OrderStatus == 1)
+                                {
+                                    <td>
+                                        <i style="color:lime" class="fas fa-circle"></i>
+                                        Approved
+                                    </td>
+                                }
+                                @if (agent.OrderStatus == 2)
+                                {
+                                    <td>
+                                        <i style="color:red" class="fas fa-circle"></i>
+                                        Rejected
+                                    </td>
+                                }
+                                <td>@agent.RequestDate</td>
+                                <td>@agent.ApprovedDate</td>
+                               @*  <td>
+                                    <a href="@Url.Action("requested-product-details","britglbl253adpnl", new { OrderId = agent.OrderId })"><i class="fas fa-info"></i>Info</a>
+                                </td> *@
+                            </tr>
+                            SrNo++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        var Model = @Html.Raw(ViewBag.Model)
+        $('#searchInput').on('input', function () {
+            var searchText = $(this).val();
+
+            var filteredProducts = Model.filter(function (product) {
+                return product.OrderId.includes(searchText);
+            });
+
+            renderFilteredProducts(filteredProducts);
+        });
+        console.log(Model);
+        function renderFilteredProducts(products) {
+
+
+            var prodHtml = "";
+            products.forEach((product, index) => {
+                prodHtml += `<tr>
+                                                                                                                                                                                                                                                                                                                         <td>${index + 1}</td>
+                                                                                                                                                                                                                                                                                                                        <td>${product.Memberid}</td>
+                                                                                                                                                                                                                                                                                                                        <td>${product.OrderId}</td>
+                                                                                                                                                                                                                                                                                                                        <td>${product.TotalProducts}</td>
+                                                                                                                                                                                                                                                                                                                        <td>${product.Items}</td>
+                                                                                                                                                                                                                                                                                                                        <td>${product.TotalPrice.toFixed(2)}</td>
+                                                                                                                                                                                                                                                                                                                        <td>${product.TotalGst}</td>
+                                                                                                                                                                                                                                                                                                                        <td>${product.FinalAmount}</td>
+                                                                                                                                                                                                                                                                                                                        <td>${product.OrderStatus}</td>
+                                                                                                                                                                                                                                                                                                                        <td>${product.RequestDate}</td>
+                                                                                                                                                                                                                                                                                                                         <td>
+                                                                                                                                                                                                                                                                                                                          <a href="/britglbl253adpnl/requested-product-details/${product.OrderId}"><i class="fas fa-info"></i>Details</a>
+                                                                                                                                                                                                                                                                                                                         </td>
+                                                                                                                                                                                                                                                                                                                         </tr>`;
+            });
+            $("#productTableBody").html(prodHtml)
+        }
+    </script>
+}

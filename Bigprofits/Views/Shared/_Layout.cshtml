@@ -1,0 +1,764 @@
+﻿<!doctype html>
+<html lang="en" class="dark-mode">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="">
+    <title>Bigprofits</title>
+
+    <!-- manifest meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/assets/img/logo.png" sizes="180x180">
+    <link rel="icon" href="/assets/img/logo.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/assets/img/logo.png" sizes="16x16" type="image/png">
+
+    <!-- Google fonts-->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+
+    <!-- swiper carousel css -->
+    <link rel="stylesheet" href="~/assets/vendor/swiperjs-6.6.2/swiper-bundle.min.css">
+    <link href="~/sweetalert/dist/sweetalert2.min.css" rel="stylesheet" />
+
+    <!-- style css for this template -->
+    <link href="~/assets/css/style.css" rel="stylesheet" id="style">
+    <style>
+        .bg-primary
+        Specificity: (0,1,0) {
+            background-color: #033c40 !important;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="body-scroll theme-green" data-page="index">
+
+    <!-- loader section -->
+    <div class="container-fluid loader-wrap">
+        <div class="row h-100">
+            <div class="col-10 col-md-6 col-lg-5 col-xl-3 mx-auto text-center align-self-center">
+                <div class="loader-cube-wrap loader-cube-animate mx-auto">
+                    <img src="~/assets/img/logo.png" alt="Logo">
+                </div>
+                <p class="mt-4">It's time for Bigprofits<br><strong>Please wait...</strong></p>
+            </div>
+        </div>
+    </div>
+    <!-- loader section ends -->
+    <!-- Sidebar main menu -->
+    <div class="sidebar-wrap  sidebar-pushcontent">
+        <!-- Add overlay or fullmenu instead overlay -->
+        <div class="closemenu text-muted">Close Menu</div>
+        <div class="sidebar dark-bg">
+            <!-- user information -->
+            <div class="row my-3">
+                <div class="col-12 ">
+                    <div class="card shadow-sm bg-opac text-white border-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <figure class="avatar avatar-44 rounded-15">
+                                        <img src="~/assets/img/logo.png" alt="Rotating Logo"
+                                             style="width: 146px;" class="mw-100 rotating-img" />
+                                    </figure>
+                                </div>
+                                <div class="col px-0 align-self-center">
+                                    <p class="mb-1">@ViewBag.MemName</p>
+                                    <p class="text-muted size-12">@ViewBag.memberid</p>
+                                </div>
+                                <div class="col-auto">
+
+                                    <a href="/account/Logout" class="btn btn-44 btn-light">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                        @*   <div class="card bg-opac text-white border-0">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h1 class="display-4">100.00</h1>
+                                    </div>
+                                    <div class="col-auto">
+                                        <p class="text-muted">Wallet Balance</p>
+                                    </div>
+                                    <div class="col text-end">
+                                        <p class="text-muted">
+                                            <a href="addmoney.html">+ Top up</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> *@
+                    </div>
+                </div>
+            </div>
+
+            <!-- user emnu navigation -->
+            <div class="row">
+                <div class="col-12">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/account/home">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-house-door"></i></div>
+                                <div class="col">Dashboard</div>
+                                <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                               aria-expanded="false">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-person"></i></div>
+                                <div class="col">Team Info</div>
+                                <div class="arrow">
+                                    <i class="bi bi-plus plus"></i> <i class="bi bi-dash minus"></i>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/direct-member">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">Direct Member</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/DownLine-Line">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Total Team</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/Tree-structure">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Genralogy</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/TeamBusiness-list">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">  Team  Bussiness List</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        @* <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                               aria-expanded="false">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-person"></i></div>
+                                <div class="col">  Salary & Reward Bonus  List</div>
+                                <div class="arrow">
+                                    <i class="bi bi-plus plus"></i> <i class="bi bi-dash minus"></i>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/Achiverment-List/SALARY">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">Salary Achievement</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/Achiverment-List/REWARD">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Reward Achievement</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </li> *@
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-person"></i></div>
+                                <div class="col">Income</div>
+                                <div class="arrow">
+                                    <i class="bi bi-plus plus"></i> <i class="bi bi-dash minus"></i>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/roi-income">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">ROI Income</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/sponosr-Income">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Direct Sponsor Income</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/matching-Income">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">Matching Income</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                @* <li>
+                                    <a class="dropdown-item nav-link" href="/account/Reward-List">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col"> Reward Bonus</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li> *@
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/Salllry-Income">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">Rank Matching Bonus</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                @* <li>
+                                    <a class="dropdown-item nav-link" href="/account/Roi-Income">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">Daily Roi Income</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/sponosr-Income">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Direct Income</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/Level-Income">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Non Working income</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/matrix-Direct-Income">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Reward Income</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/product-Level-Income">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Product Purchaseing Level Income</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li> *@
+
+                            </ul>
+                        </li>
+
+                        @* <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                               aria-expanded="false">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-person"></i></div>
+                                <div class="col"> DNIP Token History</div>
+                                <div class="arrow">
+                                    <i class="bi bi-plus plus"></i> <i class="bi bi-dash minus"></i>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">                              
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/Dinp-History">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col"> DNIP Token History</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li> *@
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                               aria-expanded="false">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-person"></i></div>
+                                <div class="col">   Wallet</div>
+                                <div class="arrow">
+                                    <i class="bi bi-plus plus"></i> <i class="bi bi-dash minus"></i>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                @* <li>
+                                    <a class="dropdown-item nav-link" href="/account/Swap">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col"> Swap To  USDT</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li> *@
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/topup-wallet-add">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">Add Fund</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/activate-from-topup-wallet">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Topup</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+
+                                @* <li>
+                                    <a class="dropdown-item nav-link" href="/account/activate-from-topup-wallet1">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Topup From Topup Wallet</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li> *@
+
+                                @* <li>
+                                    <a class="dropdown-item nav-link" href="/account/add-wallet-fund">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Add Fund From Income</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li> *@
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/mytopup-histry">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Topup History</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/wallet-summary">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Wallet Transactions</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-person"></i></div>
+                                <div class="col">Withdrawal</div>
+                                <div class="arrow">
+                                    <i class="bi bi-plus plus"></i> <i class="bi bi-dash minus"></i>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/withdrawal">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">Withdrawal Request</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/withdrawal-history">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Withdrawal History</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                               aria-expanded="false">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-palette"></i></div>
+                                <div class="col">    Privacy</div>
+                                <div class="arrow">
+                                    <i class="bi bi-plus plus"></i> <i class="bi bi-dash minus"></i>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/profile">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">Profile</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                @*   <li>
+                                    <a class="dropdown-item nav-link" href="/account/bank-details">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Bank Details</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li> *@
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/reset-password">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Change Password</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+
+                                @* <li>
+                                    <a class="dropdown-item nav-link" href="/account/IdProof">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Id Card</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li> *@
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                               aria-expanded="false">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-chat-text"></i></div>
+                                <div class="col">     User Support</div>
+                                <div class="arrow">
+                                    <i class="bi bi-plus plus"></i> <i class="bi bi-dash minus"></i>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/new-message">
+                                        <div class="avatar avatar-40 rounded icon"><i class="bi bi-calendar2"></i></div>
+                                        <div class="col">Helpdesk</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/inbox-massege">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Inbox</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item nav-link" href="/account/new-message-outbox">
+                                        <div class="avatar avatar-40 rounded icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+                                        <div class="col">Outbox</div>
+                                        <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/account/Logout" tabindex="-1">
+                                <div class="avatar avatar-40 rounded icon"><i class="bi bi-box-arrow-right"></i></div>
+                                <div class="col">Logout</div>
+                                <div class="arrow"><i class="bi bi-chevron-right"></i></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sidebar main menu ends -->
+    <!-- Begin page -->
+    <main class="h-100">
+
+        <!-- Header -->
+        <header class="header position-fixed">
+            <div class="row">
+                <div class="col-auto">
+                    <a href="javascript:void(0)" target="_self" class="btn btn-light btn-44 menu-btn">
+                        <i class="bi bi-list"></i>
+                    </a>
+                </div>
+                <div class="col align-self-center text-center">
+                    <div class="logo-small">
+                        <img src="~/assets/img/logo.png" alt="">
+                        <h5>Bigprofits</h5>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <a href="/account/Logout" target="_self" class="btn btn-light btn-44">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span class="count-indicator"></span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-container container">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <ul class="nav nav-pills nav-justified">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/account/home">
+                        <span>
+                            <i class="nav-icon bi bi-house"></i>
+                            <span class="nav-text">Home</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/account/Roi-Income">
+                        <span>
+                            <i class="nav-icon bi bi-laptop"></i>
+                            <span class="nav-text">Income</span>
+                        </span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/account/withdrawal">
+                        <span>
+                            <i class="nav-icon bi bi-gift"></i>
+                            <span class="nav-text">Withdrawal</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/account/topup-wallet-add">
+                        <span>
+                            <i class="nav-icon bi bi-wallet2"></i>
+                            <span class="nav-text">Wallet</span>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+    <!-- Footer ends-->
+    <!-- PWA app install toast message -->
+    @*   <div class="position-fixed bottom-0 start-50 translate-middle-x  z-index-10">
+        <div class="toast mb-3" role="alert" aria-live="assertive" aria-atomic="true" id="toastinstall"
+             data-bs-animation="true">
+            <div class="toast-header">
+                <img  src="/assets/img/logo.png" class="rounded me-2" alt="...">
+                <strong class="me-auto">Install PWA App</strong>
+                <small>now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                <div class="row">
+                    <div class="col">
+                        Click "Install" to install PWA app & experience indepedent.
+                    </div>
+                    <div class="col-auto align-self-center ps-0">
+                        <button class="btn-default btn btn-sm" id="addtohome">Install</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> *@
+
+    <!-- Required jquery and libraries -->
+    <script src="~/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="~/assets/js/popper.min.js"></script>
+    <script src="~/assets/vendor/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+
+    <!-- cookie js -->
+    <script src="~/assets/js/jquery.cookie.js"></script>
+
+    <!-- Customized jquery file  -->
+    <script src="~/assets/js/main.js"></script>
+    <script src="~/assets/js/color-scheme.js"></script>
+
+    <!-- PWA app service registration and works -->
+    <script src="~/assets/js/pwa-services.js"></script>
+
+    <!-- Chart js script -->
+    <script src="~/assets/vendor/chart-js-3.3.1/chart.min.js"></script>
+
+    <!-- Progress circle js script -->
+    <script src="~/assets/vendor/progressbar-js/progressbar.min.js"></script>
+
+    <!-- swiper js script -->
+    <script src="~/assets/vendor/swiperjs-6.6.2/swiper-bundle.min.js"></script>
+
+    <!-- page level custom script -->
+    <script src="~/assets/js/app.js"></script>
+    <script src="~/sweetalert/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        function copyText(id) {
+            document.getElementById(id).select();
+            document.execCommand('copy');
+        }
+    </script>
+    <script type='text/javascript'>
+        $("#home a").addClass("active")
+
+
+    </script>
+    @if (TempData["Ssuc"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: '@TempData["Ssuc"]',
+            })
+        </script>
+    }
+    @if (TempData["Serr"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '@TempData["err"]',
+            })
+        </script>
+    }
+    @if (TempData["Sinfo"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'info',
+                title: 'Oops...',
+                text: '@TempData["info"]',
+            })
+        </script>
+    }
+
+    @* ============= CuteAlert ==============*@
+    @if (TempData["Csuc"] != null)
+    {
+        <script>
+            cuteAlert({
+                type: "success",
+                title: "Success..!!",
+                message: "@TempData["Csuc"]",
+                buttonText: "OK",
+            @* closeStyle: "circle",*@
+            @* onClose: function () {
+            // Callback function executed when the alert is closed
+            console.log("Alert closed.");
+            }*@
+
+                                    });
+        </script>
+    }
+
+    @if (TempData["Cerr"] != null)
+    {
+        <script>
+            cuteAlert({
+                type: "error",
+                title: "Oops..!!",
+                message: "@TempData["Cerr"]",
+                buttonText: "OK",
+            });
+        </script>
+    }
+    @if (TempData["Cwar"] != null)
+    {
+        <script>
+            cuteAlert({
+                type: "warning",
+                title: "Ooo..!!",
+                message: "@TempData["Cwar"]",
+                buttonText: "OK",
+            });
+        </script>
+    }
+
+    @* ============= Toastfy ==============*@
+    @if (TempData["Tsuc"] != null)
+    {
+        <script>
+            cuteToast({
+                type: "success",
+                message: "@TempData["Tsuc"]",
+                timer: 5000,
+            });
+        </script>
+    }
+    @if (TempData["Terr"] != null)
+    {
+        <script>
+            cuteToast({
+                type: "error",
+                message: "@TempData["Terr"]",
+                timer: 5000,
+            });
+        </script>
+    }
+    @if (TempData["Twar"] != null)
+    {
+        <script>
+            cuteToast({
+                type: "warning",
+                message: "@TempData["Twar"]",
+                timer: 5000,
+            });
+        </script>
+    }
+
+    <script>
+        function copyText(id) {
+            document.getElementById(id).select();
+            document.execCommand('copy');
+        }
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+
+
+<!-- Mirrored from maxartkiller.com/website/fimobile2/HTML/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 29 May 2025 08:51:26 GMT -->
+</html>

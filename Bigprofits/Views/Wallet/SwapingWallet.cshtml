@@ -1,0 +1,179 @@
+﻿@using System.Data
+@model DataSet
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+	ViewData["Title"] = "Swapping Wallet";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
+	var liveRate = income.liveRate ?? 0;
+}
+
+@if (TempData["msg"] != null)
+{
+	<div class="alert alert-success">@TempData["msg"]</div>
+}
+
+<style>
+	.blinking-text {
+		animation: blink 1s infinite;
+	}
+</style>
+
+<div class="container-fluid">
+	<div class="row justify-content-center">
+		<!-- Start -->
+		<div class="card shadow-lg rounded-lg mb-4 w-full max-w-md">
+			<div class="card-header py-3 bg-primary text-center">
+				<h6 class="m-0 font-weight-bold text-white text-lg" style="color:green">SWAP TO USDT</h6>
+			</div>
+
+			<div class="card-body p-4">
+				<!-- Username or Error Message -->
+				<div class="text-center text-red-500 font-semibold" id="UserName"></div>
+
+				<!-- Income Wallet Display -->
+				<div class="text-center my-3">
+					<p class="text-sm font-semibold text-purple-600 mb-1">Stacking Wallet</p>
+					<p class="text-lg font-bold text-purple-700">Total Drone Token- @income.tokenAmount</p>
+				</div>
+
+
+				<div class="text-center my-3">
+					<h2 class="text-sm font-semibold text-purple-600 mb-1" style="color:red">LiveRate</h2>
+					<h2 class="text-lg font-bold text-purple-700 blinking-text" style="color:red">$ @income.liveRate</h2>
+				</div>
+
+				<div asp-validation-summary="All" class="text-danger"></div>
+
+				<form asp-action="SwapingWallet" method="post">
+					<!-- Amount Input -->
+					<div class="mb-4">
+						<label class="text-sm font-semibold">Enter Drone Token</label>
+						<input id="amount" name="amount"
+							   class="form-control w-full border rounded-lg py-2 px-3"
+							   placeholder="Enter Drone Token" required />
+					</div>
+
+					<!-- Hidden Live Rate -->
+					<input type="hidden" id="liveRate" value="@liveRate" name="liveRate" />
+
+					<!-- Live Conversion Result -->
+					<div class="mb-3">
+						<label class="text-sm font-semibold text-green-600">You will get:</label>
+						<p class="text-lg font-bold text-success" id="convertedAmount">0</p>
+					</div>
+					<input type="hidden" id="convertedHidden" name="convertedAmount" value="0" />
+					<!-- Submit Button -->
+					<div class="text-center mt-4">
+						<button type="submit" id="btnsubmit"
+								class="btn bg-primary text-white w-full py-2 rounded-lg text-lg">
+							SWAP TO USDT
+						</button>
+					</div>
+
+					<!-- Processing Text -->
+					<div class="text-center mt-3 d-none" id="processbtn">
+						<p class="text-red-600 font-bold">Processing...</p>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- End -->
+	</div>
+
+</div>
+<div class="col-12 col-sm-12">
+	<div class="card ">
+		<div class="card-header">
+			<h3 class="card-title mb-0"> TRANSACTION HISTORY </h3>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table id="data-table" class="table table-bordered text-nowrap mb-0">
+					<thead>
+						<tr>
+
+							<th>
+								Sno
+							</th>
+
+
+							<th>
+								Amount
+							</th>
+
+
+							@*   <th>
+                                Final Amount
+                            </th> *@
+							<th>
+								Txn Info
+							</th>
+							<th>
+								Date
+							</th>
+							<th>
+								Details
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						@{
+							int sno2 = 1;
+						}
+
+						@foreach (DataRow row in Model.Tables[0].Rows)
+						{
+							<tr>
+								<td>@sno2</td>
+
+								<td>
+									@Convert.ToDecimal(row["finalAmount"]).ToString("0.##")
+									@(row["ftype"].ToString() == "DEBIT" ? " DRONE TOKEN" : " USDT")
+								</td>
+
+
+
+								@*   <td>@("$" + Convert.ToDecimal(row["amount"]).ToString("0.00"))</td> *@
+								<td>@row["ftype"]</td>
+								<td>@row["fdate"]</td>
+								<td>@row["details"]</td>
+
+
+
+							</tr>
+							sno2++;
+						}
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+
+	<script>
+
+		   document.addEventListener("DOMContentLoaded", function () {
+			const amountInput = document.getElementById("amount");
+			const liveRate = parseFloat(document.getElementById("liveRate").value || 0);
+			const resultText = document.getElementById("convertedAmount");
+
+				   amountInput.addEventListener("input", function () {
+			const amt = parseFloat(this.value);
+			if (!isNaN(amt)) {
+				const total = (amt * liveRate).toFixed(2);
+				resultText.innerText = total;
+				document.getElementById("convertedHidden").value = total;
+			} else {
+				resultText.innerText = "0";
+				document.getElementById("convertedHidden").value = "0";
+			}
+		});
+
+		});
+	</script>
+}

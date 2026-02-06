@@ -1,0 +1,134 @@
+﻿@using System.Data
+@using Microsoft.Extensions.Configuration;
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "manage Withdrawal";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+
+    var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+    CommonMethods lib = new CommonMethods(configuration!);
+}
+
+<div class="page-heading">
+    <section class="section">
+        <div class="card">
+            <div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
+                Manage Withdrawal
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <div class="text-end">
+                    <a class="btn btn-success m-2" onclick="return manageWithdrawal('CLEAR')">Approve</a>
+                    <a class="btn btn-danger m-2" onclick="return manageWithdrawal('REJECT')">Reject</a>
+                </div>
+
+                <table class="table table-responsive text-nowrap" id="datatable">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="chkAll" name="chkAll" value='' />
+                                <label for="chkAll">Select All</label>
+                            </th>
+                            <th>Member</th>
+                            <th>Withdrawal</th>
+                            <th>Type</th>
+                            <th>Admin Charge</th>
+                            <th>Payable Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+                        @if (Model.Tables[0].Rows.Count > 0)
+                        {
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td><input type="checkbox" id="chk" name="chk" value='@row["id"]' style="height: 20px; width: 20px; vertical-align: sub; margin-right: 5px" />@sno2</td>
+                                    <td>@row["memName"] / @row["memberid"]</td>
+                                    <td>@string.Format("{0:0.00}", row["withdrawal"])</td>
+                                    <td>@(Convert.ToInt16(row["DirectIncome"]) == 0 ? "INCOME" : "CAPITAL")</td>
+                                    <td>@string.Format("{0:0.00}", row["adminCharge"])</td>
+                                    <td>@string.Format("{0:0.00}", row["details"]) @row["wType"]</td>
+                                    <td>@string.Format("{0:dd/MMMM/yyyy hh:mm tt}", row["wdlDate"])</td>
+                                </tr>
+                                sno2++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+
+
+@section Scripts{
+    <script>
+
+        $("#dt").hide()
+
+        $('#datatable').DataTable({
+            // dom: 'Bfrtip',
+            // buttons: [
+            //     'excel', 'pdf', 'print'
+            // ]
+        });
+
+        $('input[name="chkAll"]').change(function () {
+            if ($(this).prop("checked") == true) {
+                $('input[name="chk"]').prop('checked', true);
+            }
+            else if ($(this).prop("checked") == false) {
+                $('input[name="chk"]').prop('checked', false);
+            }
+        })
+
+        function manageWithdrawal(action) {
+            var arWidId = [];
+            $('input[name="chk"]').each(function () {
+                if ($(this).prop("checked") == true) {
+                    arWidId.push($(this).val())
+                }
+            })
+
+            if (arWidId.length <= 0) {
+                smessage("warning", "Select Withdrawal First", "", false)
+            }
+            else if (!confirm('Are You sure? You want to approve/reject')) {
+                return false;
+            }
+            else {
+                $.ajax({
+                    url: '/britglbl253adpnl/manage-withdrawal',
+                    method: 'post',
+                    data: { widId: arWidId.toString(), action: action },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data)
+                        smessage("success", "Withdrawal Approved/Rejected Successfully", data, true)
+                    }
+                })
+            }
+            return false;
+        }
+
+        function smessage(type, title, msg, refresh) {
+            Swal.fire({
+                icon: type,
+                title: title,
+                text: msg
+            }).then(() => {
+                if (refresh) {
+                    location.reload();
+                }
+            });
+        }
+    </script>
+}
+

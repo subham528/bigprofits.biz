@@ -1,0 +1,180 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@using Microsoft.Extensions.Configuration;
+
+@{
+	ViewData["Title"] = "AdminDashboard";
+	Layout = "~/Areas/Admin/Views/Shared/_AALayoutSub.cshtml";
+
+	var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+	CommonMethods lib = new CommonMethods(configuration!);
+	dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
+}
+
+<div class="row">
+	<div class="col-md-12"><h4>Todays deposit</h4></div>
+
+	<div class="col-6 col-lg-3 col-md-6">
+		<div class="card">
+			<div class="px-3 py-4-5">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="stats-icon blue">
+							<i class="iconly-boldProfile"></i>
+						</div>
+					</div>
+					<div class="col-md-8 p-0">
+						<h6 class="font-semibold">Todays Deposit</h6>
+						<h6 class="font-extrabold mb-0">@income.todayDeposit?.ToString("0.00")</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-6 col-lg-3 col-md-6">
+		<div class="card">
+			<div class="px-3 py-4-5">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="stats-icon blue">
+							<i class="iconly-boldProfile"></i>
+						</div>
+					</div>
+					<div class="col-md-8 p-0">
+						<h6 class="font-semibold">Todays Withdrawal</h6>
+						<h6 class="font-extrabold mb-0">@income.todayWid?.ToString("0.00")</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@* <div class="col-6 col-lg-3 col-md-6">
+		<div class="card">
+			<div class="px-3 py-4-5">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="stats-icon blue">
+							<i class="iconly-boldProfile"></i>
+						</div>
+					</div>
+					<div class="col-md-8 p-0">
+						<h6 class="text-muted font-semibold">Today Topup</h6>
+						<h6 class="font-extrabold mb-0">@income.todayTopup?.ToString("0.00")</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-6 col-lg-3 col-md-6">
+		<div class="card">
+			<div class="px-3 py-4-5">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="stats-icon blue">
+							<i class="iconly-boldProfile"></i>
+						</div>
+					</div>
+					<div class="col-md-8 p-0">
+						<h6 class="text-muted font-semibold">Today Retopup</h6>
+						<h6 class="font-extrabold mb-0">@income.todayRetopup?.ToString("0.00")</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> *@
+
+	<div class="col-12">
+		<h4 class="mb-2">Total deposit</h4>
+	</div>
+
+	<div class="col-md-12 d-flex w-100 justify-content-between align-items-center mb-0">
+		<form class="d-flex align-items-center mb-3" action="/britglbl253adpnl/topup/system-topup">
+			<input type="date" name="date" class="form-control me-2" value="@ViewBag.date" />
+			<input type="submit" class="btn btn-primary me-2" value="Search" />
+			<a href="/britglbl253adpnl/topup/system-topup" class="btn btn-danger text-nowrap">Clear Search</a>
+		</form>
+	</div>
+
+	<div class="col-6 col-lg-3 col-md-6">
+		<div class="card">
+			<div class="  px-3 py-4-5">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="stats-icon blue">
+							<i class="iconly-boldProfile"></i>
+						</div>
+					</div>
+					<div class="col-md-8 p-0">
+						<h6 class="font-semibold">Total deposit</h6>
+						<h6 class="font-extrabold mb-0">@income.totalDeposit?.ToString("0.00")</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-6 col-lg-3 col-md-6">
+		<div class="card">
+			<div class="px-3 py-4-5">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="stats-icon blue">
+							<i class="iconly-boldProfile"></i>
+						</div>
+					</div>
+					<div class="col-md-8 p-0">
+						<h6 class="font-semibold">Total Withdrawal</h6>
+						<h6 class="font-extrabold mb-0">@income.totalWid?.ToString("0.00")</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	@* <div class="col-6 col-lg-3 col-md-6">
+		<div class="card">
+			<div class="  px-3 py-4-5">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="stats-icon blue">
+							<i class="iconly-boldProfile"></i>
+						</div>
+					</div>
+					<div class="col-md-8 p-0">
+						<h6 class="font-semibold">Total Topup</h6>
+						<h6 class="font-extrabold mb-0">@income.totalTopup?.ToString("0.00")</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-6 col-lg-3 col-md-6">
+		<div class="card">
+			<div class="  px-3 py-4-5">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="stats-icon blue">
+							<i class="iconly-boldProfile"></i>
+						</div>
+					</div>
+					<div class="col-md-8 p-0">
+						<h6 class="font-semibold">Total Retopup</h6>
+						<h6 class="font-extrabold mb-0">@income.totalRetopup?.ToString("0.00")</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> *@
+
+
+
+</div>
+
+
+
+

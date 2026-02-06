@@ -1,0 +1,205 @@
+﻿@model Bigprofits.Models.TblApiPaymentReq
+
+@{
+    ViewData["Title"] = "AdminFundRequest";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+@if (TempData["code"] != null)
+{
+    <div class="alert alert-danger"> @Html.Raw(TempData["code"]) </div>
+}
+
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-danger"> @Html.Raw(TempData["msg"]) </div>
+}
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">@TempData["success"]</div>
+}
+
+<div class="container-fluid">
+
+    <div class="row" style="margin-top: -25px;">
+
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Fund Requested
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.totalFundReq</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Approve Fund
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.approvedFund</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Pending Fund
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.pendingFund</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Withdrawal Fund
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.withdrawalAmount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                API CHARGES
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.apiCharge</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Discount
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.discount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Avilable Fund
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.available</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-12">
+            @if (ViewBag.msg != null)
+            {
+                if (ViewBag.code == 1)
+                {
+                    <div class="col-md-12 text-center text-success" style="margin-bottom: 15px;">@ViewBag.msg</div>
+                }
+                else
+                {
+                    <div class="col-md-12 text-center text-danger" style="margin-bottom: 15px;">@ViewBag.msg</div>
+                }
+            }
+        </div>
+
+        <div class="col-lg-5">
+            <!-- Start-->
+            <form asp-action="AdminFundRequest" class="" method="post">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">API Fund Request</h6>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Fund Amount</label>
+                            <input type="number" required id="fundamt" asp-for="ReqAmount" class="form-control" placeholder="Enter Amount" autocomplete="off" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea asp-for="Admindescription" class="form-control" placeholder="Description" rows="4"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-success" value="Request Fund" />
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <!-- End-->
+        </div>
+    </div>
+
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#fundamt").val("");
+        })
+
+    </script>
+
+}

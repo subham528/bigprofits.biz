@@ -1,0 +1,490 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	@* <meta name="viewport" content="width=device-width, initial-scale=1.0"> *@
+	<title> @TempData["ProjectName"] | @ViewData["Title"] </title>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="~/adminassets/css/bootstrap.css">
+	<link rel="stylesheet" href="~/adminassets/vendors/iconly/bold.css">
+
+	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<META HTTP-EQUIV="Expires" CONTENT="-1">
+
+	<!---FOR SWEET ALERT-->
+	<link href="~/SweetAlert/dist/sweetalert2.min.css" rel="stylesheet">
+	<link href="~/SCuteAlert/style.css" rel="stylesheet">
+	<script src="~/adminassets/vendors/jquery/jquery.min.js"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<link rel="stylesheet" href="~/adminassets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+	<link rel="stylesheet" href="~/adminassets/vendors/bootstrap-icons/bootstrap-icons.css">
+	<link rel="stylesheet" href="~/adminassets/css/app.css">
+
+	<link rel="stylesheet" href="~/adminassets/vendors/jquery-datatables/jquery.dataTables.bootstrap5.min.css">
+	<link rel="stylesheet" href="~/adminassets/vendors/fontawesome/all.min.css">
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cute-alert@1.1.3/style.css" />
+	<style>
+		.sidebar-wrapper {
+			height: 100%;
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+
+		table.dataTable td {
+			padding: 15px 8px;
+		}
+
+		.fontawesome-icons .the-icon svg {
+			font-size: 24px;
+		}
+
+		.indicator {
+			position: absolute;
+			z-index: 100;
+			background: #F44336;
+			height: 25px;
+			width: 25px;
+			border-radius: 50%;
+			right: 20px;
+			text-align: center;
+			top: 11px;
+			color: #fff;
+		}
+
+		.searchForm {
+			display: flex;
+			margin-bottom: 20px;
+			padding: 10px;
+			background: #f3f3f3;
+			border-radius: 5px;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.searchForm .form-control {
+				width: auto;
+				margin: 0 5px;
+			}
+	</style>
+
+</head>
+
+<body>
+	<div id="app">
+		<div id="sidebar" class="active">
+			<div class="sidebar-wrapper active">
+				<div class="sidebar-header">
+					<div class="d-flex justify-content-between">
+						<div class="logo">
+							<a asp-controller="AWallet" asp-action="AdminDashboard"><img src="/assets/img/logo.png" alt="Logo" style="height: 47px;" srcset="">Bigprofits </a>
+						</div>
+						<div class="toggler">
+							<a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+						</div>
+					</div>
+				</div>
+				<div class="sidebar-menu">
+					<ul class="menu">
+
+
+						<li class="sidebar-item active ">
+							<a asp-controller="britglbl253adpnl" asp-action="home" class='sidebar-link'>
+								<i class="bi bi-grid-fill"></i>
+								<span>DASHBOARD</span>
+							</a>
+						</li>
+
+						@* <li class="sidebar-item  ">
+                        <a asp-area="Admin" asp-controller="AMember" asp-action="AKycStatus" class='sidebar-link'>
+                        <i class="bi bi-cash"></i>
+                        <span>KYC STATUS</span>
+                        </a>
+                        </li>*@
+						<li class="sidebar-item  has-sub">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-collection-fill"></i>
+								<span>MEMBER SEARCH</span>
+							</a>
+							<ul class="submenu">
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="member-list">MEMBER SEARCH</a>
+								</li>
+
+								<li class="submenu-item">
+									<a href="/britglbl253adpnl/member-list?active=1">ACTIVE MEMBERS LIST</a>
+								</li>
+
+								<li class="submenu-item">
+									<a href="/britglbl253adpnl/member-list?active=0">INACTIVE MEMBERS LIST</a>
+								</li>
+
+								<li class="submenu-item">
+									<a href="/britglbl253adpnl/member-list-block">BLOCK MEMBERS LIST</a>
+								</li>
+								
+								@*  <li class="submenu-item ">
+                                    <a asp-controller="britglbl253adpnl" asp-action="list-Update"> UPDATE MEMBERS LIST </a>
+                                </li> *@
+							</ul>
+						</li>
+
+						<li class="sidebar-item  has-sub">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-file-earmark-spreadsheet-fill"></i>
+								<span>TOPUP</span>
+							</a>
+							<ul class="submenu">
+								<li class="submenu-item ">
+									<a asp-controller="britglbl253adpnl" asp-action="admin-topup"> MEMBER TOPUP  </a>
+								</li>
+								<li class="submenu-item ">
+									<a asp-controller="britglbl253adpnl" asp-action="topup-history"> TOPUP HISTORY  </a>
+								</li>
+
+							</ul>
+						</li>
+
+						<li class="sidebar-item  has-sub">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-pen-fill"></i>
+								<span> FUND WALLET</span>
+							</a>
+							<ul class="submenu">
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="Request">FUND REQUEST</a>
+								</li>
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="FHistory">FUND HISTORY</a>
+								</li>
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="manage-fund">ADD FUND</a>
+								</li>
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="manage-fund-Histry">CREDIT/DEBIT HISTORY</a>
+								</li>
+							</ul>
+						</li>
+
+						<li class="sidebar-item has-sub">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-collection-fill"></i>
+								<span>CLOSING</span>
+							</a>
+							<ul class="submenu">
+								<li class="submenu-item">
+									<a href="/britglbl253adpnl/Daily-Closing/DAILY">DAILY CLOSING</a>
+									@* <a href="/britglbl253adpnl/Binary-Closing/BINARY"> BINARY CLOSING </a>
+									<a href="/britglbl253adpnl/Reward-Closing/REWARD"> REWARD CLOSING </a> *@
+								</li>
+							</ul>
+						</li>
+
+						<li class="sidebar-item hidden has-sub">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-file-earmark-spreadsheet-fill"></i>
+								<span>INCOME</span>
+							</a>
+							<ul class="submenu">
+								@*<li class="submenu-item">
+                                <a asp-controller="britglbl253adpnl" asp-action="CreditDebitHistry">CREDIT/DEBIT HISTORY</a>
+                                </li> *@
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="Roi-Income">DAILY RETRUN INCOME</a>
+								</li>
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="Sponsor-Income">DIRECT SPONSOR INCOME</a>
+								</li>
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="Matching-Income">MATCHING INCOME</a>
+								</li>
+
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="DropReward-Income">REWARD BONUS</a>
+								</li>
+
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="SallaryD-Income">DAILY SALARY INCOME</a>
+								</li>
+
+								@* <li class="submenu-item ">
+                                    <a asp-controller="britglbl253adpnl" asp-action="Amatrix-Income"> ROI  INCOME  </a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a asp-controller="britglbl253adpnl" asp-action="Sponsor-Income">  DIRECT INCOME  </a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a asp-controller="britglbl253adpnl" asp-action="Binary-Income"> NON WORKING  INCOME   </a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a asp-controller="britglbl253adpnl" asp-action="reward-Income"> REWARD INOCME   </a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a asp-controller="britglbl253adpnl" asp-action="Weeklyreward-Income"> PRODUCT PURCHASING  INOCME   </a>
+                                </li> *@
+								@*   <li class="submenu-item ">
+                                    <a asp-controller="britglbl253adpnl" asp-action="Bonusincome-Income"> BONUS INOCME   </a>
+                                </li> *@
+							</ul>
+						</li>
+						@* <li class="sidebar-item has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-stack"></i>
+                                <span>PRODUCT</span>
+                            </a>
+                            <ul class="submenu">
+                                <li class="submenu-item">
+                                    <a asp-controller="britglbl253adpnl" asp-action="add-category">MANAGE CATEGORY</a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a asp-controller="britglbl253adpnl" asp-action="add-sub-category">MANAGE SUB CATEGORY</a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a asp-controller="britglbl253adpnl" asp-action="add-product">ADD PRODUCT</a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a asp-controller="britglbl253adpnl" asp-action="product-list">PRODUCT LIST</a>
+                                </li>
+
+                                <li class="submenu-item">
+                                    <a asp-controller="britglbl253adpnl" asp-action="product-history">PRODUCT HISTORY</a>
+                                </li>
+                            </ul>
+                        </li> *@
+
+						<li class="sidebar-item  has-sub">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-stack"></i>
+								<span>WITHDRAWAL</span>
+							</a>
+							<ul class="submenu">
+								@*  <li class="submenu-item">
+                                   <a href="/britglbl253adpnl/manage-Withdrawal/TOKEN"> MANAGE WITHDRAWAL CPC(BEP-20)</a>  
+                                    <a href="/britglbl253adpnl/manage-Withdrawal/USDT"> MANAGE WITHDRAWAL USDT(BEP-20)</a>
+                                </li>*@
+
+								@* <li class="submenu-item">
+                                    <a asp-controller="britglbl253adpnl" asp-action="manage-Withdrawal-inr">WITHDRAWAL REQUEST (INR)</a>
+                                </li> *@
+								<li class="submenu-item">
+									@* <a href="/britglbl253adpnl/withdrawal-Request-usdt">WITHDRAWAL REQUEST USDT(BEP-20)</a> *@
+									@*  <a href="/britglbl253adpnl/withdrawal-Request-Dp">WITHDRAWAL REQUEST DNIP(DRONE TOKEN)</a> *@
+									<a href="/britglbl253adpnl/Pending-withdrawal-Request"> PENDING WITHDRAWAL HISTORY </a>
+								</li>
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="withdrawal-history">WITHDRWAL HISTORY</a>
+								</li>
+								@*   <li class="submenu-item">
+                                    <a href="/britglbl253adpnl/pay-token-lit/0">PAY TOKEN</a>
+                                    <a href="/britglbl253adpnl/pay-token-lit/1">PAY TOKEN HISTORY</a>
+                                </li> *@
+							</ul>
+						</li>
+
+						@* <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-stack"></i>
+                                <span>Qr Update</span>
+                            </a>
+                            <ul class="submenu">
+                                <li class="submenu-item">
+                                    <a href="/britglbl253adpnl/create-poster"><i class="bx bx-right-arrow-alt"></i>Add QR</a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a href="/britglbl253adpnl/poster-history"><i class="bx bx-right-arrow-alt"></i>QR List</a>
+                                </li>
+                            </ul>
+                        </li> *@
+
+						@*  <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                        <i class="bi bi-stack"></i>
+                        <span>PAYMENT API </span>
+                        </a>
+                        <ul class="submenu ">
+                        <li class="submenu-item ">
+                        <a asp-area="Admin" asp-controller="ApiPayment" asp-action="AdminFundRequest">FUND REQUEST</a>
+                        </li>
+                        <li class="submenu-item ">
+                        <a asp-area="Admin" asp-controller="ApiPayment" asp-action="AdminFundHistory">FUND HISTORY</a>
+                        </li>
+                        <li class="submenu-item ">
+                        <a asp-area="Admin" asp-controller="ApiPayment" asp-action="OrderHistory">ORDER HISTORY</a>
+                        </li>
+                        </ul>
+                        </li> *@
+
+						<li class="sidebar-item  has-sub">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-stack"></i>
+								<span>SUPPORT</span>
+							</a>
+							<ul class="submenu ">
+								<li class="submenu-item ">
+									<a asp-controller="britglbl253adpnl" asp-action="Support-system">INBOX</a>
+								</li>
+								<li class="submenu-item ">
+									<a href="/britglbl253adpnl/Inbox-History/1"> INBOX HISTORY </a>
+
+								</li>
+								<li class="submenu-item ">
+									<a asp-controller="britglbl253adpnl" asp-action="Support-system-outbox">OUTBOX</a>
+								</li>
+
+							</ul>
+						</li>
+
+						<li class="sidebar-item  has-sub">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-stack"></i>
+								<span>PRIVACY</span>
+							</a>
+							<ul class="submenu ">
+								<li class="submenu-item ">
+									<a asp-controller="britglbl253adpnl" asp-action="Add-News">ADD NEWS</a>
+								</li>
+								<li class="submenu-item ">
+									<a asp-controller="britglbl253adpnl" asp-action="News-List"> NEWS LIST </a>
+								</li>
+
+
+							</ul>
+						</li>
+
+
+						@* <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                        <i class="bi bi-collection-fill"></i>
+                        <span>WITHDRAWL CLOSING</span>
+                        </a>
+                        <ul class="submenu ">
+                        <li class="submenu-item ">
+                        <a asp-area="Admin" asp-controller="Closing" asp-action="AutoWithdrawalROI"> CASHBACK </a>
+                        </li>
+                        <li class="submenu-item ">
+                        <a asp-area="Admin" asp-controller="Closing" asp-action="AutoWithdrawalLVL"> LEVEL </a>
+                        </li>
+                        </ul>
+                        </li>*@
+
+						@*<li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                        <i class="bi bi-stack"></i>
+                        <span>KYC </span>
+                        </a>
+                        <ul class="submenu ">
+                        <li class="submenu-item ">
+                        <a asp-area="Admin" asp-controller="AMember" asp-action="AKycStatus"> KYC STATUS </a>
+                        </li>
+                        <li class="submenu-item ">
+                        <a asp-area="Admin" asp-controller="AMember" asp-action="AKycHistroy"> APPROVE LIST </a>
+                        </li>
+                        </ul>
+                        </li>*@
+						@*
+                        <li class="sidebar-item  ">
+                        <a  asp-controller="AWallet" asp-action="updateaddress" class='sidebar-link'>
+                        <i class="bi bi-cash"></i>
+                        <span>UPDATE ADDRESS</span>
+                        </a>
+                        </li>
+                        *@
+
+						<li class="sidebar-item  ">
+							<a asp-controller="britglbl253adpnl" asp-action="Change-Password" class='sidebar-link'>
+								<i class="bi bi-cash"></i>
+								<span>CHANGE PASSWORD</span>
+							</a>
+						</li>
+
+						<li class="sidebar-item  ">
+							<a asp-controller="britglbl253adpnl" asp-action="Admin-Signout" class='sidebar-link'>
+								<i class="bi bi-file-earmark-medical-fill"></i>
+								<span> LOGOUT </span>
+							</a>
+						</li>
+
+					</ul>
+				</div>
+
+			</div>
+		</div>
+		<div id="main">
+
+			<header class="mb-3">
+				<a href="#" class="burger-btn d-block d-xl-none">
+					<i class="bi bi-justify fs-3"></i>
+				</a>
+			</header>
+
+			<main>
+
+				@RenderBody()
+
+			</main>
+
+		</div>
+
+
+		@*  <footer>
+        <div class="footer clearfix mb-0 text-muted">
+        <div class="float-start">
+        <p>2021 &copy; Mazer</p>
+        </div>
+        <div class="float-end">
+        <p>
+        Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a href="http://ahmadsaugi.com">A. Saugi</a>
+        </p>
+        </div>
+        </div>
+        </footer>*@
+
+	</div>
+	<script src="~/adminassets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	<script src="~/adminassets/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+	<script src="~/adminassets/js/pages/dashboard.js"></script>
+	<script src="~/adminassets/js/mazer.js"></script>
+
+
+
+	<script src="~/adminassets/vendors/jquery/jquery.min.js"></script>
+	<script src="~/adminassets/vendors/jquery-datatables/jquery.dataTables.min.js"></script>
+	<script src="~/adminassets/vendors/jquery-datatables/custom.jquery.dataTables.bootstrap5.min.js"></script>
+	<script src="~/adminassets/vendors/fontawesome/all.min.js"></script>
+	<!--- SweetAlert JS-->
+	<script src="~/SweetAlert/dist/sweetalert2.min.js"></script>
+	<script src="~/SCuteAlert/cute-alert.js"></script>
+
+
+
+
+	<!-- JS -->
+	<script src="https://cdn.jsdelivr.net/npm/cute-alert@1.0.1/cute-alert.js"></script>
+	<!-- javascript library for excel pdf and etc-->
+	<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+
+	<script>
+		let jquery_datatable = $("#table1").DataTable()
+
+		$("form").on("submit", function(){
+			$(this).find("input[type='submit']").prop("disabled", true).val("loading...")
+			$(this).find("button[type='submit']").prop("disabled", true).html("loading...")
+		})
+	</script>
+	
+	@RenderSection("Scripts", required: false)
+
+</body>
+
+</html>

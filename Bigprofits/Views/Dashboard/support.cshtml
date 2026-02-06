@@ -1,0 +1,51 @@
+﻿@model Bigprofits.Models.TableSupport
+
+@{
+    ViewData["Title"] = "Table-support";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["msg"] != null)
+{
+    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"] </div>
+}
+
+
+
+<div class="row justify-content-center ">
+    <div class="col-12 col-sm-6 ">
+        <!-- Start-->
+        <div class="card shadow mb-4 ">
+            <div class="card-header bg-primary py-3">
+                <h6 class="m-0 font-weight-bold text-white"> Enter Detail <span> </span></h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="support" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="control-label"> Subject </label>
+                        <input asp-for="MySubject" class="form-control bg-dark" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"> Details </label>
+                        @*  <input asp-for="MyDetails" class="form-control bg-dark" />*@
+                        <textarea asp-for="MyDetails" class="form-control bg-dark" rows="4">  </textarea>
+                    </div>
+
+                    <div class="form-group mt-3" style="text-align:center">
+                        <input type="submit" value="Save" class="btn bg-primary text-white" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- End-->
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts {
+
+}

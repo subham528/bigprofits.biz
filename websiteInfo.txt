@@ -1,0 +1,7 @@
+https://britglobal.live/britglbl253adpnl/sign-in
+userid: brtglb371usry
+pass: lvpsk@4gds1
+
+start/stop nodejs server on the server
+npx pm2 start index.js --name NodeApi
+npx pm2 stop NodeApi

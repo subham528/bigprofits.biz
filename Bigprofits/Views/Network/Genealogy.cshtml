@@ -1,0 +1,137 @@
+﻿@using System.Data
+@model DataSet
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Genealogy";
+    Layout = "~/views/shared/_Layout.cshtml";
+}
+
+<meta name="viewport" content="width=device-width, initial-scale=0.5">
+<link rel="stylesheet" href="https://assets.linnt.in/treant/css/treant.css" />
+<link rel="stylesheet" href="https://assets.linnt.in/treant/perfect-scrollbar/perfect-scrollbar.css" />
+<link rel="stylesheet" href="https://assets.linnt.in/treant/css/custom-tree.css" />
+
+<style>
+    body {
+        max-height: 100vh;
+    }
+
+    .Treant > .node {
+        width: 180px;
+        border: none;
+    }
+
+        .Treant > .node p {
+            z-index: 999;
+            line-height: 1.2;
+            color: #fffbff;
+        }
+
+
+  
+       
+
+    .Treant .collapsed .collapse-switch {
+        border: none;
+    }
+
+    .tooltip {
+        --bs-tooltip-max-width: none;
+    }
+
+    .card .bg-danger {
+        background: red !important;
+    }
+
+    .card .bg-success {
+        background: green !important;
+    }
+
+    .card .bg-default {
+        background: gray !important;
+    }
+
+    .Treant .node .collapse-switch {
+        background: #ff;
+        width: 30px;
+        height: 30px;
+        top: calc(100% - 20px);
+        left: 41%;
+        color: #9C27B0;
+        font-size: 16px;
+        background: #fff;
+        border: 2px solid #00d3d2;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 28px;
+    }
+</style>
+
+@if (TempData["msg"] != null)
+{
+    <div style="text-align: center; padding: 5px; color: #b7114e; font-weight: 900; margin-bottom: 10px">
+        @TempData["msg"]
+    </div>
+}
+
+<div class="card-body">
+   
+    <div class="row">
+        <div class="col-4 mb-4 text-center">
+            <h4>
+                Left Team : @ViewBag.leftTeam <br />
+                Left Active : @ViewBag.leftActive <br />
+            </h4>
+        </div>
+        <div class="col-4 text-center mb-4">
+            <h4>
+                <input type="text" id="txtSearch" class="form-control d-inline-block w-auto" placeholder="Enter Member ID">
+                <button type="button" id="btnSearch" class="btn btn-primary" onclick="search()">
+                    <i class="bi bi-search"></i>
+                </button>
+                <button type="button" id="btnClear" class="btn btn-danger" onclick="clearFilter()">
+                    <i class="bi bi-filter"></i>
+                </button>
+            </h4>
+        </div>
+        <div class="col-4 text-center">
+            <h4>
+                Right Team : @ViewBag.rightTeam <br />
+                Right Active : @ViewBag.rightActive <br />
+            </h4>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <div id="nodetree" style="max-height: 3000px; overflow-y: auto;"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @Html.Raw(ViewBag.chart_config)
+
+    <script src="https://assets.linnt.in/treant/js/raphael.js"></script>
+    <script src="https://assets.linnt.in/treant/js/treant.js"></script>
+    <script src="https://assets.linnt.in/treant/js/jquery.mousewheel.js"></script>
+    <script src="https://assets.linnt.in/treant/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+    <script>
+        new Treant(chart_config);
+
+        function search() {
+            if ($("#txtSearch").val().trim() == "") {
+                alert('Please enter memberId first.');
+            } else {
+                location.href = "Tree-structure?Id=" + $("#txtSearch").val().trim();
+            }
+        }
+
+        function clearFilter() {
+            $("#txtSearch").val(''); // Clear the input field
+            location.href = "Tree-structure"; // Refresh the page to reset the data
+        }
+
+        $(".Treant .collapse-switch").html("<i class='bi bi-arrow-down-circle'></i>");
+    </script>
+}

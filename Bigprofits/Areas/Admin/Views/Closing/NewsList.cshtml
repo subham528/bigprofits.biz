@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Bigprofits.Models.TblNews>
+
+@{
+    ViewData["Title"] = "NewsList";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+
+
+@if (TempData["nwupdate"] != null)
+{
+    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["nwupdate"] </div>
+}
+
+
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                NEWS LIST
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive" id="table1">
+                    <thead>
+                        <tr>
+                            <th>
+                                Sno
+                            </th>
+                            <th>
+                                Heading
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.News)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NewsDate)
+                            </th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+
+                                    @sno
+                                    @{
+                                        sno++;
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.News)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NewsDate)
+                                </td>
+                                <td>
+                                    <a class="btn btn-info" asp-action="NewsUpdate" asp-route-newsid="@item.NewsId">UPDATE</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger" asp-action="NewsUpdate" asp-route-deleteid="@item.NewsId">DELETE</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+
+

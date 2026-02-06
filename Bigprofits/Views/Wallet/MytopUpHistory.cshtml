@@ -1,0 +1,212 @@
+﻿@using System.Data
+@model DataSet
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Top Up  History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+
+
+@* <div class="col-md-6 mb-2">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Topup Wallet</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-0 d-flex justify-content-around text-primary">
+                <label class="text-center fs-16 mb-0">
+                    Total Credit
+                    <br />
+                    $<span>₹@income.AW_Credit?.ToString("0.00")</span>
+                </label>
+
+                <label class="text-center fs-16 mb-0">
+                    Total Debit
+                    <br />
+                    $<span>₹@income.AW_Debit?.ToString("0.00")</span>
+                </label>
+
+                <label class="text-center fs-16 mb-0">
+                    Available
+                    <br />
+                    $<span>₹@income.Available.ToString("0")</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</div> *@
+<div class="container-fluid">
+    <div class="card innerLink">
+        <a href="/account/topup-wallet-add">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Add Fund </h6>
+            </div>
+        </a>
+    </div>
+    <div class="card innerLink">
+        <a href="/account/add-wallet-fund">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Add Fund From Income</h6>
+            </div>
+        </a>
+    </div>
+
+    <div class="card innerLink">
+        <a href="/account/activate-from-topup-wallet">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Activation/ReTopUp </h6>
+            </div>
+        </a>
+    </div>
+
+    <div class="card innerLink active">
+        <a href="/account/topup-history">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">My Top Up</h6>
+            </div>
+        </a>
+    </div>
+    <div class="card innerLink">
+        <a href="/account/wallet-send-fund">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Fund Transfer </h6>
+            </div>
+        </a>
+    </div>
+    @* <div class="card innerLink">
+    <a href="/account/wallet-send-fund">
+    <div class="card-body p-2 text-center">
+    <h6 class="text-dark mb-0">P2P Transfer</h6>
+    </div>
+    </a>
+    </div>
+    <div class="card innerLink">
+    <a href="/account/wallet-received-fun">
+    <div class="card-body p-2 text-center">
+    <h6 class="text-dark mb-0">P2P Recived</h6>
+    </div>
+    </a>
+    </div> *@
+
+    <div class="card innerLink">
+        <a href="/account/wallet-summary">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Wallet History</h6>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12">
+        @if (TempData["success"] != null)
+        {
+            <div class="alert alert-primary">@TempData["success"]</div>
+        }
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">My Topup </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                        <thead>
+                            <tr>
+
+                                <th>
+                                    Sno
+                                </th>
+                                <th>
+                                    Member
+                                </th>
+
+                                <th>
+                                    Amount
+                                </th>
+                                <th>
+                                  Token  Amount
+                                </th>
+                                <th>
+                                    Transaction Info
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    ROI Status
+                                </th>
+                                <th>Token Status</th>
+                                <th>View</th>
+                                @* <th>Action</th> *@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sno2 = 1;
+                            }
+
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td>@sno2</td>
+                                    <td>@row["memberId"]</td>
+                                    <td>@("$" + Convert.ToDecimal(row["cmitReqAmount"]).ToString("0.00"))</td>
+                                    <td>@("$" + Convert.ToDecimal(row["usdtWalelt"]).ToString("0.00"))</td>
+
+                                    <td>Deposit By @row["hashId"]</td>
+
+                                    <td>@row["cmitsdate"]</td>
+                                    <td>
+                                        @if (row["cmitstatus"].ToString() == "1")
+                                        {
+                                            <span style="color:green">ACTIVE</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:red">INACTIVE</span>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (row["PlanNo"].ToString() == "0")
+                                        {
+                                            <span style="color:red">PENDING</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="color:green">SUCCESS</span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @if (row["PlanNo"].ToString() == "1")
+                                        {
+                                            <a class="btn btn-info" target="_blank" href="https://bscscan.com/tx/@row["fromaddress"]">View</a>
+                                        }
+                                    </td>
+                                 
+                                    @* <td>
+                                        @if (row["cmitstatus"].ToString() == "1" && row["isActive"].ToString() == "1")
+                                        {
+                                            <a class="btn btn-primary" href="/account/manage-request/@row["cmitId"]" onclick="return confirm('Are you sure?');">Capital Withdrawal</a>
+                                        }
+                                        
+                                    </td> *@
+
+                                </tr>
+                                sno2++;
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

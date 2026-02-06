@@ -1,0 +1,81 @@
+﻿
+@model Bigprofits.Models.CmitRequest
+@{
+    ViewData["Title"] = "MemberTopUp";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+@if (TempData["msg"] != null)
+{
+    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"] </div>
+}
+
+
+<div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;" id="showmsg"></div>
+
+
+<div class="row justify-content-center" style="margin-top: 12px;">
+    <div class="col-10 col-md-4">
+        <!-- Start-->
+        <div class="card shadow mb-4 ">
+            <div class="card-header bg-primary py-3">
+
+                <h6 class="m-0 font-weight-bold text-white"> TOP UP <span> </span></h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="isTopUpValid" method="post">
+                    <div style="text-align: center;padding: 5px;font-weight: 400;" id="UserName"> </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Enter Member ID</label>
+                        <input asp-for="MemberId" required class="form-control text-uppercase" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Amount ($)</label>
+                        <input asp-for="CmitReqAmount" placeholder="min 10" class="form-control" />
+                    </div>
+
+                    <div class="form-group mt-3 " style="text-align:center" id="topbtn">
+                        <input type="submit" value="TopUp" id="btnsubmit" class="btn bg-primary text-white" />
+                    </div>
+                   
+                    @* -------------------------- form method End ------------------------------------*@
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script>
+        $("#MemberId").keyup(function () {
+            if ($(this).val() != "") {
+                IsSponsorExist($(this).val());
+            }
+            else $("#UserName").val("");
+        })
+
+        function IsSponsorExist(memberId) {
+            try {
+                $.ajax({
+                    url: "/britglbl253adpnl/GetName/" + memberId,
+                    method: 'post',
+                    data: { memberId: memberId },
+                    dataType: "text",
+                    success: function (data) {
+                        console.log(data);
+                        $("#UserName").text(data);
+                    }
+                });
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    </script>
+
+}

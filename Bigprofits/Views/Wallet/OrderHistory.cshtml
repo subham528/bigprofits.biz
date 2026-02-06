@@ -1,0 +1,96 @@
+﻿@using System.Data
+@model DataSet
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "OrderHistory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+  
+}
+<div class="row">
+    <div class="col-12 col-sm-12">
+        @if (TempData["success"] != null)
+        {
+            <div class="alert alert-primary">@TempData["success"]</div>
+        }
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">My Topup </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                        <thead>
+                            <tr>
+
+                                <th>Sr. No</th>
+                                <th>Service</th>
+                                <th>Txn No</th>
+                                <th>Amount</th>
+                               
+                                <th>Account/Mobile</th>
+                                <th>Status</th>
+                                <th>Check Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sno2 = 1;
+                            }
+
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td>@sno2</td>
+                                    <td> @row["serviceType"]</td>
+                                    <td>@row["User_txn_no"]</td>
+                                    <td>
+                                        @{
+                                            var amount = row["amount"] != DBNull.Value ? Convert.ToDecimal(row["amount"]).ToString("0.00") : "N/A";
+                                        }
+                                        @amount
+                                    </td>
+                                    <td>@row["Account"]</td>
+                                   
+
+                                    <td>
+                                        @if (row["status"].ToString() == "SUCCESS")
+                                        {
+                                            <span style="color:#139a18">SUCCESS</span>
+                                        }
+                                        else if (row["status"].ToString() == "FAILED")
+                                        {
+                                            <span style="color:#f44336">FAILED</span>
+                                        }
+                                        else if (row["status"].ToString() == "PENDING")
+                                        {
+                                            <span style="color:#ed6606">PENDING</span>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (row["status"].ToString() == "SUCCESS")
+                                        {
+                                            <a class="btn btn-info" asp-action="Orderdetails" asp-route-Our_txn_no="@row["Our_txn_no"]">View</a>
+                                        }
+                                    </td>
+                                    <td>@row["odate"]</td>
+                                  
+                                 
+
+
+
+                                </tr>
+                                sno2++;
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

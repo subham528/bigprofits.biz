@@ -1,0 +1,110 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+
+@{
+    ViewData["Title"] = "MATCHING BONUS";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+            Reward Bonus
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap" id="datatable">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                Sno
+                            </th>
+                            <th>
+                               Memberid
+                            </th>
+                            @*  <th>
+                                    Direct
+                                </th>
+                                <th>
+                                     Self Package
+                                </th>
+                                <th>
+                                     Team Size
+                                </th>
+                                <th>
+                                     Team Volume
+                                </th>
+ *@
+                            <th>
+                                Reward
+                            </th>
+                            <th>
+                                Rank
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>@row["memberid"]</td>
+                                <td>@sno2</td>
+                                @*  <td>@String.Format("{0:0}", row["FinalIncome"])</td>
+
+                                    <td>@("$" + Convert.ToDecimal(row["Tds"]).ToString("0.00"))</td>
+                                    <td>@String.Format("{0:0}", row["rpcharge"])</td>
+
+                                    <td>@("$" + Convert.ToDecimal(row["AdminCrg"]).ToString("0.00"))</td> *@
+                                <td>@("$" + Convert.ToDecimal(row["RwrdIncome"]).ToString("0.00"))</td>
+
+                                <td>@row["RDescription"]</td>
+                                <td>@row["RDate"]</td>
+                            </tr>
+                            sno2++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#dt").hide()
+
+        $('#datatable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ]
+
+        });
+
+        $(".buttons-excel").append('&nbsp;<i class="fa fa-file-excel"></i>')
+        $(".buttons-pdf").append('&nbsp;<i class="fa fa-file-pdf"></i>')
+        $(".buttons-print").append('&nbsp;<i class="fa fa-print"></i>')
+
+    });
+
+</script>

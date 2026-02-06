@@ -1,0 +1,119 @@
+﻿@using System.Data
+@model DataSet
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "DownLine";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+
+
+
+@* <div class="col-md-12 mb-2 innerLinkWrap">
+
+    <div class="card innerLink ">
+        <a href="Direct-Member">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Direct Member</h6>
+            </div>
+        </a>
+    </div>
+    <div class="card innerLink">
+        <a href="/account/Tree-structure">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Genealogy</h6>
+            </div>
+        </a>
+    </div>
+    <div class="card innerLink active">
+        <a href="DownLine-Line">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Total Team</h6>
+            </div>
+        </a>
+    </div>
+
+
+</div> *@
+<div class="row">
+    <div class="col-12 col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Total Team</h3>
+            </div>
+            <div class="card-body">
+                <!-- Filter Section -->
+                 <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="positionFilter">Filter by Position </label>
+                        <select id="positionFilter" class="form-control" style="background-color: #274232;">
+                            <option value="">All</option>
+                            @foreach (var pos in Model.Tables[0].AsEnumerable().Select(r => r["refpos"].ToString()).Distinct())
+                            {
+                                <option value="@pos">@pos</option>
+                            }
+                        </select>
+                    </div>
+                </div> 
+
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>USER ID</th>
+                                 <th>POSITION</th> 
+                                <th>PACKAGE</th>
+                                <th>SPONSOR</th>
+                                <th>REGISTERED ON</th>
+                                <th>ACTIVATED ON</th>
+                                <th>LEVEL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sno2 = 1;
+                            }
+
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td>@sno2</td>
+                                    <td>@row["memLogId"]</td>
+                                     <td>@row["refpos"]</td> 
+                                    <td>@row["lvl1"]</td>
+                                    <td>@row["spoId"]</td>
+                                    <td>@row["memReg"]</td>
+                                    <td>@row["posDate"]</td>
+                                    <td>@row["lvl"]</td>
+                                </tr>
+                                sno2++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><!-- COL END -->
+</div><!-- ROW-5 END -->
+
+<script>
+    document.getElementById('positionFilter').addEventListener('change', function() {
+        var positionFilter = this.value.toLowerCase();
+        var tableRows = document.querySelectorAll('#data-table tbody tr');
+
+        tableRows.forEach(function(row) {
+            var position = row.cells[2].textContent.toLowerCase(); // "refpos" is in column 3 (index 2)
+
+            if (positionFilter === "" || position === positionFilter) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+

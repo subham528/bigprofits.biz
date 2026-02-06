@@ -1,0 +1,99 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+
+
+@{
+    ViewData["Title"] = "Topup History";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                @(ViewBag.Status == 0 ? "PAY TOKEN LIST" : "PAY TOKEN HISTORY")
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+
+                @if (ViewBag.Status == 0)
+                {
+                    <table class="table table-responsive text-nowrap text-center" id="table1">
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Member</th>
+                                <th>Package</th>
+                                <th>Payable Token</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sno2 = 1;
+                            }
+
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td>@sno2</td>
+                                    <td>@row["memName"] / @row["memberId"]</td>
+                                    <td>@("$" + Convert.ToDecimal(row["cmitReqAmount"]).ToString("0.00"))</td>
+                                    <td>@(Convert.ToDecimal(row["usdtWalelt"]).ToString("0.00") + "CPC")</td>
+                                    <td>@string.Format("{0:dd/MMMM/yyyy hh:mm tt}", row["cmitsDate"])</td>
+                                    <td><a class="btn btn-info" href="/britglbl253adpnl/pay-token/@row["cmitId"]">TOKEN</a></td>
+                                </tr>
+                                sno2++;
+                            }
+
+                        </tbody>
+                    </table>
+                }
+                else if (ViewBag.status == 1)
+                {
+                    <table class="table table-responsive text-nowrap text-center" id="table1">
+                        <thead>
+                            <tr>
+                                <th>Sno</th>
+                                <th>Member</th>
+                                <th>Package</th>
+                                <th>Payable Token</th>
+                                <th>Req Date</th>
+                                <th>Approve Date</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sno2 = 1;
+                            }
+
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td>@sno2</td>
+                                    <td>@row["memName"] / @row["memberId"]</td>
+                                    <td>@("$" + Convert.ToDecimal(row["amount"]).ToString("0.00"))</td>
+                                    <td>@(Convert.ToDecimal(row["tokenAmount"]).ToString("0.00") + " CPC")</td>
+                                    <td>@string.Format("{0:dd/MMMM/yyyy hh:mm tt}", row["cmitsDate"])</td>
+                                    <td>@string.Format("{0:dd/MMMM/yyyy hh:mm tt}", row["udate"])</td>
+                                    <td><a class="btn btn-info" target="_blank" href="https://bscscan.com/tx/@row["hashId"]">View</a></td>
+                                </tr>
+                                sno2++;
+                            }
+
+                        </tbody>
+                    </table>
+                }
+
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+

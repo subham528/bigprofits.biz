@@ -1,0 +1,119 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+
+@{
+    ViewData["Title"] = "ADailyROI";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
+                Daily Salary Income
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap" id="datatable">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                Sno
+
+                            </th>
+
+                            <th>
+                              Memberid
+                            </th>
+                            <th>
+                                reward No
+                            </th>
+
+                            @* <th>
+                                   Package
+                                </th> *@
+
+                            @*   <th>
+                                    Rate
+                                </th> *@
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Rank
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>@sno2</td>
+                                <td>@row["memberid"]</td>
+                                <td>@row["rewardId"]</td>
+                                @*   <td>@("$" + Convert.ToDecimal(row["package"]).ToString("0.00"))</td> *@
+
+
+                                @*  <td>@(Convert.ToDecimal(row["rpcharge"]).ToString("0.00") + "%")</td> *@
+                                <td>@("$" + Convert.ToDecimal(row["amount"]).ToString("0.00"))</td>
+
+                                <td>@row["rType"]</td>
+
+                                <td>@row["rdate"]</td>
+
+
+
+
+
+
+                            </tr>
+                            sno2++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#dt").hide()
+
+        $('#datatable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ]
+
+        });
+
+        $(".buttons-excel").append('&nbsp;<i class="fa fa-file-excel"></i>')
+        $(".buttons-pdf").append('&nbsp;<i class="fa fa-file-pdf"></i>')
+        $(".buttons-print").append('&nbsp;<i class="fa fa-print"></i>')
+
+    });
+
+</script>

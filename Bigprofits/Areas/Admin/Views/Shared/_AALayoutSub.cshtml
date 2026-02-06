@@ -1,0 +1,155 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	@* <meta name="viewport" content="width=device-width, initial-scale=1.0"> *@
+	@* <title> @TempData["ProjectName"] | @ViewData["Title"] </title> *@
+	<title>Support DashBoard</title>
+	<link rel="icon" type="image/png" href="/Images/favicon.png">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="~/adminassets/css/bootstrap.css">
+	<link rel="stylesheet" href="~/adminassets/vendors/iconly/bold.css">
+
+	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+	<META HTTP-EQUIV="Expires" CONTENT="-1">
+
+	<!---FOR SWEET ALERT-->
+	<link href="~/SweetAlert/dist/sweetalert2.min.css" rel="stylesheet">
+	<link href="~/SCuteAlert/style.css" rel="stylesheet">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<link rel="stylesheet" href="~/adminassets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+	<link rel="stylesheet" href="~/adminassets/vendors/bootstrap-icons/bootstrap-icons.css">
+	<link rel="stylesheet" href="~/adminassets/css/app.css">
+	<link rel="stylesheet" href="~/adminassets/vendors/jquery-datatables/jquery.dataTables.bootstrap5.min.css">
+	<link rel="stylesheet" href="~/adminassets/vendors/fontawesome/all.min.css">
+
+	<style>
+		table.dataTable td {
+			padding: 15px 8px;
+		}
+
+		.fontawesome-icons .the-icon svg {
+			font-size: 24px;
+		}
+
+		.logo-wrapper {
+			padding: 0px; /* Adjust padding if necessary */
+		}
+
+		/* .sidebar-header {
+							height: 150px;
+						} */
+
+		.searchForm {
+			display: flex;
+			margin-bottom: 20px;
+			padding: 10px;
+			background: #f3f3f3;
+			border-radius: 5px;
+			justify-content: center;
+			align-items: center;
+		}
+
+			.searchForm .form-control {
+				width: auto;
+				margin: 0 5px;
+			}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<div id="sidebar" class="active">
+			<div class="sidebar-wrapper active">
+				<div class="sidebar-header">
+					<div class="text-center">
+						<div class="logo-wrapper">
+							<a href="/winad458dx/home" class="logo-link">
+								<img src="~/images/logo.png" alt="logo" class="Logoimage" style="height: 90px" />
+							</a>
+						</div>
+						<div class="toggler">
+							<a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+						</div>
+					</div>
+				</div>
+				<div class="sidebar-menu">
+					<ul class="menu">
+						<li class="sidebar-item">
+							<a href="/winad458dx/topup/system-topup" class='sidebar-link'>
+								<i class="bi bi-grid-fill"></i>
+								<span>DASHBOARD</span>
+							</a>
+						</li>
+
+						@* <li class="sidebar-item has-sub">
+							<a href="#" class='sidebar-link'>
+								<i class="bi bi-stack"></i>
+								<span>SUPPORT</span>
+							</a>
+							<ul class="submenu">
+								<li class="submenu-item">
+									<a href="/winad458dx/topup/support-system">INBOX</a>
+								</li>
+								<li class="submenu-item">
+									<a href="/winad458dx/topup/inbox-history">INBOX HISTORY</a>
+								</li>
+								<li class="submenu-item">
+									<a href="/winad458dx/topup/outbox">OUTBOX</a>
+								</li>
+							</ul>
+						</li> *@
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div id="main">
+			<main>
+				@RenderBody()
+			</main>
+		</div>
+
+	</div>
+
+	<script src="~/adminassets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+	<script src="~/adminassets/js/bootstrap.bundle.min.js"></script>
+	@*  <script src="~/adminassets/vendors/apexcharts/apexcharts.js"></script>*@
+	<script src="~/adminassets/js/pages/dashboard.js"></script>
+	<script src="~/adminassets/js/mazer.js"></script>
+
+	<script src="~/adminassets/vendors/jquery/jquery.min.js"></script>
+	<script src="~/adminassets/vendors/jquery-datatables/jquery.dataTables.min.js"></script>
+	<script src="~/adminassets/vendors/jquery-datatables/custom.jquery.dataTables.bootstrap5.min.js"></script>
+	<script src="~/adminassets/vendors/fontawesome/all.min.js"></script>
+	<!--- SweetAlert JS-->
+	<script src="~/SweetAlert/dist/sweetalert2.min.js"></script>
+	<script src="~/SCuteAlert/cute-alert.js"></script>
+
+	<!-- javascript library for excel pdf and etc-->
+	<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+	<script>
+		let jquery_datatable = $("#table1").DataTable()
+
+		function MM_openBrWindow(theURL, winName, features) {
+			//window.parent.open(theURL, winName, features);
+			window.open(theURL, '_blank');
+		}
+	</script>
+
+	@RenderSection("Scripts", required: false)
+
+</body>
+
+</html>

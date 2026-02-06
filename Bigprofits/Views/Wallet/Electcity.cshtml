@@ -1,0 +1,187 @@
+﻿@using System.Data
+@model DataSet
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+
+
+@{
+    ViewData["Title"] = "Electricity Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row ">
+    <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6">
+        <div class="widget-stat card bg-info" style="background-image: linear-gradient(45deg, #882ba5, transparent);">
+            <div class="card-body  p-4">
+                <div class="media">
+
+                    <div class="media-body text-white text-center">
+                        <p class="mb-1">WALLET</p>
+                        <h3 class="text-white" style="font-size:23px"></h3>
+                        @*<h3 class="text-white" style="font-size:23px" > 0.00 </h3>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6">
+        <div class="widget-stat card bg-success" style="background-image: linear-gradient(45deg, #000, transparent);">
+            <div class="card-body p-4">
+                <div class="media">
+
+                    <div class="media-body text-white text-center">
+                        <p class="mb-1">TOTAL USED</p>
+                        <h3 class="text-white" style="font-size:23px"></h3>
+                        @*<h3 class="text-white" style="font-size:23px" > 0.00 </h3>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row justify-content-center" style="margin-top: 12px;">
+    <div class="col-10 col-md-5">
+        <!-- Start-->
+        <div class="card shadow mb-4 ">
+            <div class="card-header bg-primary py-3">
+                <h6 class="m-0 font-weight-bold text-white"> Eletricity Payment <span> </span></h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center" style="color:red;" id="UserName"> </div>
+                <div class=" ">
+                    <form asp-action="PrepaidDth" method="post">
+                        <div class="form-group ">
+                            <label class="control-label"> IVRS NO </label>
+                            <input  required class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Select Operator</label>
+                            <select class="form-control" required  asp-items="ViewBag.Op">
+                                <option value=""> select-operator  </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Unit(Only for MSED)</label>
+                            <input  class="form-control" placeholder="Enter bill Unit" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Amount</label>
+                            <input  required class="form-control" placeholder="Enter bill amount" />
+                        </div>
+
+                        <div class="form-group mt-3 " style="text-align:center" id="subt">
+                            <input type="submit" id="submmitBill" value="Pay" class="btn bg-primary text-white" />
+                        </div>
+                        <div class="form-group mt-3" style="text-align:center" id="pros">
+                            <p style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> wait processing... </p>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-10 col-md-5 d-none">
+        <!-- Start-->
+        <div class="card shadow mb-4 ">
+            <div class="card-header bg-primary py-3">
+                <h6 class="m-0 font-weight-bold text-white"> Fatch Electricitry Bill <span> </span></h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center" style="color:red;" id="cus"> </div>
+                <div class="text-center" style="color:red;" id="bi"> </div>
+                <div class="text-center" style="color:red;" id="erMag"> </div>
+                <div class="text-center" style="color:red;" id="ms"> </div>
+                <div class="form-group ">
+                    <label class="control-label"> IVRS NO </label>
+                    <input id="virs" required class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Select Operator</label>
+                    <select class="form-control" required id="opcod" asp-items="ViewBag.fatchbill">
+                        <option value=""> select-operator  </option>
+                    </select>
+                </div>
+
+                @*   <div class="form-group mt-3" style="text-align:center" id="subt">
+                <input id="submmitBill" value="fatch bill" class="btn bg-primary text-white" />
+                </div>
+                <div class="form-group mt-3" style="text-align:center" id="pros">
+                <p style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> wait processing... </p>
+                </div> *@
+
+
+
+            </div>
+        </div>
+        <!-- End-->
+    </div>
+
+</div>
+
+
+@section Scripts{
+
+    <script>
+        $(function () {
+            $("#subt").show();
+            $("#pros").hide();
+        })
+
+        $("#submmitBill").click(function () {
+
+            var ac = $("#AccountNo").val();
+            var opr = $("#OperatorCode").val();
+            if (ac != "" && opr != "") {
+                $("#subt").hide();
+                $("#pros").show();
+            }
+        })
+
+    </script>
+
+    <script>
+        //     $("#submmitBill").click(function () {
+        //
+        //         var vino = $("#virs").val();
+        //         var opno = $("#opcod").val();
+        //
+        //         if (vino == null || vino == "") $("#erMag").text("Please enter ivrs no.");
+        //         else if (opno == null || opno == "") $("#erMag").text("Please select operator");
+        //         else {
+        //             $("#subt").hide();
+        //             $("#pros").show();
+        //
+        //             $.ajax({
+        //                 url: "/InsPayUtility/BillFatching/",
+        //                 method: "post",
+        //                 data: { vino: vino, opno: opno },
+        //                 dataType: "Json",
+        //                 success: function (res) {
+        //                     console.log(res)
+        //                     var data = JSON.parse(res)
+        //                     console.log(data)
+        //                     if (data.status === "true") {
+        //                         $("#cus").text("Customer Name:- " + data.CustomerName);
+        //                         $("#bi").text("Bill Amount:- " + data.Billamount);
+        //                     }
+        //                     else {
+        //                         $("#ms").text("msg:- " + data.message);
+        //                     }
+        //                     $("#subt").show();
+        //                     $("#pros").hide();
+        //                 }
+        //             })
+        //         }
+        //
+        //     })
+        //
+        //
+        //
+    </script>
+
+
+}

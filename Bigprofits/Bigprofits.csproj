@@ -1,0 +1,216 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <CopyRefAssembliesToPublishDirectory>true</CopyRefAssembliesToPublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="NodeApi\node_modules\**" />
+    <Compile Remove="wwwroot\assets\vendors\**" />
+    <Compile Remove="wwwroot\DarkRedDash\**" />
+    <Compile Remove="wwwroot\Masterdesign\**" />
+    <Compile Remove="wwwroot\MasterTradersdesign\**" />
+    <Compile Remove="wwwroot\NextPDesign\**" />
+    <Compile Remove="wwwroot\ZanexDash\**" />
+    <Content Remove="NodeApi\node_modules\**" />
+    <Content Remove="wwwroot\assets\vendors\**" />
+    <Content Remove="wwwroot\DarkRedDash\**" />
+    <Content Remove="wwwroot\Masterdesign\**" />
+    <Content Remove="wwwroot\MasterTradersdesign\**" />
+    <Content Remove="wwwroot\NextPDesign\**" />
+    <Content Remove="wwwroot\ZanexDash\**" />
+    <EmbeddedResource Remove="NodeApi\node_modules\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendors\**" />
+    <EmbeddedResource Remove="wwwroot\DarkRedDash\**" />
+    <EmbeddedResource Remove="wwwroot\Masterdesign\**" />
+    <EmbeddedResource Remove="wwwroot\MasterTradersdesign\**" />
+    <EmbeddedResource Remove="wwwroot\NextPDesign\**" />
+    <EmbeddedResource Remove="wwwroot\ZanexDash\**" />
+    <None Remove="NodeApi\node_modules\**" />
+    <None Remove="wwwroot\assets\vendors\**" />
+    <None Remove="wwwroot\DarkRedDash\**" />
+    <None Remove="wwwroot\Masterdesign\**" />
+    <None Remove="wwwroot\MasterTradersdesign\**" />
+    <None Remove="wwwroot\NextPDesign\**" />
+    <None Remove="wwwroot\ZanexDash\**" />
+    <TypeScriptCompile Remove="NodeApi\node_modules\**" />
+    <TypeScriptCompile Remove="wwwroot\assets\vendors\**" />
+    <TypeScriptCompile Remove="wwwroot\DarkRedDash\**" />
+    <TypeScriptCompile Remove="wwwroot\Masterdesign\**" />
+    <TypeScriptCompile Remove="wwwroot\MasterTradersdesign\**" />
+    <TypeScriptCompile Remove="wwwroot\NextPDesign\**" />
+    <TypeScriptCompile Remove="wwwroot\ZanexDash\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.min.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.min.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.rtl.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.rtl.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.rtl.min.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-grid.rtl.min.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.min.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.min.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.min.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-reboot.rtl.min.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.min.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.min.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.min.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap-utilities.rtl.min.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap.min.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap.min.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap.rtl.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap.rtl.css.map" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap.rtl.min.css" />
+    <Content Remove="C:\Users\Epds\.nuget\packages\bootstrap\5.1.3\contentFiles\any\any\wwwroot\css\bootstrap.rtl.min.css.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Areas\Admin\Views\AMember\MemberUpdate.cshtml~RF5383b60.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\assets\js\bootstrap.min.js" />
+    <None Include="wwwroot\assets\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\assets\js\extensions\rater-js.js" />
+    <None Include="wwwroot\assets\js\extensions\sweetalert2.js" />
+    <None Include="wwwroot\assets\js\extensions\toastify.js" />
+    <None Include="wwwroot\assets\js\mazer.js" />
+    <None Include="wwwroot\assets\js\mazer.min.js" />
+    <None Include="wwwroot\assets\js\pages\dashboard.js" />
+    <None Include="wwwroot\assets\js\pages\form-editor.js" />
+    <None Include="wwwroot\assets\js\pages\form-element-select.js" />
+    <None Include="wwwroot\assets\js\pages\horizontal-layout.js" />
+    <None Include="wwwroot\assets\js\pages\ui-apexchart.js" />
+    <None Include="wwwroot\assets\js\pages\ui-chartjs.js" />
+    <None Include="wwwroot\assets\js\vendors.js" />
+    <None Include="wwwroot\SCuteAlert\cute-alert.js" />
+    <None Include="wwwroot\SCuteAlert\img\error.svg" />
+    <None Include="wwwroot\SCuteAlert\img\info.svg" />
+    <None Include="wwwroot\SCuteAlert\img\question.svg" />
+    <None Include="wwwroot\SCuteAlert\img\success.svg" />
+    <None Include="wwwroot\SCuteAlert\img\warning.svg" />
+    <None Include="wwwroot\SweetAlert\dist\sweetalert2.all.js" />
+    <None Include="wwwroot\SweetAlert\dist\sweetalert2.all.min.js" />
+    <None Include="wwwroot\SweetAlert\dist\sweetalert2.js" />
+    <None Include="wwwroot\SweetAlert\dist\sweetalert2.min.js" />
+    <None Include="wwwroot\SweetAlert\LICENSE" />
+    <None Include="wwwroot\SweetAlert\README.md" />
+    <None Include="wwwroot\SweetAlert\src\buttons-handlers.js" />
+    <None Include="wwwroot\SweetAlert\src\constants.js" />
+    <None Include="wwwroot\SweetAlert\src\globalState.js" />
+    <None Include="wwwroot\SweetAlert\src\instanceMethods.js" />
+    <None Include="wwwroot\SweetAlert\src\instanceMethods\close.js" />
+    <None Include="wwwroot\SweetAlert\src\instanceMethods\enable-disable-elements.js" />
+    <None Include="wwwroot\SweetAlert\src\instanceMethods\getInput.js" />
+    <None Include="wwwroot\SweetAlert\src\instanceMethods\hideLoading.js" />
+    <None Include="wwwroot\SweetAlert\src\instanceMethods\progress-steps.js" />
+    <None Include="wwwroot\SweetAlert\src\instanceMethods\update.js" />
+    <None Include="wwwroot\SweetAlert\src\instanceMethods\validation-message.js" />
+    <None Include="wwwroot\SweetAlert\src\instanceMethods\_destroy.js" />
+    <None Include="wwwroot\SweetAlert\src\keydown-handler.js" />
+    <None Include="wwwroot\SweetAlert\src\popup-click-handler.js" />
+    <None Include="wwwroot\SweetAlert\src\privateMethods.js" />
+    <None Include="wwwroot\SweetAlert\src\privateProps.js" />
+    <None Include="wwwroot\SweetAlert\src\scss\_animations.scss" />
+    <None Include="wwwroot\SweetAlert\src\scss\_body.scss" />
+    <None Include="wwwroot\SweetAlert\src\scss\_core.scss" />
+    <None Include="wwwroot\SweetAlert\src\scss\_mixins.scss" />
+    <None Include="wwwroot\SweetAlert\src\scss\_theming.scss" />
+    <None Include="wwwroot\SweetAlert\src\scss\_toasts-animations.scss" />
+    <None Include="wwwroot\SweetAlert\src\scss\_toasts-body.scss" />
+    <None Include="wwwroot\SweetAlert\src\scss\_toasts.scss" />
+    <None Include="wwwroot\SweetAlert\src\staticMethods.js" />
+    <None Include="wwwroot\SweetAlert\src\staticMethods\argsToParams.js" />
+    <None Include="wwwroot\SweetAlert\src\staticMethods\bindClickHandler.js" />
+    <None Include="wwwroot\SweetAlert\src\staticMethods\dom.js" />
+    <None Include="wwwroot\SweetAlert\src\staticMethods\fire.js" />
+    <None Include="wwwroot\SweetAlert\src\staticMethods\mixin.js" />
+    <None Include="wwwroot\SweetAlert\src\staticMethods\showLoading.js" />
+    <None Include="wwwroot\SweetAlert\src\staticMethods\timer.js" />
+    <None Include="wwwroot\SweetAlert\src\SweetAlert.js" />
+    <None Include="wwwroot\SweetAlert\src\sweetalert2.js" />
+    <None Include="wwwroot\SweetAlert\src\sweetalert2.scss" />
+    <None Include="wwwroot\SweetAlert\src\utils\aria.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\classes.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\defaultInputValidators.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\DismissReason.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\animationEndEvent.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\domUtils.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\getters.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\index.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\init.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\inputUtils.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\measureScrollbar.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\parseHtmlToContainer.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\render.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderActions.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderCloseButton.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderContainer.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderContent.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderFooter.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderIcon.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderImage.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderInput.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderPopup.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderProgressSteps.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\dom\renderers\renderTitle.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\getTemplateParams.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\iosFix.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\isNodeEnv.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\openPopup.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\params.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\scrollbarFix.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\setParameters.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\Timer.js" />
+    <None Include="wwwroot\SweetAlert\src\utils\utils.js" />
+    <None Include="wwwroot\SweetAlert\src\variables.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="jQuery" Version="3.6.0" />
+    <PackageReference Include="jQuery.Validation" Version="1.19.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.31" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="4.6.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Allimg\FundReqImage\" />
+    <Folder Include="wwwroot\Allimg\AadharImage\" />
+    <Folder Include="wwwroot\Allimg\PassBookImage\" />
+    <Folder Include="wwwroot\Allimg\PanCardImage\" />
+    <Folder Include="wwwroot\Allimg\ProfileImage\" />
+  </ItemGroup>
+
+</Project>

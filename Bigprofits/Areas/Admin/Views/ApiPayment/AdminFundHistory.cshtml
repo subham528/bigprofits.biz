@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Bigprofits.Models.TblApiPaymentReq>
+
+@{
+    ViewData["Title"] = "AdminFundHistory";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+<div class="Container-fluid">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Wallet History </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr role="row">
+                            <th>Sno</th>
+                            <th>Request Id</th>
+                            <th>Amount</th>
+                            <th>Req Date</th>
+                            <th>Status</th>
+                            <th>Approve Date</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr class="">
+                                <td class="">@i</td>
+                                <td class="">@item.AdminReqid</td>
+                                <td class="">@item.ReqAmount</td>
+                                <td class="">@item.ReqDate</td>
+                                <td class="">
+                                    @if (item.ReqStatus == 0)
+                                    {
+                                        <span class="text-warning">PENDING</span>
+                                    }
+                                    else if (item.ReqStatus == 1)
+                                    {
+                                        <span class="text-success">APPROVED</span>
+                                    }
+                                </td>
+                                <td class="">@item.ApproveDate</td>
+
+
+                            </tr>
+                            i++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,227 @@
+﻿@{
+    ViewData["Title"] = "AdminDashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+
+<div class="page-heading">
+    <h3> ADMIN DASHBOARD</h3>
+</div>
+
+<!--   ======================  Row Start ================================= -->
+<div class="row">
+    <div class="col-6 col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon purple">
+                            <i class="iconly-boldShow"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold">TOTAL MEMBER</h6>
+                        <h6 class="font-extrabold mb-0">@ViewBag.data.totalMember</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold">TOTAL ACTIVE MEMBER</h6>
+                        <h6 class="font-extrabold mb-0">  @ViewBag.data.totalpaid </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon green">
+                            <i class="iconly-boldAdd-User"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold"> TOTAL DEACTIVE MEMBER </h6>
+                        <h6 class="font-extrabold mb-0"> @ViewBag.data.totalunpaid </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon red">
+                            <i class="iconly-boldBookmark"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold"> TOTAL INCOME </h6>
+                        <h6 class="font-extrabold mb-0">  @ViewBag.data.totalIncome.ToString("0.00") </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--   ======================  Row End  ================================= -->
+<!--   ======================  Row Start ================================= -->
+<div class="row">
+   
+
+    <div class="col-6 col-lg-4 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold"> CASHBACK INCOME  </h6>
+                        <h6 class="font-extrabold mb-0">  @ViewBag.data.cashbackincome.ToString("0.00")   </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-4 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon purple">
+                            <i class="iconly-boldShow"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold"> DIRECT INCOME  </h6>
+                        <h6 class="font-extrabold mb-0">  @ViewBag.data.levelincome.ToString("0.00")     </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-4 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold"> BINARY INCOME </h6>
+                        <h6 class="font-extrabold mb-0"> @ViewBag.data.BinaryIncome.ToString("0.00")   </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--   ======================  Row End  ================================= -->
+<!--   ======================  Row Start ================================= -->
+<div class="row">
+    <div class="col-6 col-lg-4 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon purple">
+                            <i class="iconly-boldShow"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold"> Total Credit  </h6>
+                        <h6 class="font-extrabold mb-0"> @ViewBag.data.TotalCredit.ToString("0.00")   </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-4 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold"> Total Debit  </h6>
+                        <h6 class="font-extrabold mb-0">  @ViewBag.data.TotalDebit.ToString("0.00")    </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* <div class="col-6 col-lg-4 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon purple">
+                            <i class="iconly-boldShow"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold"> CTO Income  </h6>
+                         <h6 class="font-extrabold mb-0">  @ViewBag.data.CtoIncome.ToString("0.00")     </h6>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3 col-md-6" style="display:none">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="text-muted font-semibold"> BINARY INCOME </h6>
+                        <h6 class="font-extrabold mb-0"> @ViewBag.data.globelGT.ToString("0.00")  </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+<!--   ======================  Row End  ================================= -->
+@section Scripts {
+
+
+
+
+
+
+}

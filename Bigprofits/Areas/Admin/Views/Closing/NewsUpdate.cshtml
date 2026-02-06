@@ -1,0 +1,43 @@
+﻿@model Bigprofits.Models.TblNews
+
+@{
+    ViewData["Title"] = "NewsUpdate";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+<h1>NEWS UPDATE</h1>
+<hr />
+
+@if(ViewBag.nwmsg != null)
+{
+    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;" > @ViewBag.nwmsg </div>
+}
+
+<div class="row">
+      <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form asp-action="NewsUpdate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+            <div class="form-group">
+                <label asp-for="News" class="control-label"></label>
+                <input asp-for="News" class="form-control" />
+                <span asp-validation-for="News" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewsDate" class="control-label"></label>
+                <input asp-for="NewsDate" class="form-control" />
+                <span asp-validation-for="NewsDate" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="text-align: center;" >
+                <input type="submit"  value="UPDATE NEWS" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+   
+
+}

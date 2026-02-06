@@ -1,0 +1,119 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Ledarship  Income";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-md-12 mb-2 innerLinkWrap">
+    <div class="card innerLink">
+        <a href="/account/Reward-List">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Reward List</h6>
+            </div>
+        </a>
+    </div>
+    <div class="card innerLink">
+        <a href="/account/roi-income">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">ROI Income</h6>
+            </div>
+        </a>
+    </div>
+
+    
+
+    <div class="card innerLink">
+        <a href="/account/Level-Income">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Direct Income </h6>
+            </div>
+        </a>
+    </div>
+    @* <div class="card innerLink active">
+        <a href="/account/LeaderShip-Income">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">LeaderShip Achivement</h6>
+            </div>
+        </a>
+    </div> *@
+    <div class="card innerLink active">
+        <a href="/account/reward-Income">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Reward Income</h6>
+            </div>
+        </a>
+    </div>
+    <div class="card innerLink ">
+        <a href="/account/Bonus-Income">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Global Income</h6>
+            </div>
+        </a>
+    </div>
+  
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12">
+        <div class="card ">
+            <div class="card-header">
+                <h3 class="card-title mb-0"> Reward Income </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                        <thead>
+                            <tr>
+
+                                <th>
+                                    Sno
+                                </th>
+                                <th>
+                               Amount
+                                </th>
+                                <th>
+                                  Reward
+                                </th>
+
+                              
+                           
+                                <th>
+                                    Date
+                                </th>
+
+                               @*  <th>
+                                    Type
+                                </th> *@
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sno2 = 1;
+                            }
+
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td>@sno2</td>
+                                
+                                  
+
+                                    <td>@("$" + Convert.ToDecimal(row["amount"]).ToString("0.00"))</td>
+                                    <td>@row["rType"]</td>
+                                    <td>@row["rdate"]</td>
+                                @*     <td>@row["atype"]</td> *@
+
+                                </tr>
+                                sno2++;
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><!-- COL END -->
+</div><!-- ROW-5 END -->

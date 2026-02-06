@@ -1,0 +1,92 @@
+﻿@* @model IEnumerable<Bigprofits.Models.FundAmount>
+
+@{
+    ViewData["Title"] = "FundRequest";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+<div class="page-heading">
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                FUND REQUEST
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive" id="table1">
+                    <thead>
+                        <tr>
+                            <th>
+                                Sno
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MemberId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Amount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UtrNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TRXAmmount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Rdate)
+                            </th>
+
+                            <th>Approve </th>
+                            <th>Reject </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @sno
+                                    @{
+                                        sno++;
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MemberId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FundAmount1)
+                                </td>
+                                <td>
+                                    @if (item.UtrNo != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => item.UtrNo)
+                                    }
+                                    else
+                                    {
+                                        <p class=" text-danger"> NA </p>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TRXAmmount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Rdate)
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary" asp-action="ReqApproveOrReject" asp-route-Approve="@item.FundId" onclick="return confirm('Are you sure?');">Approve</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger" asp-action="ReqApproveOrReject" asp-route-Reject="@item.FundId" onclick="return confirm('Are you sure?');">Reject</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+ *@

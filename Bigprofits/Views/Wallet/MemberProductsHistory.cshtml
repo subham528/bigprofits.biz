@@ -1,0 +1,134 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+@using Microsoft.Extensions.Configuration;
+@{
+	int SrNo = 1;
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+	CommonMethods lib = new CommonMethods(configuration!);
+}
+<style>
+	a {
+		color: #007bff;
+		text-decoration: none;
+	}
+
+		a:hover {
+			color: #0056b3;
+			text-decoration: underline;
+		}
+
+</style>
+
+<div class="table-responsive">
+	<table id="data-table" class="table table-bordered text-wrap mb-2">
+		<thead>
+			<tr>
+				<th>Sr.No</th>
+				<th>Member</th>
+				<th>By Member</th>
+				<th>Order Id</th>
+				<th>Total Products</th>
+				<th>Items</th>
+				<th>Total BV</th>
+				<th>Total GST</th>
+				<th>Final Amount</th>
+				@*  <th>Order Status</th> *@
+				<th>Date</th>
+				@* <th>Approved Date</th> *@
+				@*                     <th>Details</th>
+                *@
+			</tr>
+		</thead>
+		<tbody id="productTableBody">
+			@foreach (DataRow agent in Model.Tables[0].Rows)
+			{
+				<tr>
+					<td>@SrNo</td>
+					<td>@agent["memberId"] / @agent["memName"]</td>
+					<td>@agent["User_Type"] / @agent["ByMemName"]</td>
+					<td>
+						@agent["OrderId"]
+						@* <a href="/account/Invoice/@agent["OrderId"]">
+                            @agent["OrderId"]
+                        </a> *@
+					</td>
+					<td>@agent["Total_Products"]</td>
+					<td>@agent["Items"]</td>
+					<td>@string.Format("{0:0.00}", agent["Total_Price"])</td>
+					<td>@string.Format("{0:0.00}", agent["Total_Gst"])</td>
+					<td>@string.Format("{0:0.00}", agent["Final_Amount"])</td>
+					@* @if (agent["Order_Status"].ToString() == "0")
+                {
+                <td>
+                <i style="color:orange" class="fa fa-circle"></i>
+                Pending
+                </td>
+                }
+                @if (agent["Order_Status"].ToString() == "1")
+                {
+                <td>
+                <i style="color:lime" class="fa fa-circle"></i>
+                Approved
+                </td>
+                }
+                @if (agent["Order_Status"].ToString() == "2")
+                {
+                <td>
+                <i style="color:red" class="fa fa-circle"></i>
+                Rejected
+                </td>
+                } *@
+					<td>@agent["Request_Date"]</td>
+					@* <td>@agent["Approved_Date"]</td> *@
+					@* <td>
+                <a href="@Url.Action("requested-product-details","adminzenovalife", new { OrderId = agent.OrderId })"><i class="fa fa-info"></i>Info</a>
+                </td> *@
+				</tr>
+				SrNo++;
+			}
+		</tbody>
+	</table>
+</div>
+
+
+@section Scripts {
+	<script>
+		var Model = @Html.Raw(ViewBag.Model);
+		$('#searchInput').on('input', function () {
+			var searchText = $(this).val();
+
+			var filteredProducts = Model.filter(function (product) {
+				return product.OrderId.includes(searchText);
+			});
+
+			renderFilteredProducts(filteredProducts);
+		});
+		console.log(Model);
+		function renderFilteredProducts(products) {
+
+
+			var prodHtml = "";
+			products.forEach((product, index) => {
+				prodHtml += `<tr>
+																																																																		 <td>${index + 1}</td>
+																																																																		<td>${product.Memberid}</td>
+																																																																		<td>${product.OrderId}</td>
+																																																																		<td>${product.TotalProducts}</td>
+																																																																		<td>${product.Items}</td>
+																																																																		<td>${product.TotalPrice.toFixed(2)}</td>
+																																																																		<td>${product.TotalGst}</td>
+																																																																		<td>${product.FinalAmount}</td>
+																																																																		<td>${product.OrderStatus}</td>
+																																																																		<td>${product.RequestDate}</td>
+																																																																		 <td>
+																																																																		  <a href="/adminzenovalife/requested-product-details/${product.OrderId}"><i class="fas fa-info"></i>Details</a>
+																																																																		 </td>
+																																																																		 </tr>`;
+			});
+			$("#productTableBody").html(prodHtml)
+		}
+	</script>
+}

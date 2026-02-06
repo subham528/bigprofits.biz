@@ -1,0 +1,177 @@
+﻿@model List<OrderDetail>
+@{
+    int SrNo = 1;
+    Layout = "_AALayout";
+}
+
+<style>
+    #searchInput {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+
+        /* Placeholder text color */
+        #searchInput::placeholder {
+            color: black;
+        }
+
+        /* Hover effect */
+        #searchInput:hover {
+            border-color: #66afe9;
+        }
+
+        /* Focus effect */
+        #searchInput:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+
+    .styled-table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        padding: 20px;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
+        border-radius: 12px; /* Added border radius */
+        overflow: hidden; /* To apply border radius properly */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: rgba(0, 0, 0, 0.15);
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        color: darkslateblue;
+        font-weight: normal;
+    }
+
+    tr:hover {
+        background-color: rgba(10, 5, 5, 0.15);
+        transition: background-color 0.3s ease;
+    }
+
+    .fa-edit {
+        color: blue;
+    }
+
+    #backToTopBtn {
+        display: block; /* Hidden by default */
+        position: fixed; /* Fixed/sticky position */
+        bottom: 20px; /* Place the button at the bottom of the page */
+        right: 20px; /* Place the button 30px from the right */
+        z-index: 99; /* Make sure it does not overlap */
+        color: white; /* Text color */
+        cursor: pointer; /* Add a mouse pointer on hover */
+        font-size: 24px; /* Increase font size */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for background and shadow */
+    }
+
+        #backToTopBtn:hover {
+            box-shadow: 0 0 15px 5px rgba(255, 255, 255, 1.6);
+        }
+
+</style>
+
+<div>
+    <input type="text" id="searchInput" placeholder="Search Products...">
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>Sr.No</th>
+                <th>Member Id</th>
+                <th>Order Id</th>
+                <th>Product Id</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>GST</th>
+                <th>GST Amount</th>
+                <th>Amount With GST</th>
+                <th>Final Price</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody id="productTableBody">
+            @foreach (var agent in Model)
+            {
+                <tr>
+                    <td>@SrNo</td>
+                    <td>@agent.Memberid</td>
+                    <td>@agent.OrderId</td>
+                    <td>@agent.ProductId</td>
+                    @*  <td>@agent.Product_Name</td> *@
+                    <td>@agent.Quantity</td>
+                    <td>@agent.Price!.Value.ToString("0.00")</td>
+                    <td>@agent.Gst%</td>
+                    <td>@agent.GstAmount!.Value.ToString("0.00")</td>
+                    <td>@agent.AmountWithGst!.Value.ToString("0.00")</td>
+                    <td>@agent.FinalPrice!.Value.ToString("0.00")</td>
+                    @*  <td><img src="/@agent.Product_Image" height="40" width="40" alt="requested-product_image" /></td> *@
+                </tr>
+                SrNo++;
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a class="btn btn-secondary" href="javascript:history.back()">Back</a>
+</div>
+<a href="#" id="backToTopBtn" title="Go to top">⬆️</a>
+@section Scripts {
+    <script>
+        var Model = @Html.Raw(ViewBag.model)
+        $('#searchInput').on('input', function () {
+            var searchText = $(this).val();
+
+            var filteredProducts = Model.filter(function (product) {
+                return product.ProductName.toLowerCase().includes(searchText.toLowerCase());
+            });
+
+            renderFilteredProducts(filteredProducts);
+        });
+        console.log(Model);
+        function renderFilteredProducts(products) {
+
+
+            var prodHtml = "";
+            products.forEach((product, index) => {
+                prodHtml += `<tr>
+                                <td>${index + 1}</td>
+                                <td>${product.ProductId}</td>
+                                <td>${product.ProductName}</td>
+                                <td>${product.ProductDescription}</td>
+                                <td>${product.Price.toFixed(2)}</td>
+                                <td>${product.Gst}</td>
+                                <td>${product.PriceWithGst}</td>
+                                <td>${product.FinalPrice}</td>
+                                <td>${product.Weight}</td>
+                                <td><img src="/${product.ProductImage}" height="50" width="50" alt="Product Image" /></td>
+                                <td>
+                                <a href="/britglbl253adpnl/edit-product/${product.Id}"><i class="fas fa-edit"></i>Edit</a>
+                                </td>
+                                </tr>`;
+            });
+            $("#productTableBody").html(prodHtml)
+        }
+    </script>
+}

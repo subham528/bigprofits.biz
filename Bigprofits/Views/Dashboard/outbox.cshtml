@@ -1,0 +1,26 @@
+﻿@using System.Data;
+@model IEnumerable<Bigprofits.Models.TableSupport>
+@{
+    ViewData["Title"] = "Outbox";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+
+
+
+<div class="row">
+    <div class="col-12 col-sm-12">
+
+        @foreach (var item in Model)
+        {
+            <div class="card mb-3">
+                <div class='card-body'>
+                    <p><b>Subject</b><br> @Html.DisplayFor(modelItem => item.MySubject)</p>
+                    <p><b class="text-info">Admin Reply</b><br>@Html.DisplayFor(modelItem => item.MyDetails)</p>
+                    <p class="text-primary text-end mb-0">@Html.DisplayFor(modelItem => item.Sdate) &nbsp;  &nbsp; @(item.MyStatus == 1 ? Html.Raw("<b class='text-success'>Read</b>") : Html.Raw("<b class='text-danger'>Unread</b>"))</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

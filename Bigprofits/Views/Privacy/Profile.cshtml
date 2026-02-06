@@ -1,0 +1,97 @@
+﻿@model Bigprofits.Models.MemberInfo
+
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    hr {
+        border-top: 1px solid #121010fa;
+    }
+</style>
+
+
+
+
+@if (TempData["msg"] != null)
+{
+
+    <div class="alert alert-success">@TempData["msg"] </div>
+    
+}
+
+
+<div class="container-fluid " >
+   
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-white" style="color:green">Profile Update</h6>
+
+        </div>
+        <div class="card-body">
+            <form asp-action="Profile" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="MemId" />
+
+                <!-- Form Fields -->
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <label class="fw-bold">Member ID</label>
+                        <input asp-for="MemberId" readonly class="form-control w-full border rounded-lg py-2 px-3" />
+                        <span asp-validation-for="MemberId" class="text-danger"></span>
+                    </div>
+                   @*  <div class="col-12 mb-3">
+                        <label class="fw-bold">Username</label>
+                        <input asp-for="MemName" readonly class="form-control w-full border rounded-lg py-2 px-3" />
+                        <span asp-validation-for="MemName" class="text-danger"></span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="fw-bold">Mobile</label>
+                        <input asp-for="MemMobile" readonly value="@Model.MemMobile"
+                               class="form-control w-full border rounded-lg py-2 px-3" />
+                        <span asp-validation-for="MemMobile" class="text-danger"></span>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="fw-bold">Email ID</label>
+                        <input asp-for="MemEmail" value="@Model.MemEmail" readonly
+                               class="form-control w-full border rounded-lg py-2 px-3" />
+                        <span asp-validation-for="MemEmail" class="text-danger"></span>
+                    </div> *@
+                    <div class="col-12 mb-3">
+                        <label class="fw-bold">Wallet Address USDT (BEP-20)</label>
+                        <input asp-for="MemAddress" value="@Model.MemAddress"
+                               class="form-control w-full border rounded-lg py-2 px-3" />
+                        <span asp-validation-for="MemAddress" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn bg-primary text-white">
+                        <i class="fa-solid fa-save"></i> Save
+                    </button>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div class="form-group text-center">
+    <a asp-controller="Dashboard" asp-action="Dashboard">Back to Home</a>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script>
+        if ($('#MemAddress').val().trim() != '') $('#MemAddress').attr('readonly', 'readonly')
+           if ($('#MemnominiAdd').val().trim() != '') $('#MemnominiAdd').attr('readonly', 'readonly')
+
+</script>
+}

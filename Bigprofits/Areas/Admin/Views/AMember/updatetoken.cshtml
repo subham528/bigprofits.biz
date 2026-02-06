@@ -1,0 +1,41 @@
+﻿@using System.Data
+@using Microsoft.Extensions.Configuration;
+@model Bigprofits.Models.UserMaster
+@using Bigprofits.Common;
+
+@{
+    ViewData["Title"] = "updateToken";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+
+    
+}
+
+
+
+<div class="container mt-4">
+    <h4 class="mb-3 ">UPDATE RATE </h4>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form action="/britglbl253adpnl/update-token" method="post">
+        
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label style="color:white">Token Price</label>
+            <input asp-for="TokenPrice" class="form-control" />
+            <span asp-validation-for="TokenPrice" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update</button>
+    </form>
+</div>

@@ -1,0 +1,170 @@
+﻿@using System.Data
+@using Microsoft.Extensions.Configuration;
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "DeactivateMember";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+
+    var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+    CommonMethods lib = new CommonMethods(configuration!);
+}
+
+@if (TempData["msg"] != null)
+{
+    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;">@TempData["msg"] </div>
+}
+
+<div class="page-heading">
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                BLOCK MEMBER
+            </div>
+            
+            <div class="card-body mt-3 overflow-auto">
+                <form action="/britglbl253adpnl/member-list-block" method="get" class="searchForm mb-1">
+                    <select name="type" id="type" class="form-control">
+                        <option value="">Search-Type</option>
+                        <option value="userId">Member ID</option>
+                        <option value="loginId">Login ID</option>
+                        <option value="name">Name</option>
+                        <option value="sponsor">Sponser Id</option>
+                        <option value="address">Wallet</option>
+                        @* <option value="mobile">Mobile</option>
+                        <option value="email">Email</option> *@
+                        <option value="regDate">Registration Date</option>
+                        <option value="activeDate">Activation Date</option>
+                    </select>
+                    <input name="value" id="value" class="form-control" placeholder="Enter value" value="@ViewBag.value">
+
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <a href="/britglbl253adpnl/member-list-block" class="btn btn-danger form-control">Clear Filter</a>
+                </form>
+
+                <div class="text-end">
+                    <a class="btn btn-warning m-2" onclick="callthepage()">UnBlock</a>
+                </div>
+
+                @if (Model != null && Model.Tables.Count > 0 && Model.Tables[0].Rows.Count > 0)
+                {
+                    <table class="table table-responsive text-nowrap text-center" id="datatable">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>MemberId</th>
+                                @* <th>Member Info</th> *@
+                                <th>Password</th>
+                                <th>Name</th>
+                                <th>Sponsor</th>
+                                <th>Address</th>
+                                <th>Registration Date</th>
+                                <th>Activation Date</th>
+                                <th>Package</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td>  <input class="form-check-input me-2" type="checkbox" value="" onclick="checkBoxChecked('@row["MemberId"]')" id="flexCheckDefault">@row["srNo"]</td>
+                                    <td>
+                                        @if (row["PosDate"].ToString() == "")
+                                        {
+                                            <div class="cate" style="width: 100%;background: red;padding: 5px;border-radius: 5px;color: white;">
+                                                @row["MemberId"]
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="cate" style="width: 100%;background: green;padding: 5px;border-radius: 5px;color: white;">
+                                                @row["MemberId"]
+                                            </div>
+                                        }
+                                    </td>
+                                    @* <td>
+                                        <a class="btn btn-info" target="_blank" asp-action="MemberDashboard" asp-controller="AMember" asp-route-MemId="@row["MemId"]">Go</a>
+                                    </td> *@
+                                    <td>@lib.Decrypt(@row["MemLogPass"].ToString()!)</td>
+                                    <td>@row["MemName"]</td>
+                                    <td>@row["spoName"] / @row["SpoId"]</td>
+                                    <td>@lib.Decrypt(@row["MemAddress"].ToString()!)</td>
+                                    <td>@row["MemReg"]</td>
+                                    <td>@row["PosDate"]</td>
+                                    <td>@("$" + Convert.ToDecimal(row["memPackageValue"]).ToString("0.00"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <ul class="pagination mt-3">
+                        @Html.Raw(ViewBag.pgnHtml)
+                    </ul>
+                }
+                else
+                {
+                    <div class="alert alert-warning">No data found.</div>
+                }
+
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+
+
+@section Scripts {
+    <script>
+        $("#type").change(function () {
+            var type = $("#type").val().toLowerCase();
+
+            if (type.includes("date")) {
+                $("#value").attr("type", "date");
+            } else {
+                $("#value").attr("type", "text");
+            }
+        });
+
+        var array = new Array();
+        function checkBoxChecked(id) {
+            var index = array.indexOf(id);
+            if (index == -1) {
+                array.push(id);
+            } else {
+                array.splice(index, 1);
+            }
+            console.log('Check Box ' + array.length + ' Clicked');
+        }
+
+        function callthepage() {
+            if (array.length > 0) {
+                var confirmation = confirm("Are you sure you want to UnBlock This MemberId?");
+                if (confirmation) {
+                    $.ajax({
+                        url: "/britglbl253adpnl/member-Unblock",
+                        method: 'POST',
+                        data: { id: array.toString() },
+                        dataType: "text",
+                        success: function (data) {
+                            console.log(data);
+                            location.href = "/britglbl253adpnl/member-list-block";
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("Error: " + error);
+                        }
+                    });
+                } else {
+                    console.log("Action canceled by the user.");
+                }
+            } else {
+                alert("No Row is selected!!");
+            }
+        }
+    </script>
+
+
+}

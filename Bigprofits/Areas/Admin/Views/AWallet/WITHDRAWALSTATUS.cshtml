@@ -1,0 +1,68 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+
+
+@{
+    ViewData["Title"] = "TODAY WITHDRAWAL  HISTROY";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                TOTAL @ViewBag.staus WITHDRAWAL  HISTROY
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap text-center" id="table1">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                Sno
+                            </th>
+                            <th>Member</th>
+                            <th>Withdrawal</th>
+                            @*    <th>Type</th> *@
+                            @*      <th>Admin Charge</th> *@
+                            <th>Payable Amount</th>
+                            <th>Date</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>@sno2</td>
+                                <td> @row["memberid"]</td>
+                                <td> @row["withdrawal"]</td>
+
+                                @*          <td>@(Convert.ToInt16(row["DirectIncome"]) == 0 ? "INCOME" : "CAPITAL")</td> *@
+                                @*   <td>@string.Format("{0:0.00}", row["adminCharge"])</td> *@
+                                <td>@string.Format("{0:0.00}", row["details"]) @row["wType"]</td>
+                                <td>@string.Format("{0:dd/MMMM/yyyy hh:mm tt}", row["wdlDate"])</td>
+
+
+                            </tr>
+                            sno2++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+

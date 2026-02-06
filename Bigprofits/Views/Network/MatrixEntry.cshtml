@@ -1,0 +1,98 @@
+﻿@using System.Data
+@using Bigprofits.Common
+@using Microsoft.Extensions.Configuration
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+    CommonMethods lib = new CommonMethods(configuration!);
+    ViewBag.HideLoader = true;
+    // Assume matrixNo is passed from controller (e.g., ViewBag.matrixNo)
+    int matrixNo = ViewBag.matrixNo ?? 1;
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+<style>
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table-bordered {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .bg-primary {
+        background-color: #033c40 !important;
+        color: white;
+    }
+
+    .text-black {
+        color: rgb(75, 69, 69) !important;
+    }
+
+    @@media (max-width: 768px) {
+        .table
+
+    {
+        font-size: 0.9rem;
+    }
+
+    }
+</style>
+
+<div class="card animate__animated animate__fadeInUp">
+    <div class="card-header bg-primary text-center">
+        <h4 class="card-title mb-0 text-white">@ViewBag.title</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                <thead class="bg-primary">
+                    <tr>
+                          <th>Slot</th>
+                        <th>Member ID</th>
+                        <th>Rank</th>
+                        <th>Members</th>
+                        <th>View Members</th>
+                    </tr>
+                </thead>
+                <tbody id="data-table-body">
+                    @{
+                        int sno = 1;
+                    }
+                    @if (ViewBag.data != null && ViewBag.data.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in ViewBag.data.Rows)
+                        {
+                            <tr id="row-@sno" class="data-row">
+                                <td>@row["EntryMemberId"]</td>
+                                <td>@ViewBag.member</td>
+                                <td>@(row["etype"].ToString() == "SELF" ? "Auto Level Bonus" : "Global Rank Bonus")</td>
+                                <td>@row["total"]</td>
+                                <td>
+                                    <a href="/account/pool-downline/@row["EntryMemberId"]/@row["etype"]/1">View</a>
+                                </td>
+                            </tr>
+                            sno++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No downlines found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

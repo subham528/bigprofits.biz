@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Closing";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+<h3 style="text-align:center;background: #296ea9;color: white;padding: 5px;border-radius: 10px;"> DAILY MINING </h3>
+<hr />
+
+@if (ViewBag.clo != null)
+{
+    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> Last Closing - @ViewBag.clo </div>
+}
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form asp-action="DailyClosing" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group" style="text-align:center">
+                <input type="submit" value="DAILY MINING" class="btn btn-primary" style="padding: 12px;margin-top: 120px;" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+
+
+    @if (ViewBag.daily != null)
+    {
+
+
+        <script>
+            Swal.fire({
+                title: ' @ViewBag.daily ',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            })
+        </script>
+
+        // <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;" >  @ViewBag.daily </div>
+    }
+
+
+
+}
+

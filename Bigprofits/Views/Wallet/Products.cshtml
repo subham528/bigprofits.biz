@@ -1,0 +1,453 @@
+﻿@using System.Data
+@{
+    ViewData["Title"] = "TopUp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    /* Navbar Styling */
+    .custom-navbar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Center alignment for better UX */
+        gap: 10px; /* Space between category boxes */
+        padding: 10px;
+        background-color: #f3f3f3;
+    }
+
+    .custom-menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Dropdown Box */
+    .custom-dropdown {
+        position: relative;
+        border: 1px solid #6D965E;
+        border-radius: 6px;
+        padding: 10px;
+        text-align: center;
+        background-color: #ffffff;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: background-color 0.3s ease, width 0.3s ease;
+        flex: 1 1 auto; /* Allow categories to grow/shrink dynamically */
+        min-width: 160px; /* Minimum width for small categories */
+        max-width: 220px; /* Maximum width for large categories */
+    }
+
+        /* Default Active Category */
+        .custom-dropdown.active {
+            background-color: #2196f3;
+            color: #fff;
+        }
+
+        /* Category Icon */
+        .custom-dropdown .category-icon {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #6D965E;
+        }
+
+        /* Category Link */
+        .custom-dropdown .custom-nav-link {
+            text-decoration: none;
+            color: black;
+            font-size: 14px;
+            white-space: nowrap; /* Prevent wrapping of category name */
+        }
+
+        /* Dropdown Content */
+        .custom-dropdown .custom-dropdown-content {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            z-index: 1;
+            min-width: 160px; /* Fixed width for dropdown content */
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Show on Hover */
+        .custom-dropdown:hover .custom-dropdown-content {
+            display: block;
+        }
+
+    /* Subcategory Links */
+    .custom-dropdown-content a {
+        color: black;
+        padding: 8px 12px;
+        display: block;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+        .custom-dropdown-content a:hover {
+            background-color: #2196f3;
+        }
+
+    /* Mobile Responsiveness */
+    @@media screen and (max-width: 768px) {
+        .custom-navbar {
+            display: block; /* Stack the categories vertically on mobile */
+            text-align: center;
+        }
+
+        .custom-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .custom-dropdown {
+            width: 90%; /* Full width for mobile view */
+            margin-bottom: 10px; /* Space between categories */
+        }
+
+        .category-icon {
+            font-size: 18px; /* Smaller icon size for mobile */
+        }
+
+        .custom-nav-link {
+            font-size: 16px; /* Adjust font size for better readability */
+        }
+        /* Ensure the dropdown content fits well on mobile */
+        .custom-dropdown-content {
+            min-width: 100%; /* Full-width dropdown on mobile */
+        }
+    }
+</style>
+
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-success mb-3">
+        <strong>Success!!</strong>@TempData["msg"]
+    </div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger mb-3">
+        <strong>Error!!</strong>@TempData["error"]
+    </div>
+}
+<style>
+    /* --- Desktop View: Horizontal Navbar --- */
+    .custom-navbar {
+        display: flex;
+        justify-content: center; /* Center align */
+        align-items: center;
+        background: #ffffff;
+        padding: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+
+    .custom-menu {
+        display: flex;
+        flex-direction: row;
+        gap: 15px; /* Space between items */
+    }
+
+    .custom-dropdown {
+        position: relative;
+    }
+
+    .custom-nav-link {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        font-size: 14px;
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+        .custom-nav-link:hover {
+            background: #e9ecef;
+        }
+
+    .category-icon {
+        margin-right: 5px;
+        font-size: 16px;
+    }
+
+    .custom-dropdown-content {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 150px;
+        background: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        z-index: 1000;
+    }
+
+    .custom-dropdown:hover .custom-dropdown-content {
+        display: block;
+    }
+
+    /* --- Mobile View: Stack the Buttons --- */
+    @@media (max-width: 768px) {
+        .custom-navbar {
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .custom-menu {
+            flex-direction: column;
+            gap: 10px; /* Space between stacked buttons */
+            width: 100%;
+        }
+
+        .custom-dropdown {
+            width: 90%;
+            text-align: center;
+        }
+
+        .custom-nav-link {
+            justify-content: center;
+            font-size: 12px;
+            padding: 6px 10px; /* Smaller padding */
+        }
+
+        .category-icon {
+            font-size: 14px;
+        }
+
+        .custom-dropdown-content {
+            position: static;
+            width: 100%;
+            display: none;
+        }
+
+        .custom-dropdown:hover .custom-dropdown-content {
+            display: block;
+        }
+    }
+</style>
+<style>
+    /* --- Parent Container: Center Align --- */
+    #productList {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Center cards */
+        gap: 20px; /* Space between cards */
+    }
+
+    /* --- Card Style --- */
+    .p-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #ffffff;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        min-height: 380px; /* Ensures uniform height */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+        .p-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- Image Styling --- */
+        .p-card img {
+            width: 100%;
+            height: 180px; /* Fixed height for consistency */
+            object-fit: cover; /* Ensures proper cropping */
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+    /* --- Card Content Styling --- */
+    .dish-list-text {
+        text-align: center;
+        padding: 10px;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .card-price,
+    .card-weight {
+        font-size: 14px;
+        color: #666;
+    }
+
+    /* --- "Add to Cart" Button --- */
+    .btn-primary {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 0 0 10px 10px;
+    }
+
+        .btn-primary i {
+            margin-right: 5px;
+        }
+
+    /* --- Responsive Fixes --- */
+    @@media (max-width: 768px) {
+        .col-md-4 {
+            width: 100%; /* Full width on small screens */
+        }
+
+        .p-card {
+            min-height: auto;
+        }
+    }
+</style>
+
+<div class="custom-navbar">
+    <div class="custom-menu">
+        @foreach (var category in ViewBag.CategoryList)
+        {
+            var iconClass = category.CatName switch
+            {
+                "TRENDING" => "fa fa-fire",
+                "Immunity Booster" => "fa fa-heartbeat",
+                "Childs" => "fa fa-child",
+                "Pleasure Enhancement" => "fa fa-smile",
+                "Drinking Herbs" => "fa fa-leaf",
+                "Spices" => "fa fa-pepper-hot",
+                _ => "fa fa-folder"
+            };
+
+            <div class="custom-dropdown">
+                <a class="custom-nav-link dropdown-toggle" href="#" id="categoryDropdown_@category.Id" role="button" aria-expanded="false">
+                    <i class="category-icon @iconClass"></i>
+                    <strong>@category.CatName</strong>
+                </a>
+
+                <div class="custom-dropdown-content">
+                    @foreach (var subCategory in ViewBag.CategorySubCategoryMap[category.CatName])
+                    {
+                        <a href="@Url.Action("products", "account", new { subCategoryId = subCategory.Id })">
+                            @subCategory.SubCatName
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<div class="row d-flex" id="productList">
+    @foreach (DataRow product in ViewBag.data.Rows)
+    {
+
+
+        <div class="col-md-4 mb-3">
+            <div class="card p-card position-relative">
+                <a data-bs-target="#exampleModalToggle_@product["Product_Id"]" data-bs-toggle="modal">
+                    <img src="/@product["Product_Image"]" alt="dish-menu" />
+                    <div class="dish-list-text card-body p-2">
+                        <h4 class="card-title">@product["Product_Name"]</h4>
+                        <input type="hidden" value="@product["Product_Id"]" />
+                        <h5 class="fs-3 text-warning">₹@string.Format("{0:0}", product["Final_Price"])</h5>
+
+                        <h5 class="card-price">BV : ₹@string.Format("{0:0}", product["Price"])</h5>
+                        <h5 class="card-weight">Net Weight : @product["Weight"]</h5>
+
+
+                    </div>
+                </a>
+                <a href="/account/add-cart?ProductId=@product["Product_Id"]" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        var Model = @Html.Raw(ViewBag.Model);
+        $('#searchInput').on('input', function () {
+            var searchText = $(this).val();
+
+            var filteredProducts = Model.filter(function (product) {
+                return product.ProductName.toLowerCase().includes(searchText.toLowerCase());
+            });
+
+            renderFilteredProducts(filteredProducts);
+        });
+        console.log(Model);
+        function renderFilteredProducts(products) {
+
+            var prodHtml = "";
+            products.forEach(product => {
+                prodHtml += `
+                                                         <div class="modal fade" id="exampleModalToggle_${product.ProductId}" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                <div class="modal-content text-center">
+                                                                    <div class="modal-header">
+                                                                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Product Details</h1>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="d-flex justify-content-between align-content-between">
+                                                                        <div class="mt-3 col-6">
+                                                                            <h5><strong>PId:</strong> ${product.ProductId}</h5><br />
+                                                                            <img class="image" src="/${product.ProductImage}" alt="${product.ProductName}" />
+                                                                            <h5>${product.ProductName}</h5>
+                                                                            <h5>₹${product.Price.toFixed(2)}</h5>
+                                                                            <h5>Bv :${product.ProductBv}</h5>
+                                                                            <h5>${product.Weight}</h5>
+                                                                            <hr style="height:1px;" />
+                                                                            <div class="mt-5 mb-5">
+                                                                                <div>
+                                                                                    <a href="/account/add-cart?ProductId=${product.ProductId}">
+                                                                                        <button class="btn btn-outline-primary"><i class="fa fa-shopping-cart"></i>&nbsp;Add To Cart</button>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="mt-3 col-6">
+                                                                            <div class="row mb-2">
+                                                                                <h6 style="overflow-y:auto"><strong>Description:</strong> ${product.ProductDescription}</h6>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-4 mb-3">
+                                                            <div class="card p-card position-relative">
+                                                                <a data-bs-target="#exampleModalToggle_${product.ProductId}" data-bs-toggle="modal">
+                                                                    <img src="/${product.ProductImage}" alt="${product.ProductName}" />
+                                                                    <div class="dish-list-text card-body p-2">
+                                                                        <h4 class="card-title">${product.ProductName}</h4>
+                                                                        <input type="hidden" value="${product.ProductId}" />
+                                                                        <h5 class="card-price">₹${product.Price.toFixed(2)}</h5>
+                                                                        <h5 class="card-weight">BV: ${product.ProductBv.toFixed(2)}</h5>
+                                                                        <h5 class="card-weight">${product.Weight}</h5>
+                                                                    </div>
+                                                                </a>
+                                                                <a href="/account/add-cart?ProductId=${product.ProductId}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                                            </div>
+                                                        </div>
+                                                        `;
+            });
+            $("#productList").html(prodHtml)
+        }
+    </script>
+}
+
+
+

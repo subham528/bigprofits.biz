@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Order Details";
+    var orderId = ViewData["OrderId"] as string;
+    var status = ViewData["Status"] as string;
+    var statusClass = ViewData["StatusClass"] as string;
+    var statusIcon = ViewData["StatusIcon"] as string;
+    var service = ViewData["Service"] as string;
+    var amount = ViewData["Amount"] as string;
+    var number = ViewData["Number"] as string;
+    var transactionStatus = ViewData["TransactionStatus"] as string;
+    var transactionDateTime = ViewData["TransactionDateTime"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="path/to/your/styles.css">
+</head>
+<body>
+    <header>
+        <!-- Include your header content -->
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h4 class="page-title">Order Details</h4>
+            <div class="breadcrumb">
+                <a href="/account/home">Dashboard</a> &gt; Order Details
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Txn ID #@orderId</h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div class="alert alert-@statusClass">
+                        <i class="fa fa-@statusIcon"></i> @status
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Service:</strong> @service</p>
+                        <p><strong>Amount:</strong> @amount</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Account Number:</strong> @number</p>
+                        <p><strong>Transaction Status:</strong> @transactionStatus</p>
+                        <p><strong>Transaction Date/Time:</strong> @transactionDateTime</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-right mt-3">
+            <a href="/account/order-history" class="btn btn-dark">
+                <i class="fa fa-long-arrow-left"></i> Back
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        <!-- Include your footer content -->
+    </footer>
+
+    <script src="~/assets/js/main.js"></script>
+</body>
+</html>

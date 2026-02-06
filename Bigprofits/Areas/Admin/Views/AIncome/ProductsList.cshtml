@@ -1,0 +1,214 @@
+﻿@model List<AddProduct>
+@{
+	var SrNo = 1;
+	Layout = "_AALayout";
+}
+
+<style>
+	#backToTopBtn {
+		display: block; /* Hidden by default */
+		position: fixed; /* Fixed/sticky position */
+		bottom: 20px; /* Place the button at the bottom of the page */
+		right: 20px; /* Place the button 30px from the right */
+		z-index: 99; /* Make sure it does not overlap */
+		color: white; /* Text color */
+		cursor: pointer; /* Add a mouse pointer on hover */
+		font-size: 24px; /* Increase font size */
+		border-radius: 5px; /* Rounded corners */
+		transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for background and shadow */
+	}
+
+		#backToTopBtn:hover {
+			box-shadow: 0 0 15px 5px rgba(255, 255, 255, 1.6);
+		}
+
+	#searchInput {
+		width: 100%;
+		padding: 10px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		font-size: 16px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		background-color: rgba(0, 0, 0, 0.15);
+	}
+
+		#searchInput::placeholder {
+			color: black;
+		}
+
+
+	.styled-table {
+		border-collapse: collapse;
+		margin: 25px 0;
+		padding: 20px;
+		font-size: 0.9em;
+		font-family: sans-serif;
+		min-width: 400px;
+		box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
+		border-radius: 12px; /* Added border radius */
+		overflow: hidden; /* To apply border radius properly */
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-bottom: 20px;
+		border-radius: 5px;
+	}
+
+	th, td {
+		padding: 10px;
+		text-align: left;
+		border-bottom: 1px solid #ddd;
+	}
+
+	th {
+		background-color: rgba(0, 0, 0, 0.15);
+		font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+		color: darkslateblue;
+		font-weight: normal;
+	}
+
+	tr:hover {
+		background-color: rgba(10, 5, 5, 0.15);
+		transition: background-color 0.3s ease;
+	}
+
+	.edit-icon-container {
+		position: relative;
+		display: inline-block;
+	}
+
+	.edit-icon {
+		text-decoration: none;
+		color: #555;
+		font-size: 24px;
+		transition: color 0.3s ease;
+	}
+
+	.edit-icon:hover {
+		color: purple;
+	}
+
+	.edit-icon::after {
+		content: "Edit";
+		position: absolute;
+		left: 100%;
+		top: 0;
+		white-space: nowrap;
+		z-index: 20;
+		visibility: hidden;
+		background-color: #333;
+		color: #fff;
+		text-align: center;
+		border-radius: 5px;
+		padding: 5px 10px;
+		margin-left: 5px;
+		font-size: 14px;
+		transition: visibility 0.1s ease;
+	}
+</style>
+
+@if (TempData["err"] != null)
+{
+	<span class="text-danger">
+		<strong>Error!</strong>@TempData["err"]
+	</span>
+}
+@if (TempData["msg"] != null)
+{
+	<span class="text-success">
+		<strong>Success!</strong>@TempData["msg"]
+	</span>
+}
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-body">
+				<input type="text" id="searchInput" placeholder="Search Products...">
+
+				<table class="styled-table" style="color:black">
+					<thead>
+						<tr>
+							<th>Sr.No</th>
+							<th>Product Id</th>
+							<th>Product Name</th>
+							<th>BV</th>
+							<th>Product Description</th>
+							<th>Price</th>
+							<th>GST</th>
+							<th>PriceWithGST</th>
+							<th>Final Price</th>
+							<th>Weight</th>
+							<th>Product Image</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="productTableBody">
+						@foreach (var agent in Model)
+						{
+							<tr>
+								<td>@SrNo</td>
+								<td>@agent.ProductId</td>
+								<td>@agent.ProductName</td>
+								<td>@agent.ProductBv!.Value.ToString("0.00")</td>
+								<td>@agent.ProductDescription</td>
+								<td>@agent.Price!.Value.ToString("0.00")</td>
+								<td>@agent.Gst%</td>
+								<td>@agent.PriceWithGst!.Value.ToString("0.00")</td>
+								<td>@agent.FinalPrice!.Value.ToString("0.00")</td>
+								<td>@agent.Weight</td>
+								<td><img src="/@agent.ProductImage" height="50" width="50" alt="Product Image" /></td>
+								<td>
+									<span class="edit-icon-container"><a class="edit-icon" href="@Url.Action("edit-product","britglbl253adpnl", new { id = agent.Id })"><i class="fa fa-edit"></i></a></span>
+								</td>
+							</tr>
+							SrNo++;
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+		var Model = @Html.Raw(ViewBag.Model)
+		$('#searchInput').on('input', function () {
+			var searchText = $(this).val();
+
+			var filteredProducts = Model.filter(function (product) {
+				return product.ProductName.toLowerCase().includes(searchText.toLowerCase());
+			});
+
+			renderFilteredProducts(filteredProducts);
+		});
+		console.log(Model);
+
+		function renderFilteredProducts(products) {
+			var prodHtml = "";
+			products.forEach((product, index) => {
+				prodHtml += `<tr>
+								<td>${index + 1}</td>
+								<td>${product.ProductId}</td>
+								<td>${product.ProductName}</td>
+									<td>${product.ProductBv}</td>
+								<td>${product.ProductDescription}</td>
+								<td>${product.Price.toFixed(2)}</td>
+								<td>${product.Gst}</td>
+								<td>${product.PriceWithGst}</td>
+								<td>${product.FinalPrice}</td>
+								<td>${product.Weight}</td>
+								<td><img src="/${product.ProductImage}" height="50" width="50" alt="Product Image" /></td>
+								<td>
+								<span class="edit-icon-container"><a class="edit-icon" href="/britglbl253adpnl/edit-product/${product.Id}"><i class="fas fa-edit"></i></a></span>
+								</td>
+								</tr>`;
+			});
+			$("#productTableBody").html(prodHtml)
+		}
+	</script>
+}
+

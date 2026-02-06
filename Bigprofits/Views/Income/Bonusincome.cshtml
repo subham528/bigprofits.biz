@@ -1,0 +1,72 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Global Income";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+    
+
+<div class="row">
+    <div class="col-12 col-sm-12">
+        <div class="card ">
+            <div class="card-header">
+                <h3 class="card-title mb-0"> Achivemnt Income </h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                        <thead>
+                            <tr>
+
+                                <th>
+                                    Sno
+                                </th>
+                                <th>
+                                    Member Id
+                                </th>
+                                <th>
+                                  amount
+                                </th>
+
+                               
+
+                                <th>
+                                    Date
+                                </th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int sno2 = 1;
+                            }
+
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td>@sno2</td>
+                                    <td>@row["cmitid"]</td>
+
+
+                                    <td>@("$" + Convert.ToDecimal(row["amount"]).ToString("0.00"))</td>
+
+                                    <td>@row["adate"]</td>
+
+
+
+                                </tr>
+                                sno2++;
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><!-- COL END -->
+</div><!-- ROW-5 END -->

@@ -1,0 +1,211 @@
+﻿@using Newtonsoft.Json;
+@{
+    ViewData["Title"] = "Dth";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTH Recharge</title>
+  
+    <style>
+        .btnDisable {
+            position: relative;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        .selected {
+            background-color: #f0f0f0; 
+        }
+
+        .pkgBtn ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pkgBtn li {
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .pkgBtn img {
+            width: 80px; 
+            height: 80px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .pkgBtn p {
+            text-align: center;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+    </style>
+    <script src="~/assets/cute-alert.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
+</head>
+<body>
+
+    <div class="page-header">
+        <div class="page-leftheader">
+            <h4 class="page-title mb-0">DTH Recharge</h4>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/account/home"><i class="fe fe-home mr-2 fs-14"></i>Dashboard</a></li>
+               
+            </ol>
+        </div>
+    </div>
+
+    <div class="loader" id="updPro" style="display: none;">
+        <p>Please Wait...</p>
+        <img src="/images/loadernew.gif" alt="Wait..." />
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="divMsg" class="text-center text-danger mb-2"></div>
+        </div>
+
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body p-2">
+                    <div class="mb-3 d-flex justify-content-around text-primary p-3">
+                        <label class="text-center fs-16">
+                            Usable USD
+                            <br />
+                            <span id="lblAvailable">@income.usableUsd</span>
+                        </label>
+                        <label class="text-center fs-16 text-success">
+                            Usable INR
+                            <br />
+                            <span id="lblAvailableInr">@income.usableInr</span>
+                        </label>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="pkgBtn">
+                            <ul id="rp_operator">
+                                <!-- Dynamic items will be added here -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="form" class="d-none">
+                        <div class="mb-3">
+                            <label>Card/Customer No - <span id="lblBiller" class="text-warning"></span></label>
+                            <input type="text" id="txtPhoneNo" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Enter Amount (INR)</label>
+                            <input type="text" id="txtAmount" class="form-control" />
+                        </div>
+
+                        <div class="mb-3 text-center divBtn">
+                            <button id="btnTransfer" class="btn btn-primary" onclick="return validate()">RECHARGE</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <input type="hidden" id="txtType" />
+    <input type="hidden" id="txtBillerId" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <script>
+        var billerId = "";
+
+        function setBillerId(biller) {
+            billerId = biller;
+            $("#txtBillerId").val(biller);
+
+            $(".pkgBtn li").removeClass("selected");
+            $(".pkgBtn li[data-id='" + biller + "']").addClass("selected");
+            $("#form").removeClass("d-none");
+            $("#lblBiller").text($(".pkgBtn li[data-id='" + biller + "'] p").text());
+        }
+
+        function validate() {
+            var number = $("#txtPhoneNo").val().trim();
+            var amount = $("#txtAmount").val().trim();
+
+            if (number === "" || amount === "") {
+                showCuteAlert("warning", "Empty Fields!", "All fields are mandatory!", false);
+                return false;
+            }
+            else if (isNaN(amount)) {
+                showCuteAlert("warning", "Invalid Amount!", "Invalid Amount! Please enter a valid amount", false);
+                return false;
+            }
+            else if (parseFloat(amount) < 10) {
+                showCuteAlert("warning", "Invalid Amount!", "Invalid Amount! Minimum amount 10 INR", false);
+                return false;
+            }
+            else {
+                $(".divBtn button").addClass("btnDisable");
+                $(".divBtn").prepend("<p>Loading...</p>");
+
+                $.ajax({
+                    url: '/account/INSP_Utility_Payment',
+                    method: 'post',
+                    data: { number: number, amount: amount, billerId: billerId },
+                    dataType: 'json',
+                    success: function (data) {
+                        showCuteAlert(data.type, data.title, data.text, true);
+                    },
+                    error: function (xhr, status, error) {
+                        showCuteAlert("error", "Error!", "An error occurred while processing your request. Please try again.", false);
+                    }
+                });
+            }
+            return false;
+        }
+
+        function showCuteAlert(type, title, message, refresh = false) {
+            swal({
+                icon: type,
+                title: title,
+                text: message,
+                button: "Okay",
+            }).then(() => {
+                if (refresh) {
+                    location.reload();
+                }
+            });
+        }
+
+     
+
+        $(document).ready(function () {
+            var operators = [
+                { billerId: 'AIRT00000NAT87', iconUrl: '/img/a.svg', billerName: 'Airtel Digital TV' },
+                { billerId: 'DISH00000NAT01', iconUrl: '/img/b.svg', billerName: 'Dish TV' },
+                { billerId: 'TATASKY00NAT01', iconUrl: '/img/c.svg', billerName: 'Tata Play' },
+                { billerId: 'VIDEOCON0NAT01', iconUrl: '/img/d.svg', billerName: 'd2h' },
+                { billerId: 'SUND00000NAT02', iconUrl: '/img/e.svg', billerName: 'Sun Direct TV' }
+            ];
+
+            operators.forEach(function (operator) {
+                $('#rp_operator').append(
+                    '<li data-id="' + operator.billerId + '">' +
+                    '<a href="javascript:;" onclick="setBillerId(\'' + operator.billerId + '\')">' +
+                    '<img src="' + operator.iconUrl + '" alt="' + operator.billerName + '" />' +
+                    '<p>' + operator.billerName + '</p>' +
+                    '</a>' +
+                    '</li>'
+                );
+            });
+        });
+    </script>
+
+</body>
+</html>

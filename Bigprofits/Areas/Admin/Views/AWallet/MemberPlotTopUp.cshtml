@@ -1,0 +1,102 @@
+﻿@model CmitRequest
+
+@{
+    ViewData["Title"] = "MemberTopUp";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+<div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;" id="showmsg"></div>
+
+@if (TempData["cmitmsg"] != null)
+{
+    <p style ="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;">  @TempData["cmitmsg"] </p>
+}
+
+<div class="row justify-content-center" style="margin-top: 12px;">
+    <div class="col-10 col-md-4">
+        <!-- Start-->
+        <div class="card shadow mb-4 ">
+            <div class="card-header bg-primary py-3">
+
+                <h6 class="m-0 font-weight-bold text-white"> Land Guarante Top Up <span> </span></h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center" style="color:red;" id="UserName"> </div>
+
+                <form asp-action="MemberPlotTopUp" method="post">
+                    <div class="form-group">
+                        <label class="control-label">MemberId</label>
+                        <input asp-for="MemberId" required class="form-control text-uppercase" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"> Amount </label>
+                        <input asp-for="CmitReqAmount" type="number" required class="form-control" />
+                    </div>
+                @*     <div class="form-group">
+                        <label class="control-label">Plot Area In Sq.ft </label>
+                        <input asp-for="PlotSf" type="number" required class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"> Remark </label>
+                        <textarea asp-for="Remark" rows="3" required class="form-control">  </textarea>
+                    </div> *@
+                    <div class="form-group mt-3 " style="text-align:center" id="Atopbtn">
+                        <input type="submit" value="TopUp" id="btnsubmit" class="btn bg-primary text-white" />
+                    </div>
+                    <div class="form-group mt-3 " style="text-align:center" id="Aprocessbtn">
+                        <p style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> Processing...  </p>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <!-- End-->
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+
+    <script>
+
+        $(function () {
+            $("#Atopbtn").show()
+            $("#Aprocessbtn").hide()
+        });
+
+    </script>
+
+    <script>
+
+
+        $("#MemberId").keyup(function () {
+            if ($(this).val() != "") {
+                IsSponsorExist($(this).val());
+            }
+            else $("#UserName").val("");
+        })
+        function IsSponsorExist(memberId) {
+            try {
+                $.ajax({
+                    url: "/Admin/AWallet/GetMemberName/",
+                    method: 'post',
+                    data: { memberId: memberId },
+                    dataType: "text",
+                    success: function (data) {
+                        console.log(data);
+                        $("#UserName").text(data);
+                    }
+                });
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+
+    </script>
+
+}

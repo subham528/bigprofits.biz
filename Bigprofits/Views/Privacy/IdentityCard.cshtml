@@ -1,0 +1,72 @@
+﻿@model Bigprofits.Models.MemberInfo
+
+@{
+    ViewData["Title"] = "IdentityCard";
+   // Layout = "~/Views/Shared/_Layout.cshtml";
+     Layout = null;
+}
+
+
+
+   
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="card overflow-auto">
+                        <div class="card-header">
+                            <h3 class="card-title">ID Card</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-12">
+                                    <div id="divMsg" runat="server" class="text-center text-danger fs-16 mt-3 mb-3"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div style="width: 600px; margin: 0 auto; text-align: right; margin-bottom: 10px;">
+                                        <a href="javascript:" onclick="window.print()" style="text-decoration: none; color: #000">Print<img alt="N/A" src="~/images/print.gif" /></a>
+                                    </div>
+
+                                    <div style="height: 320px; width: 600px; margin: 0 auto; position: relative" id="printDiv">
+                                        <div style="border: 1px solid #9cabb1">
+                                            <div style="background: green; padding: 20px;">
+                                                <h3 style="color: #fff; font-size: 32px; display: inline-block; margin: 0;">VEDIC NATURAL
+                                                   </h3>
+                                                <p style="color: #fff; margin: 0; font-size: 20px; line-height: 1.2; text-align: right; display: inline-block; width: 50%; font-weight: 600;">USER
+                                                    <br />
+                                                    IDENTIFICATION</p>
+                                            </div>
+                                            <table style="width: 94%; margin: 0 auto; margin-top: 20px;">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width: 160px;">
+                                                            <img src="~/@Url.Content(@Model.ProfileImage)" id="cardImg" runat="server" style="height: 130px; border: 1px solid #e0e5f3; max-width: 130px;" alt="" /></td>
+                                                        <td>
+                                                            <p style="margin-bottom: 15px; padding-bottom: 3px; border-bottom: 1px solid #1e576e;">Member Id: &nbsp; @Model.MemberId
+                                                              
+                                                                <p style="margin-bottom: 15px; padding-bottom: 3px; border-bottom: 1px solid #1e576e;">Name: &nbsp;&nbsp;&nbsp;  @Model.MemName
+                                                               
+                                                            <p style="margin-bottom: 15px; padding-bottom: 3px; border-bottom: 1px solid #1e576e;">Membership: <b> @Model.LastName </b></p>
+                                                            <p style="margin-bottom: 15px; padding-bottom: 3px; border-bottom: 1px solid #1e576e;">Registered On:  &nbsp; @Model.MemReg
+                                                             
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div style="background: #008000; padding: 10px; margin-top: 12px;">
+                                                <p style="margin: 0; text-align: center; color: #fff; font-size: 16px;">Email: info@Bigprofits.in</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+

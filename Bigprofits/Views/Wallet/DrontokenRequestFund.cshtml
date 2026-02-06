@@ -1,0 +1,393 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+
+@{
+    ViewData["Title"] = "DronTokenRequest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dark-mode .form-control.txtAddress {
+        border: 0 !important;
+        outline: 0;
+        background: none;
+        text-align: center;
+        margin-top: 15px;
+    }
+</style>
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-success">@TempData["msg"]</div>
+
+
+}
+
+
+@if (ViewBag.Message != null)
+{
+
+    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @ViewBag.Message </div>
+}
+
+
+<div class="container-fluid">
+
+
+    <div class="row justify-content-center">
+        <!-- Start-->
+        <div class="card shadow-lg rounded-lg mb-4 w-full max-w-md">
+            <div class="card-header py-3 bg-primary text-center">
+                <h6 class="m-0 font-weight-bold text-white text-lg" style="color:green">Add Drone Token</h6>
+            </div>
+
+            <div class="card-body p-4">
+
+
+                <div class="px-3">
+                    <!-- Added padding around the form -->
+                    <label class="text-sm font-semibold" for="lblWalletConnected">Wallet</label>
+                    <input id="lblWalletConnected" readonly class="form-control w-full border rounded-lg py-2 px-3" value="connecting..." />
+
+                    <label class="text-sm font-semibold" for="lblTrxBalance">Wallet Balance</label>
+                    <input id="lblTrxBalance" readonly class="form-control w-full border rounded-lg py-2 px-3" value="0 USDT" />
+                </div>
+                <div class="mb-4">
+                    <label class="text-sm font-semibold" for="member">User ID</label>
+                    <input id="member" value="@ViewBag.memberid" name="member" required class="form-control w-full border rounded-lg py-2 px-3" />
+                </div>
+                <!-- USDT Amount -->
+                <div class="mb-4">
+                    <label class="text-sm font-semibold">TOKEN AMOUNT </label>
+                    <input id="amount" required name="amount" type="number"
+                           class="form-control w-full border rounded-lg py-2 px-3"
+                           placeholder="ENTER DRONE TOKEN" />
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+
+                    <button type="submit" id="btnpurchase" onclick="return purchase()"
+                            class="btn bg-primary text-white w-full py-2 rounded-lg text-lg">
+                        Request
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <!-- End-->
+    </div>
+
+</div>
+<div class="col-12 col-sm-12">
+    <div class="card ">
+        <div class="card-header">
+            <h3 class="card-title mb-0"> ADD FUND HISTORY </h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                Sno
+                            </th>
+
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Details
+                            </th>
+                            <th>
+                                Transaction Info
+                            </th>
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>@sno2</td>
+                                <td>@("$" + Convert.ToDecimal(row["amount"]).ToString("0.00"))</td>
+
+                                <td>
+                                    @if (row["ftype"].ToString() == "CREDIT")
+                                    {
+                                        <span style="color:green">CREDIT</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:red">DEBIT</span>
+                                    }
+                                </td>
+                                <td>@row["fdate"]</td>
+                                <td>@row["details"]</td>
+                                <td>  <a href='https://bscscan.com/tx/@row["hashId"]' target="_blank">View</a></td>
+
+                                <td>
+                                    @if (row["status"].ToString() == "0")
+                                    {
+                                        <span class="text-warning">Pending</span>
+                                    }
+                                    else if (row["status"].ToString() == "1")
+                                    {
+                                        <span class="text-success">Approve</span>
+                                    }
+                                    else if (row["status"].ToString() == "2")
+                                    {
+                                        <span class="text-danger">Reject</span>
+                                    }
+
+                                </td>
+                            </tr>
+                            sno2++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> <!-- COL END -->
+@section Scripts {
+    <script type="text/javascript" src="/SCuteAlert/cute-alert.js"></script>
+    <script type="text/javascript" src="/adminassets/web3.min.js"></script>
+    <script type="text/javascript" src="/adminassets/bignumber.js"></script>
+    <script type="text/javascript" src="/SCuteAlert/cute-alert.js"></script>
+
+    <script>
+        @if (TempData["success"] != null)
+        {
+            <text>
+                    cuteAlert({
+                        type: "success",
+                        title: "Success",
+                        message: "@TempData["success"]",
+                        buttonText: "Okay"
+                    });
+            </text>
+        }
+        else if (TempData["error"] != null)
+        {
+            <text>
+                    cuteAlert({
+                        type: "error",
+                        title: "Failed",
+                        message: "@TempData["error"]",
+                        buttonText: "Okay"
+                    });
+            </text>
+        }
+    </script>
+    <script>
+        var dataMsg = '@ViewBag.type'
+        if (dataMsg != "") {
+                   cuteAlert({
+            type: "success",
+            title: "Success",
+            message: "@TempData["success"]",
+            buttonText: "Okay"
+        }).then(() => {
+            window.location.href = "/account/topup-wallet-add"; // change path if needed
+        });
+        }
+        var weiValue = 1000000000000000000;
+        var account;
+        var contractAbi;
+        var tokenAddress = "";
+        var tokenBal = 0;
+
+        function getTokenDetail() {
+            $.ajax({
+                    url: '/britglbl253adpnl/dron-address-info',
+                method: 'post',
+                    data: { currency: "USDT-Bigprofits-20" },
+                dataType: 'json',
+                success: function (res) {
+                    if (!res.toString().includes("Failed")) {
+                        tokenAddress = res.tokenAddress;
+                        contractAbi = res.contractAbi;
+                        console.log("Token details fetched successfully:", res);
+                    } else {
+                        console.log("Failed to fetch token details: ", res);
+                    }
+                }
+            });
+        }
+
+        getTokenDetail();
+
+
+        async function getDetails() {
+            try {
+                if (typeof window.ethereum === 'undefined') {
+                    console.log("Dapp is not installed!");
+                    alert("Dapp is required for this feature.");
+                } else {
+
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    account = accounts[0].toLowerCase();
+
+                    console.log("Connected Wallet Address:", account);
+                    $("#lblWalletConnected").val(account);
+
+
+                    if (!contractAbi || !tokenAddress) {
+                        console.log("Contract ABI or Token Address is missing.");
+                        return;
+                    }
+
+
+                    const web3 = new Web3(window.ethereum);
+                    const contract = new web3.eth.Contract(JSON.parse(contractAbi), tokenAddress);
+                    console.log("Contract instance created.");
+
+
+                    const balance = await contract.methods.balanceOf(account).call();
+                    if (balance) {
+                        tokenBal = parseFloat(balance) / weiValue;
+                        console.log("USDT Balance:", tokenBal);
+                        $('#lblTrxBalance').val(tokenBal.toFixed(4) + " USDT");
+                    } else {
+                        console.log("Failed to retrieve balance.");
+                        alert("Could not retrieve token balance. Please try again.");
+                    }
+                }
+            } catch (e) {
+                console.log("Error occurred while fetching wallet details:", e);
+
+            }
+        }
+
+        setTimeout(getDetails, 1500);
+
+        var submitBtn = $("#btnpurchase")
+               async function purchase() {
+            console.log("Purchase function called");
+
+            var amount = $("#amount").val(); // ✅ Get input value
+            var payableAmount = parseFloat(amount); // ✅ Convert to number
+
+            var dep = '@ViewBag.ds'; // Deposit address
+
+            if ($('#member').val().trim() == "") {
+                $('input.form-control').each(function () {
+                    if ($(this).val().trim() == "") {
+                        $(this).focus();
+                    }
+                });
+                showCuteAlert("warning", "Member ID Required!", "Please enter member ID first", false);
+                return false;
+            }
+
+            if (!amount || isNaN(payableAmount)) {
+                showCuteAlert("warning", "Invalid Amount", "Please enter a valid USDT amount.", false);
+                return false;
+            }
+
+            if (typeof window.ethereum === 'undefined') {
+                showCuteAlert('warning', 'Dapp Not Connected!', 'Please install and connect MetaMask.', false);
+                return false;
+            }
+
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+            const web3 = new Web3(window.ethereum);
+            const balance = await web3.eth.getBalance(account);
+            const balanceInBNB = web3.utils.fromWei(balance, 'ether');
+
+            if (!account) {
+                showCuteAlert('warning', 'Connect Dapp!', 'Please connect your MetaMask wallet.', false);
+                return false;
+            } else if (parseFloat(tokenBal) < payableAmount) {
+                showCuteAlert('error', 'Insufficient USDT!', 'Please ensure you have enough USDT tokens.', false);
+                return false;
+            } else if (balanceInBNB < 0.001) {
+                showCuteAlert('error', 'Low BNB Balance!', 'Please keep some BNB for gas fees.', false);
+                return false;
+            } else {
+                submitBtn.attr("disabled", "disabled");
+                submitBtn.val("CONNECTING...");
+
+                try {
+                    const toAddress = dep;
+                    console.log("Deposit Address:", toAddress);
+                    const contract = new web3.eth.Contract(JSON.parse(contractAbi), tokenAddress);
+
+                    // Convert amount to smallest unit (e.g., 10 USDT → 10000000000000000000)
+                    const rawAmount = parseFloat(payableAmount * weiValue).toFixed();
+                    const finalAmount = BigNumber(rawAmount).toFixed(); // ✅ Fix BigNumber error
+
+                    await contract.methods.transfer(toAddress, finalAmount).send({ from: account }).then(result => {
+                        console.log(result);
+
+                        if (result.status) {
+                            var member = $('#member').val().trim();
+
+                            $.ajax({
+                                    url: `/account/wallet-add-fund-Dptoken/${payableAmount}/${result.transactionHash}`,
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ member: member, address: result.transactionHash }),
+                                dataType: 'json',
+                                success: function (jsonRes) {
+                                    if (jsonRes.type == "success") {
+                                        showCuteAlert('success', 'Success', 'Fund request submitted successfully.', true);
+                                    } else {
+                                        showCuteAlert(jsonRes.type, jsonRes.title, jsonRes.text, true);
+                                    }
+                                }
+                            });
+                        } else {
+                            showCuteAlert('error', 'Transaction Failed!', 'Blockchain transaction did not complete.', false);
+                        }
+                    });
+
+                    submitBtn.removeAttr("disabled");
+                    submitBtn.val("Purchase");
+                } catch (e) {
+                    console.log(e);
+                    showCuteAlert('error', 'Transaction Error', e.message, false);
+                    submitBtn.removeAttr("disabled");
+                    submitBtn.val("Purchase");
+                }
+            }
+
+            return false;
+        }
+
+
+
+
+
+
+        function showCuteAlert(type, title, message, refresh) {
+            cuteAlert({
+                type: type,
+                title: title,
+                message: message,
+                buttonText: "Okay"
+            }).then(() => {
+                if (refresh) location.href = location.pathname;
+            })
+        }
+    </script>
+}

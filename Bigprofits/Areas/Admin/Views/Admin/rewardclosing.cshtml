@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Encrypt/Decrypt Data";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" href="/images/favicon.png" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #CCC8AB;
+        }
+
+        .thumbnail {
+            padding: 20px;
+            color: #333;
+        }
+
+            .thumbnail h3 {
+                text-align: center
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="divMsg" class="text-center text-danger" style="margin-bottom: 10px; padding: 20px 0">
+            @if (TempData["msg"] != null)
+            {
+                <span>@TempData["msg"]</span>
+            }
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="thumbnail">
+                    <h3>Encrypt Data</h3>
+                    <form action="/britglbl253adpnl/encrypt-data" method="post">
+                        <div class="form-group">
+                            <label>Enter Data</label>
+                            <input type="text" name="Edata" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Encrypted Data</label>
+                            <textarea class="form-control" rows="3" readonly>@TempData["EncryptedData"]</textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-danger">ENCRYPT DATA</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="thumbnail">
+                    <h3>Decrypt Data</h3>
+                    <form action="/britglbl253adpnl/decrypt-data" method="post">
+                        <div class="form-group">
+                            <label>Enter Encrypted Data</label>
+                            <input type="text" name="EncryptedData" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Decrypted Data</label>
+                            <textarea class="form-control" rows="3" readonly>@TempData["DecryptedData"]</textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">DECRYPT DATA</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

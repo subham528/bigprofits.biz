@@ -1,0 +1,535 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Microsoft.Extensions.Configuration;
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "AdminDashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+
+    var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+    CommonMethods lib = new CommonMethods(configuration!);
+    dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
+}
+
+<div class="page-heading">
+    <h3> ADMIN DASHBOARD</h3>
+</div>
+
+<!--   ======================  Row Start ================================= -->
+<div class="row">
+
+    <div class="col-md-12"><h4>Member</h4></div>
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/member-list">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon purple">
+                            <i class="iconly-boldShow"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Total Member</h6>
+                        <h6 class="font-extrabold mb-0">@income.totalMember</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/member-list-deactive">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Active</h6>
+                        <h6 class="font-extrabold mb-0">@income.activeMember</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/member-list-active">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon green">
+                            <i class="iconly-boldAdd-User"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Inactive</h6>
+                        <h6 class="font-extrabold mb-0">@income.inactiveMember</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+   
+
+
+
+    <div class="col-md-12"><h4>Todays joining</h4></div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Today-joing-list">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon purple">
+                            <i class="iconly-boldShow"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Todays joining</h6>
+                        <h6 class="font-extrabold mb-0">@income.todayJoining</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Today-joingActive--list">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Active</h6>
+                        <h6 class="font-extrabold mb-0">@income.todayJoiningActive</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Today-joingInactive-list">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon green">
+                            <i class="iconly-boldAdd-User"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Inactive</h6>
+                        <h6 class="font-extrabold mb-0">@income.todayJoiningInactive</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-md-12"><h4> Information business </h4></div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Today-Deposits-history">
+            <div class="card">
+                <div class="card-body px-3 py-4-5">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stats-icon blue">
+                                <i class="iconly-boldProfile"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-8 p-0">
+                            <h6 class="text-muted font-semibold"> Today's business </h6>
+                            <h6 class="font-extrabold mb-0">@income.todayDeposit?.ToString("0.00")</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Total-Deposits-history">
+            <div class="card">
+                <div class="card-body px-3 py-4-5">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stats-icon blue">
+                                <i class="iconly-boldProfile"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-8 p-0">
+                            <h6 class="text-muted font-semibold"> Total business</h6>
+                            <h6 class="font-extrabold mb-0">@income.totalDeposit?.ToString("0.00")</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Today-withdrawal-history">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Today withdrawal </h6>
+                        <h6 class="font-extrabold mb-0">@income.todayWid?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/TOTAL-Withdrawal-history">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Total withdrawal </h6>
+                            <h6 class="font-extrabold mb-0">@income.totalWid?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-md-12"><h4>  Todays deposit</h4></div>
+  
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Today-Deposits-history">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold"> Todays deposit</h6>
+                        <h6 class="font-extrabold mb-0">@income.todayDeposit?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+    
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Today-Deposits-history">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold"> Today Topup</h6>
+                        <h6 class="font-extrabold mb-0">@income.todayTopup?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+    <div class="col-6 col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Today Retopup</h6>
+                        <h6 class="font-extrabold mb-0">@income.todayRetopup?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12"><h4>   Todays withdrawal</h4></div>
+   
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Today-Withdrawal-history">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Todays withdrawal</h6>
+                        <h6 class="font-extrabold mb-0">@income.todayWid?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-md-12"><h4>Total joining</h4></div>
+
+   
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/member-list">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Total joining</h6>
+                        <h6 class="font-extrabold mb-0">@income.totalMember</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/member-list-deactive">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Active</h6>
+                        <h6 class="font-extrabold mb-0">@income.activeMember</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/member-list-active">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Inactive</h6>
+                        <h6 class="font-extrabold mb-0">@income.inactiveMember</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+    <div class="col-md-12"><h4> Total deposit</h4></div>
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Total-Deposits-history">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Total deposit</h6>
+                        <h6 class="font-extrabold mb-0">@income.totalDeposit?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/Total-Deposits-history">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Total Topup</h6>
+                        <h6 class="font-extrabold mb-0">@income.totalTopup?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+       
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Total Retopup</h6>
+                        <h6 class="font-extrabold mb-0">@income.totalRetopup?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+    <div class="col-md-12"><h4> Total withdrawal</h4></div>
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/TOTAL-Withdrawal-history">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="text-muted font-semibold">Total withdrawal</h6>
+                        <h6 class="font-extrabold mb-0">@income.totalWid?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/TOTAL-Status--history/1">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                            <h6 class="text-muted font-semibold">Total Sucess With </h6>
+                            <h6 class="font-extrabold mb-0">@income.totalApproveWith?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <a href="/britglbl253adpnl/TOTAL-Status--history/0">
+            <div class="card">
+                <div class="card-body px-3 py-4-5">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stats-icon blue">
+                                <i class="iconly-boldProfile"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-8 p-0">
+                            <h6 class="text-muted font-semibold">Total Pending With </h6>
+                            <h6 class="font-extrabold mb-0">@income.totalPendingWith?.ToString("0.00")</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    @* <div class="col-md-12"><h4>Auto Pool Info</h4></div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="font-semibold">CURRENT FUND</h6>
+                        <h6 class="font-extrabold mb-0">@income.autoPoolCurrent?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body px-3 py-4-5">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="stats-icon blue">
+                            <i class="iconly-boldProfile"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8 p-0">
+                        <h6 class="font-semibold">TOTAL FUND</h6>
+                        <h6 class="font-extrabold mb-0">@income.autoPoolTotal?.ToString("0.00")</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> *@
+
+</div>
+
+
+
+
+@section Scripts {
+
+}

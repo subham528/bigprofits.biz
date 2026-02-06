@@ -1,0 +1,49 @@
+﻿@model Bigprofits.Models.Poster
+@{
+    ViewData["Title"] = "ADDPOSTER";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+<div class="row justify-content-center ">
+    <div class="col-12 col-sm-5 mt-5">
+        <!-- Start-->
+        @if (TempData["success"] != null)
+        {
+            <span class="text-danger">
+                <strong>Success!</strong>@TempData["success"]
+            </span>
+        }
+        <div class="card shadow mb-4 ">
+            <div class="card-header bg-info py-3">
+
+                <h6 class="m-0 font-weight-bold text-white"> ADD QR <span> </span></h6>
+            </div>
+
+            <div class="card-body">
+                <div class=" ">
+
+                    <form method="post" asp-action="create-poster" asp-controller="britglbl253adpnl" enctype="multipart/form-data">
+
+                        <div class="form-group">
+                            <label asp-for="Postername">PhonePay UpiId :</label>
+                            <input type="text" asp-for="Postername" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PosterContent">GooglePay UpiId</label>
+                            <textarea asp-for="PosterContent" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="PosteImage">QR Image (optional)</label>
+                            <input type="file" asp-for="PosteImage" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add QR</button>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- End-->
+    </div>
+</div>

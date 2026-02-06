@@ -1,0 +1,209 @@
+﻿@using System.Data
+@model DataSet
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Add Fund";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
+}
+
+
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-success">@TempData["msg"]</div>
+    
+   // <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"] </div>
+}
+
+ 
+ 
+
+
+<div class="container-fluid">
+   
+    <div class="row justify-content-center">
+        <!-- Start -->
+        <div class="card shadow-lg rounded-lg mb-4 w-full max-w-md">
+            <div class="card-header py-3 bg-primary text-center">
+                <h6 class="m-0 font-weight-bold text-white text-lg" style="color:green">ADD FUND FROM INCOME</h6>
+            </div>
+
+            <div class="card-body p-4">
+                <!-- Username or Error Message -->
+                <div class="text-center text-red-500 font-semibold" id="UserName"></div>
+
+                <!-- Income Wallet Display -->
+                <div class="text-center my-3">
+                    <p class="text-sm font-semibold text-purple-600 mb-1">Income Wallet</p>
+                    <p class="text-lg font-bold text-purple-700">$@income.Available</p>
+                </div>
+
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <form asp-action="AddFund" method="post">
+                    <!-- Amount Input -->
+                    <div class="mb-4">
+                        <label class="text-sm font-semibold">Enter Amount</label>
+                        <input id="amount" name="amount"
+                               class="form-control w-full border rounded-lg py-2 px-3"
+                               placeholder="Min 10 & multiple of 1" required />
+                    </div>
+
+                    <!-- Add Fund Button -->
+                    <div class="text-center mt-4">
+                        <button type="submit" id="btnsubmit"
+                                class="btn bg-primary text-white w-full py-2 rounded-lg text-lg">
+                            Add Fund
+                        </button>
+                    </div>
+
+                    <!-- Processing Text (Hidden by default) -->
+                    <div class="text-center mt-3 hidden" id="processbtn">
+                        <p class="text-red-600 font-bold">Processing...</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- End -->
+    </div>
+
+</div>
+<div class="col-12 col-sm-12">
+    <div class="card ">
+        <div class="card-header">
+            <h3 class="card-title mb-0"> TRANSACTION HISTORY </h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                Sno
+                            </th>
+
+
+                            <th>
+                                Amount
+                            </th>
+
+                          
+                            <th>
+                                Final Amount
+                            </th>
+                            <th>
+                                Txn Info
+                            </th>
+                            <th>
+                                Date 
+                            </th>
+                            <th>
+                                Details
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>@sno2</td>
+
+                                <td>@row["finalAmount"]</td>
+                               
+                                <td>@("$" + Convert.ToDecimal(row["amount"]).ToString("0.00"))</td>
+                                <td>@row["ftype"]</td>
+                                <td>@row["fdate"]</td>
+                                <td>@row["details"]</td>
+
+
+
+                            </tr>
+                            sno2++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+
+        $(function () {
+            $("#topbtn").show()
+            $("#processbtn").hide()
+        });
+
+    </script>
+
+    <script>
+
+        $("#btnsubmit").on("click", function () {
+            var member = ""
+            var amount = $("#txtAmount").val().trim()
+            //var member = $("#member").val().trim()
+
+            //if (member == "") { $("#showmsg").text("Plese enter valid memberid"); }
+            if (amount == "") $("#showmsg").text("Please enter amount first");
+            else if (isNaN(amount)) $("#showmsg").text("Please enter a valid amount");
+            else if (parseFloat(amount) < 10 || parseFloat(amount) % 1 != 0) $("#showmsg").text("Amount should be minimum 10 and in multiple of 1");
+            else {
+                $("#topbtn").hide()
+                $("#processbtn").show()
+
+                $.ajax({
+                    url: "/Wallet/AddFund",
+                    method: "post",
+                    data: { amount: amount },
+                    dataType: "Json",
+                    success: function (data) {
+                        console.log(data)
+
+                        Swal.fire({
+                            icon: data.includes("Failed!") ? 'error' : 'success',
+                            title: data.includes("Failed!") ? 'Add Fund Failed!' : 'Add Fund Successfull!',
+                            text: data,
+                        }).then(() => {
+                            location.href = location.pathname;
+                        })
+                    }
+                })
+
+            }
+        })
+
+
+
+        $("#member").keyup(function () {
+            if ($(this).val() != "") {
+                IsSponsorExist($(this).val());
+            }
+            else $("#UserName").val("");
+        })
+        function IsSponsorExist(memberId) {
+            try {
+                $.ajax({
+                    url: "/TopUp/GetMemberName/",
+                    method: 'post',
+                    data: { memberId: memberId },
+                    dataType: "text",
+                    success: function (data) {
+                        console.log(data);
+                        $("#UserName").text(data);
+                    }
+                });
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    </script>
+}

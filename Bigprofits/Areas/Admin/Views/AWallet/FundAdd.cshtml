@@ -1,0 +1,125 @@
+﻿@model Bigprofits.Models.FundAmount
+
+@{
+    ViewData["Title"] = "FundAdd";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+@if (TempData["msg"] != null)
+{
+    <p style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"]  </p>
+}
+
+
+
+<div class="row justify-content-center ">
+    <div class="col-12 col-sm-5 mt-5">
+        <!-- Start-->
+        <div class="card shadow mb-4 ">
+            <div class="card-header bg-info py-3">
+
+                <h6 class="m-0 font-weight-bold text-white"> FUND ADD <span> </span></h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="FundAdd">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <div class="text-center " style="color:red;" id="UserName"></div>
+                        <label asp-for="MemberId" class="control-label"></label>
+                        <input required asp-for="MemberId" class="form-control text-uppercase" />
+                        <span asp-validation-for="MemberId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"> Fund Type </label>
+                        <select asp-for="Ftype" class="form-control " required aria-label="Fund Type">
+                            <option value="">Select-Type</option>
+                            <option value="CREDIT"> CREDIT </option>
+                            <option value="DEBIT"> DEBIT </option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label"> Fund Amount </label>
+                        <input id="fund" type="number" min="1" required asp-for="Amount" class="form-control" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group" style="text-align:center" id="Afundbtn">
+                        <input id="fndreq" type="submit" value="Sumbit" class="btn btn-primary" />
+                    </div>
+                    <div class="form-group mt-3" style="text-align:center" id="Aprobtn">
+                        <p style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> Processing.. </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- End-->
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+            console.log("heeloo");
+
+            $("#member").val("")
+            $("#fund").val("")
+            $("#Afundbtn").show()
+            $("#Aprobtn").hide()
+
+        });
+    </script>
+
+    <script>
+
+        //$("#fndreq").on("click", function () {
+
+        //    $("#Afundbtn").hide()
+        //    $("#Aprobtn").show()
+
+        //});
+
+    </script>
+
+    <script>
+        $("#MemberId").keyup(function () {
+            if ($(this).val() != "") {
+                IsSponsorExist($(this).val());
+            }
+            else $("#UserName").val("");
+        })
+
+        function IsSponsorExist(memberId) {
+            try {
+                $.ajax({
+                    url: "GetName/" + memberId,
+                    method: 'post',
+                    data: { memberId: memberId },
+                    dataType: "text",
+                    success: function (data) {
+                        console.log(data);
+                        $("#UserName").text(data);
+                    }
+                });
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    </script>
+
+
+
+
+}

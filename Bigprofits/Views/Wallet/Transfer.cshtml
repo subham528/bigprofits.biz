@@ -1,0 +1,248 @@
+﻿@using System.Data
+@model DataSet
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "TopUp";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
+}
+<style>
+    .dark-mode .form-control.txtAddress {
+        border: 0 !important;
+        outline: 0;
+        background: none;
+        text-align: center;
+        margin-top: 15px;
+    }
+</style>
+
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-success"> @TempData["msg"] </div>
+    //<div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"] </div>
+}
+
+
+<div class="container-fluid">
+    <div class="col-md-12 mb-2 innerLinkWrap">
+
+        <div class="card innerLink ">
+            <a href="/account/topup-wallet-add">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">Add Fund </h6>
+                </div>
+            </a>
+        </div>
+        <div class="card innerLink ">
+            <a href="/account/add-wallet-fund">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">Add Fund From Income</h6>
+                </div>
+            </a>
+        </div>
+
+        <div class="card innerLink">
+            <a href="/account/activate-from-topup-wallet">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">Activation/ReTopUp </h6>
+                </div>
+            </a>
+        </div>
+
+        <div class="card innerLink">
+            <a href="/account/topup-history">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">My Top Up</h6>
+                </div>
+            </a>
+        </div>
+        <div class="card innerLink active">
+            <a href="/account/wallet-send-fund">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">Fund Transfer </h6>
+                </div>
+            </a>
+        </div>
+
+        @* <div class="card innerLink">
+            <a href="/account/wallet-send-fund">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">P2P Transfer</h6>
+                </div>
+            </a>
+        </div>
+        <div class="card innerLink">
+            <a href="/account/wallet-received-fun">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">P2P Recived</h6>
+                </div>
+            </a>
+        </div> *@
+
+        <div class="card innerLink">
+            <a href="/account/wallet-summary">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-dark mb-0">Wallet History</h6>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-4">
+            <!-- Start -->
+            <div class="card shadow-lg rounded-lg mb-4">
+                <div class="card-header py-3 bg-primary text-center">
+                    <h6 class="m-0 font-weight-bold text-white text-lg" style="color:green">P2P TRANSFER</h6>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Wallet Balance Display -->
+                    <div class="text-center my-3">
+                        <p class="text-sm font-semibold text-purple-600 mb-1">Fund Wallet</p>
+                        <p class="text-lg font-bold text-purple-700">$@income.AW_Available</p>
+                    </div>
+
+                    <div asp-validation-summary="All" class="text-danger"></div>
+
+                    <form asp-action="Transfer" method="post">
+                        <!-- User ID Input -->
+                        <div class="mb-4">
+                            <label class="text-sm font-semibold">Enter User ID</label>
+                            <div class="text-center text-red-500 font-semibold" id="UserName"></div>
+                            <input id="Memberid" name="Memberid"
+                                   class="form-control w-full border rounded-lg py-2 px-3"
+                                   placeholder="Enter User ID" required />
+                        </div>
+
+                        <!-- Amount Input -->
+                        <div class="mb-4">
+                            <label class="text-sm font-semibold">Amount ($)</label>
+                            <input id="amount" name="amount" type="number"
+                                   class="form-control w-full border rounded-lg py-2 px-3"
+                                   placeholder="Min 20 & mul of 1" required />
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" id="btnsubmit"
+                                    class="btn bg-primary text-white w-full py-2 rounded-lg text-lg">
+                                Submit Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- End -->
+        </div>
+    </div>
+
+</div>
+
+<div class="col-12 col-sm-12">
+    <div class="card ">
+        <div class="card-header">
+            <h3 class="card-title mb-0"> Transaction History </h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="data-table" class="table table-bordered text-nowrap mb-0">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                Sno
+                            </th>
+
+                            <th>
+                                Member Id
+                            </th>
+                        
+
+                            <th>
+                                Amount
+                            </th>
+                            <th>
+                                Type
+                            </th>
+                          
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                              Details
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>@sno2</td>
+
+                                <td>@row["byMemName"]</td>
+                                <td>@("$" + Convert.ToDecimal(row["amount"]).ToString("0.00"))</td>
+                                <td>
+
+                                    @if (row["ftype"].ToString() == "CREDIT")
+                                    {
+                                        <span style="color:green">CREDIT</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color:red">DEBIT</span>
+                                    }
+                                </td>
+                                <td>@row["fdate"]</td>
+                                <td>@row["details"]</td>
+                              
+
+
+                            </tr>
+                            sno2++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $("#Memberid").keyup(function () {
+            if ($(this).val() != "") {
+                IsSponsorExist($(this).val());
+            }
+            else $("#UserName").val("");
+        })
+        function IsSponsorExist(memberId) {
+            try {
+                $.ajax({
+                    url: "/SponsorName/" + memberId,
+                    method: 'post',
+                    data: { memberId: memberId },
+                    dataType: "text",
+                    success: function (data) {
+                        console.log(data);
+                        $("#UserName").text(data);
+                    }
+                });
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+
+    </script>
+
+
+}

@@ -1,0 +1,410 @@
+﻿@using System.Data
+@using Microsoft.Extensions.Configuration;
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Withdrawal History";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+
+    var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+    CommonMethods lib = new CommonMethods(configuration!);
+}
+
+<style type="text/css">
+    .grdForm {
+        margin: 0 auto;
+        color: #000;
+        background: #fff;
+        text-align: center
+    }
+
+        .grdForm tr td, .grdForm tr th {
+            color: #333;
+            padding: 10px;
+            text-align: center;
+        }
+
+    .grdTopup {
+        width: 100%;
+        background: #fff;
+    }
+
+        .grdTopup tr td, .grdTopup tr th {
+            color: #333;
+            padding: 10px 5px;
+            text-align: center;
+            border: 1px solid #d4d4d4;
+        }
+
+        .grdTopup tr th {
+            background: #464444;
+            color: #fff;
+        }
+
+        .grdTopup tr:nth-child(odd) {
+            background: #f1f1f1;
+        }
+</style>
+
+<div class="page-heading">
+    <section class="section">
+        <h4 class="text-center">Pay Token CPC (BEP-20)</h4>
+
+        <p style="text-align: center; color: #000;margin-bottom: 0;">Admin can send CPC BEP-20 to member wallet</p>
+        <div id="divMsg" class="divMsg"></div>
+
+        <table class="grdForm">
+            <tr>
+                <td>
+                    <b>
+                        CPC BEP-20 Balance :
+                        <span id="lblBalance"></span>
+                    </b>
+                </td>
+            </tr>
+            <tr>
+
+                <td>
+                    <input type="button" id="btnWithdrawal" value="MAKE WITHDRAWAL" onclick="memberWithdrawal()" style="display: none" />
+                </td>
+            </tr>
+        </table>
+
+        <p style="color: #000; font-size: 18px; text-align: center; margin-top: 20px; background: #f5f5f5; padding: 10px; border: 1px solid #b1b1b1;">
+            Total CPC BEP-20 to be paid :
+            <span id="lblTotalAmount">0.00</span>
+            <input type="button" id="btnPaid" value="Approve Withdrawal" style="font-size: 14px; margin-left: 15px; display: none" onclick="memberWithdrawal()" />
+        </p>
+
+        <div class="card">
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Member</th>
+                            <th>Withdrawal</th>
+                            <th>Admin Charge</th>
+                            <th>Payable Amount</th>
+                            <th>Address</th>
+                            <th>Request Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+                        @if (Model.Tables[0].Rows.Count > 0)
+                        {
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <tr>
+                                    <td><input type="checkbox" name="widChk" value='@row["id"]' checked="checked" style="height: 20px; width: 20px; vertical-align: bottom" /> @sno2</td>
+                                    <td>@row["memName"] / @row["memberid"]</td>
+                                    <td>@string.Format("{0:0.00}", row["withdrawal"])</td>
+                                    <td>@string.Format("{0:0.00}", row["adminCharge"])</td>
+                                    <td><span class="trxAmount">@string.Format("{0:0.00}", row["details"])</span> @row["wType"]</td>
+                                    <td><span class="memAddress">@lib.Decrypt(row["memAddress"].ToString()!)</span></td>
+                                    <td>@string.Format("{0:dd/MMMM/yyyy hh:mm tt}", row["wdlDate"])</td>
+                                </tr>
+                                sno2++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+</div>
+<input type="hidden" id="txtOwner" />
+
+
+@section Scripts{
+    <script type="text/javascript" src="~/adminassets/web3.min.js"></script>
+    <script type="text/javascript" src="~/adminassets/bignumber.js"></script>
+    <script>
+        var weiValue = 1000000000000000000;
+        var account;
+        var contractAbi;
+        var tokenAddress;
+        var contractAddress;
+        var privateKey;
+        var nonce;
+        var ready = false;
+
+        var submitBtn = $("#btnPaid");
+
+        var tokenAddress = "", receiver = "";
+        function getTokenDetail() {
+            $.ajax({
+                url: '/britglbl253adpnl/address-info',
+                method: 'post',
+                data: { currency: "CPC-BEP-20" },
+                dataType: 'json',
+                success: function (res) {
+                    if (!res.toString().includes("Failed")) {
+                        console.log(res);
+                        tokenAddress = res.tokenAddress;
+                        receiver = res.withdrawalAddress;
+                        privateKey = res.privateKey;
+                        contractAbi = res.contractAbi;
+                        contractAddress = res.contractAddress;
+
+                        $("#txtOwner").val(receiver);
+                        submitBtn.removeAttr("disabled");
+                    }
+                    else console.log(res)
+                }
+            })
+        }
+        getTokenDetail();
+
+        var trxBal = 0, tokenBal = 0
+        async function getDetails() {
+            try {
+                if (typeof window.ethereum == 'undefined') {
+                    console.log("MetaMask is not installed!");
+                }
+                else {
+                    const web3 = new Web3(window.ethereum);
+                    //chainId = await ethereum.request({ method: 'eth_chainId' });
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    account = accounts[0].toLowerCase();
+                    //console.log(web3.utils.hexToNumber(chainId));
+                    console.log(account)
+                    receiver = account
+                    //console.log(receiver)
+
+                    web3.eth.getBalance(account).then(res => {
+                        console.log(res);
+                        accountBalance = parseFloat(res);
+                        trxBal = (accountBalance / weiValue)
+
+                        // $('#lblBalance').text(accountBalance / weiValue)
+                        // submitBtn.removeAttr("disabled");
+                        // submitBtn.val("Approve Withdrawal");
+
+                        setTimeout(async () => {
+                            const contract = new web3.eth.Contract(JSON.parse(contractAbi), tokenAddress);
+                            await contract.methods.balanceOf(receiver).call((err, bal) => {
+                                if (bal) {
+                                    console.log(bal)
+
+                                    web3.eth.getTransactionCount(receiver).then(res => {
+                                        $('#lblBalance').text(parseFloat(parseFloat(bal) / weiValue).toFixed(4));
+                                        $('#btnPaid').css({ 'display': 'inline' })
+                                        ready = true;
+                                    });
+                                }
+                                else {
+                                    console.log(err)
+                                    alert("Opps! Could not find the contract. Please try again")
+                                }
+                            })
+                        }, 0)
+                    });
+
+
+                }
+            } catch (e) {
+                console.log(e);
+                setTimeout(() => { location.href = location.pathname }, 10000)
+            }
+        }
+
+        function memberWithdrawal() {
+            var arMemAddress = [];
+            var arTrxAmount = [];
+            var arSunAmount = [];
+            var arWidId = [];
+            $('input[name="widChk"]').each(function () {
+                if ($(this).prop("checked") == true) {
+                    var adrs = $(this).parent().parent().find(".memAddress").text();
+                    var amnt = $(this).parent().parent().find(".trxAmount").text();
+                    arMemAddress.push(adrs);
+                    arTrxAmount.push(parseFloat(amnt));
+                    arSunAmount.push(parseFloat(amnt * weiValue));
+                    arWidId.push($(this).val())
+                }
+            })
+
+            var sum = arTrxAmount.reduce(function (a, b) {
+                return a + b;
+            }, 0);
+
+            $("#lblTotalAmount").text(parseFloat(sum).toFixed(2));
+            $("#txtWidAddress").val(arMemAddress);
+            $("#txtWidAmount").val(arTrxAmount);
+            $("#txtSunAmount").val(arSunAmount);
+            $("#txtWidId").val(arWidId);
+
+            var totalWid = parseFloat($('#lblTotalAmount').text());
+            var balance = parseFloat($('#lblBalance').text());
+            //var sender = account.toUpperCase();
+            var owner = $("#txtOwner").val().toUpperCase();
+            var gasFees = arMemAddress.length * 8;
+
+            //if (parseFloat($("#lblTotalAmount").text()) <= 0) {
+            //    alert("Select Withdrawal First! Select at least one withdrawal then approve.");
+            //    return false;
+            //}
+            //if (sender != owner || owner == "" || owner == undefined || sender == undefined || sender == null) {
+            //    alert("Invalid Owner! Only owner can make withdrawal.");
+            //    return false;
+            //}
+            if (totalWid > balance) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Insufficient CPC-BEP-20 Balance!',
+                    text: 'Insufficient CPC-BEP-20 Balance! You do not have enough CPC-BEP-20 balance to make these withdrawal. Please deposit required CPC-BEP-20.',
+                }).then(() => {
+                    location.href = "/britglbl253adpnl/withdrawal-RequestCPC/TOKEN";
+                })
+
+                //setTimeout(() => { location.href = location.pathname }, 10000)
+                return false;
+            }
+            else if (trxBal < 0.00018) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Insufficient Gas Fees!',
+                    text: 'Insufficient Gas Fees! Minimum " + 0.00018 + " is required. You do not have enough BNB in your wallet.',
+                }).then(() => {
+                    location.href = "/britglbl253adpnl/withdrawal-RequestCPC/TOKEN";
+                })
+                return false;
+            }
+            else {
+                //return false;
+                if (arMemAddress.length <= 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'List Is Empty!',
+                        text: '',
+                    }).then(() => {
+                        location.href = "/britglbl253adpnl/withdrawal-RequestCPC/TOKEN";
+                    })
+
+                    //setTimeout(() => { location.href = location.pathname }, 10000)
+                }
+                else {
+                    submitBtn.attr("disabled", "");
+                    submitBtn.val("Please wait..");
+
+                    setTimeout(async () => {
+                        const web3 = new Web3(window.ethereum);
+                        const contract = new web3.eth.Contract(JSON.parse(contractAbi), tokenAddress);
+                        nonce = await web3.eth.getTransactionCount(receiver, 'latest');
+
+                        var receiverAdd = "", amountTbp = 0, wid = "", txObject = {}, raw = "";
+                        for (var i = 0; i < arMemAddress.length; i++) {
+                            wid = arWidId[i];
+                            receiverAdd = arMemAddress[i];
+                            amountTbp = parseFloat(arTrxAmount[i] * weiValue).toFixed();
+                            amountTbp = BigNumber(amountTbp).toFixed();
+                            txObject = {};
+                            raw = "";
+
+                            //alert(wid);
+                            try {
+                                await contract.methods.transfer(receiverAdd, amountTbp).send({ from: account }).then(result => {
+                                    console.log(result)
+
+                                    console.log("success", result.status);
+                                    console.log("from", result.events.Transfer.returnValues.from);
+                                    console.log("to", result.events.Transfer.returnValues.to);
+                                    console.log("amount", result.events.Transfer.returnValues.value);
+
+                                    if (result.status) {
+                                        $.ajax({
+                                            url: '/britglbl253adpnl/approve-token-pay',
+                                            method: 'post',
+                                            contentType: 'application/x-www-form-urlencoded',
+                                            data: $.param({
+                                                hashId: result.transactionHash,
+                                                from: result.events.Transfer.returnValues.from,
+                                                to: result.events.Transfer.returnValues.to,
+                                                id: wid
+                                            }),
+                                            dataType: "text",
+                                            success: function (data) {
+                                                console.log(data)
+
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Transfer Successful!',
+                                                    text: 'Token transfer successful',
+                                                }).then(() => {
+                                                    location.href = "/britglbl253adpnl/pay-token-lit/0";
+                                                })
+
+                                                //setTimeout(async () => { location.href = location.pathname; }, 30000)
+                                            }
+                                        })
+                                    }
+                                })
+
+                                // txObject = {
+                                //     nonce: nonce.toString(),
+                                //     chainId: 56,
+                                //     from: receiver,
+                                //     to: tokenAddress,
+                                //     gas: 100000,
+                                //     value: "0x0",
+                                //     data: contract.methods.transfer(receiverAdd, web3.utils.toHex(web3.utils.toWei(amountTbp.toString(), "wei"))).encodeABI()
+                                // }
+                                // console.log(txObject)
+                                // await web3.eth.accounts.signTransaction(txObject, privateKey, (err, res) => {
+                                //     console.log(res);
+                                //     raw = res.rawTransaction
+
+                                //     setTimeout(async () => {
+                                //         await web3.eth.sendSignedTransaction(raw, (err, txHash) => {
+                                //             if (err) {
+                                //                 console.log(err)
+                                //                 setTimeout(function () { location.href = location.pathname; }, 10000)
+                                //             }
+                                //             else console.log("txHash:", txHash)
+
+                                //             if (txHash != null && txHash != undefined) {
+                                //                 $.ajax({
+                                //                     url: '/britglbl253adpnl/approve-token-pay',
+                                //                     method: 'post',
+                                //                     data: { hashId: txHash, from:  id: wid },
+                                //                     dataType: 'json',
+                                //                     success: function (data) {
+                                //                         console.log(data)
+                                //                         setTimeout(async () => { location.href = location.pathname; }, 30000)
+                                //                     }
+                                //                 })
+                                //             }
+                                //         })
+                                //     }, 0)
+                                // })
+                            } catch (error) {
+                                console.log(error)
+                                //alert(error.message)
+                                //setTimeout(async () => { location.href = location.pathname; }, 30000)
+                            }
+                        }
+                    }, 0)
+                }
+            }
+        }
+
+        setTimeout(getDetails, 1500);
+                        // var rd = setInterval(() => {
+                        //     if (ready) {
+                        //         clearInterval(rd);
+                        //         memberWithdrawal();
+                        //     }
+                        // }, 2000);
+
+
+
+    </script>
+}
+
+
+

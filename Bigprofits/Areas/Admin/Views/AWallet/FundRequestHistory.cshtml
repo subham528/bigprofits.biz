@@ -1,0 +1,100 @@
+﻿@* @model IEnumerable<Bigprofits.Models.FundAmount>
+
+@{
+    ViewData["Title"] = "FundRequestHistory";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                FUND HISTROY
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap text-center" id="table1">
+                    <thead>
+                        <tr>
+                            <th>
+                                Sno
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MemberId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FundAmount1)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.UtrNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TRXAmmount)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Rdate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Adate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FundStatus)
+                            </th>
+                          
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @sno
+                                    @{
+                                        sno++;
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MemberId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FundAmount1)
+                                </td>
+                                <td>
+                                    @if (item.UtrNo != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => item.UtrNo)
+                                    }
+                                    else
+                                    {
+                                        <p class=" text-danger"> NA </p>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TRXAmmount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Rdate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Adate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FundStatus)
+                                </td>
+                              
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+
+ *@

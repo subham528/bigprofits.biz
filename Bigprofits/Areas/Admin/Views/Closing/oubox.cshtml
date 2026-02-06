@@ -1,0 +1,70 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Outbox";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
+               Outbox Histroy
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap" id="datatable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Sno
+                            </th>
+                            <th>
+                                Memberid
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Subject
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Request Date
+                            </th>
+                            <th>
+                                READ
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>@sno2</td>
+                                <td>@row["ToBy"]</td>
+                                <td>@row["memName"]</td>
+                                <td>@row["reply"]</td>
+                                <td>@row["MyDetails"]</td>
+                                <td>@row["Status"]</td>
+                                <td>@row["SDate"]</td>
+                           
+                            </tr>
+                            sno2++;
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>

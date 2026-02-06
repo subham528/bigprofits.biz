@@ -1,0 +1,228 @@
+﻿@model Bigprofits.Models.MemberInfo
+@using Microsoft.Extensions.Configuration;
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Withdrawal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //decimal num = ViewBag.NumValue;
+    var configuration = Context.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration;
+    CommonMethods lib = new CommonMethods(configuration!);
+}
+
+<div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;" id="showmsg"></div>
+
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-danger"> @Html.Raw(TempData["msg"]) </div>
+}
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">@TempData["success"]</div>
+}
+
+<div class="container-fluid">
+    <div class="card innerLink active ">
+        <a href="/account/withdrawal">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-white mb-0">Withdrawal</h6>
+            </div>
+        </a>
+    </div>
+    <div class="card innerLink active ">
+        <a href="/account/roiwithdrawal">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-white mb-0">ROI-CoinPayToken-Withdrawal</h6>
+            </div>
+        </a>
+    </div>
+    @*  <div class="card innerLink">
+    <a href="/account/Capital-Withdrawal">
+    <div class="card-body p-2 text-center">
+    <h6 class="text-dark mb-0">Capital Withdrawal</h6>
+    </div>
+    </a>
+    </div> *@
+
+    <div class="card innerLink">
+        <a href="/account/withdrawal-history">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-dark mb-0">Withdrawal History</h6>
+            </div>
+        </a>
+    </div>
+
+
+</div>
+<div class="col-12 justify-content">
+    <!-- Start-->
+    <div class="card shadow mb-4 ">
+        <div class="card-header bg-primary py-3">
+            @* Remove Span*@
+            <h6 class="m-0 font-weight-bold text-white"> ROI-WITHDRAWAL <span> </span></h6>
+        </div>
+        <div class="card-body">
+
+            @* <label>&nbsp; Member Id</label>*@
+
+            <form asp-action="roiWithdrawal" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label class="control-label">Wallet Address USDT (BEP-20)</label>
+                    <input value="@lib.Decrypt(ViewBag.memaddress)" class="form-control" disabled />
+                    <span class="text-danger"></span>
+                </div>
+
+                @* @if (ViewBag.widMode != null && ViewBag.widMode.ToString() == "INR")
+                {
+                <div class="mb-3">
+                <label class="form-label">Account No</label>
+                <input type="text" value="@ViewBag.acNo" readonly class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                <label class="form-label">IFSC</label>
+                <input type="text" value="@ViewBag.ifsc" readonly class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                <label class="form-label">Account Holder Name</label>
+                <input type="text" value="@ViewBag.acName" readonly class="form-control" />
+                </div>
+                } *@
+
+                <div class="mb-3">
+                    <label class="control-label">Available Balance($)</label>
+                    <input value="@ViewBag.NumValue" readonly class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="control-label">Available CPC</label>
+                    <input value="@ViewBag.NumValue" readonly class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="control-label">Enter CPC</label>
+                    <input id="WdrlAmount" name="WdrlAmount" class="form-control" placeholder="Min 10 & mul of 10" />
+                    <span class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="control-label">Amount (After Deduction)</label>
+                    <input id="txtAmountFinal" class="form-control" value="0" readonly />
+                    <span class="text-danger"></span>
+                </div>
+
+                @*      <div class="mb-3">
+                <label class="control-label">Payable Amount</label>
+                <input id="txtFinalAmount" class="form-control" value="0" readonly />
+                </div> *@
+
+                <div class="mb-3 text-center mt-3">
+                    <input type="submit" value="WITHDRAWAL" id="fndreq" class="btn bg-primary text-white" />
+                </div>
+
+
+                @*   <div class="mb-3 mt-3" style="text-align:center" id="fundbtn">
+                <input type="submit" id="fndreq" value="Submit Request" class="btn bg-primary text-white" />
+                </div> *@
+
+                <div class="mb-3 mt-3" style="text-align:center" id="probtn">
+                    <p style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> Processing.. </p>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $("#WdrlAmount").keyup(function () {
+            FnCalPayAmount();
+
+            // var amount = parseFloat($("#WdrlAmount").val().trim())
+            // if (amount >= 1) {
+            //     $("#fundbtn").hide()
+            //     $("#probtn").show()
+
+            //     $.ajax({
+            //         url: "/Withdrawal/get_trx",
+            //         method: 'get',
+            //         dataType: "text",
+            //         success: function (data) {
+            //             //console.log(data);
+            //             var trxRate = parseFloat(data);
+            //             var trxAmount = parseFloat(amount * trxRate).toFixed(2)
+            //             $("#TRXAmmount").val(trxAmount)
+
+            //             $("#fundbtn").show()
+            //             $("#probtn").hide()
+            //         }
+            //     });
+            // }
+            // else {
+            //     $("#TRXAmmount").val("0")
+            // }
+
+        })
+
+        function FnCalPayAmount() {
+            var amount = parseFloat($("#WdrlAmount").val().trim())
+            // var usdRate = parseFloat('@ViewBag.usdRate')
+            var currency = $("#WdrlAmount").val().trim();
+
+            if (amount != "") {
+                amount = amount - (amount * 10 / 100)
+                $("#txtAmountFinal").val(amount)
+
+                // if (currency == "USDT") $("#txtFinalAmount").val((amount / usdRate).toFixed(2) + " USDT")
+                // else $("#txtFinalAmount").val(amount + " INR")
+            }
+            else {
+                $("#txtFinalAmount").val("0")
+                $("#txtAmountFinal").val("0")
+            }
+        }
+
+
+        $(function () {
+
+            $("#FundAmount1").val("")
+            $("#Details").val("")
+            $("#fundbtn").show()
+            $("#probtn").hide()
+        });
+
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+            if ($("#MemAcNo").val() == "" || $("#MemAcBranch").val() == "" || $("#MemAcIfsc").val() == "" || $("#MemAcBank").val() == "") {
+                $("#showmsg").html("please update Your bank detail first..! <a href='/Privacy/BankDetails' >   click here </a> to update")
+
+                // $("#btnsubmit").attr("disabled", "disabled");
+
+
+            }
+
+
+        });
+
+
+
+    </script>
+
+    @if (TempData["Ssuc"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                html: '@Html.Raw(TempData["Ssuc"])'
+            })
+        </script>
+    }
+}

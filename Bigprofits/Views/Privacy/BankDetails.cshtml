@@ -1,0 +1,138 @@
+﻿@model Bigprofits.Models.MemberInfo
+
+@{
+    ViewData["Title"] = "BankDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    hr {
+        border-top: 1px solid #121010fa;
+    }
+
+    .ww {
+    }
+</style>
+
+
+
+
+@if (ViewBag.bankupMsg != null)
+{
+    <h4 class="text-danger" style="text-align:center"> @ViewBag.bankupMsg </h4>
+}
+
+
+<div class="container-fluid">
+    @* <div class="col-md-12 mb-2 innerLinkWrap">
+        <div class="card innerLink">
+            <a href="/account/profile">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-white mb-0">Profile </h6>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="card innerLink">
+            <a href="/account/reset-password">
+                <div class="card-body p-2 text-center">
+                    <h6 class="text-white mb-0">Password </h6>
+                </div>
+            </a>
+        </div>
+    </div> *@
+
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-white">Bank Details Update</h6>
+
+        </div>
+        <div class="card-body">
+
+            <form asp-controller="Privacy" asp-action="BankDetails" method="post">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="MemberId" />
+                <!-- Row start-->
+                <div class="row">
+
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Account No</label>
+                            <input asp-for="MemAcNo" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">IFSC</label>
+                            <input asp-for="MemAcIfsc" class="form-control " />
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">A/c Holder Name</label>
+                            <input asp-for="MemAcName" class="form-control " />
+                        </div>
+                    </div>
+
+                    @* <div class="col-12 col-sm-6">
+                    <div class="form-group">
+                    <label asp-for="MemAcBank" class="control-label"></label>
+                    <input asp-for="MemAcBank" class="form-control " />
+                    <span asp-validation-for="MemAcBank" class="text-danger"></span>
+                    </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                    <div class="form-group">
+                    <label asp-for="MemAcBranch" class="control-label"></label>
+                    <input asp-for="MemAcBranch" class="form-control " />
+                    <span asp-validation-for="MemAcBranch" class="text-danger"></span>
+                    </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                    <div class="form-group">
+                    <label asp-for="MemAcType" class="control-label"></label>
+                    <input asp-for="MemAcType" class="form-control " />
+                    <span asp-validation-for="MemAcType" class="text-danger"></span>
+                    </div>
+                    </div> *@
+
+                </div>
+                <!-- Row end-->
+
+
+                <div class="form-group text-center mt-3 ">
+                    <input type="submit" value="Save" class="btn bg-primary text-white" />
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+@section Scripts {
+
+    <script>
+        $('input[type=text]').each(function () {
+            if ($(this).val() != "") $(this).attr("readonly", "")
+        })
+    </script>
+
+
+}

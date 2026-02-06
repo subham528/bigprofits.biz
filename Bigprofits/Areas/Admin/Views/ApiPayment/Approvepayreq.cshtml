@@ -1,0 +1,228 @@
+﻿@{
+    ViewData["Title"] = "Approvepayreq";
+    Layout = null
+    ;
+}
+<link rel="stylesheet" href="~/adminassets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+<link rel="stylesheet" href="~/adminassets/vendors/bootstrap-icons/bootstrap-icons.css">
+<link rel="stylesheet" href="~/adminassets/css/app.css">
+
+<link rel="stylesheet" href="~/adminassets/vendors/jquery-datatables/jquery.dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="~/adminassets/vendors/fontawesome/all.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/adminassets/css/bootstrap.css">
+<link rel="stylesheet" href="~/adminassets/vendors/iconly/bold.css">
+
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+
+<!---FOR SWEET ALERT-->
+<link href="~/SweetAlert/dist/sweetalert2.min.css" rel="stylesheet">
+<link href="~/SCuteAlert/style.css" rel="stylesheet">
+@model IEnumerable<TblApiPaymentReq>
+@{
+    int i = 1;
+}
+
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (ViewBag.msg != null)
+            {
+                if (ViewBag.code == 1)
+                {
+                    <div class="col-md-12 text-center text-success" style="margin-bottom: 15px;">@ViewBag.msg</div>
+                }
+                else
+                {
+                    <div class="col-md-12 text-center text-danger" style="margin-bottom: 15px;">@ViewBag.msg</div>
+                }
+            }
+        </div>
+
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Fund Requested
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.totalFundReq</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Approve Fund
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.approvedFund</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Pending Fund
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.pendingFund</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Withdrawal Fund
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.withdrawalAmount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                API CHARGES
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.apiCharge</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Discount
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.discount</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+            <div class="card border-bottom-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Avilable Fund
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"> @ViewBag.available </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-inr fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Withdrawl Req List </h6>
+        </div>
+        <!--- Form Start-->
+        <form method="post">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr role="row">
+                                <th>Sno</th>
+                                <th>REQUEST Id</th>
+                                <th>Amount</th>
+                                <th>Request Date</th>
+                                <th>Status</th>
+                                <th>Approve/Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="">
+                                    <td class="">@i</td>
+                                    <td class="">@item.AdminReqid</td>
+                                    <td class="">@item.ReqAmount</td>
+                                    <td class="">@item.ReqAmount</td>
+                                    <td class="">
+                                        @if (item.ReqStatus == 1)
+                                        {
+                                            <p class="text-success">APPROVED</p>
+                                        }
+                                        else if (item.ReqStatus == 0)
+                                        {
+                                            <p class="text-warning">PENDING</p>
+                                        }
+                                        else if (item.ReqStatus == 2)
+                                        {
+                                            <p class="text-danger">REJECT</p>
+                                        }
+                                    </td>
+                                    <td class="">@item.ApproveDate</td>
+                                    <td class="">
+                                        <a asp-route-fundid="@item.Id" asp-route-id="1" asp-action="ApiFundRequestApprove"> <p class="btn btn-success">Approve </p> </a>  &nbsp;
+                                        <a asp-route-fundid="@item.Id" asp-route-id="0" asp-action="ApiFundRequestApprove"> <p class="btn btn-danger">Reject </p> </a>
+                                    </td>
+
+                                </tr>
+                                i++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

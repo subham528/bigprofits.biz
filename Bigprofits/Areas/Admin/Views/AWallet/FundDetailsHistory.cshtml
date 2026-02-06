@@ -1,0 +1,115 @@
+﻿@model IEnumerable<Bigprofits.Models.FundAmount>
+
+@{
+    ViewData["Title"] = "FundRequestHistory";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+<div class="page-heading">
+    <!-- Basic Tables start -->
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                FUND HISTROY
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap text-center" id="table1">
+                    <thead>
+                        <tr>
+                            <th>
+                                Sno
+                            </th>
+                            @*                             <th>
+                            Image
+                            </th> *@
+                            <th>
+                                MemberId
+                            </th>
+                            <th>
+                              Fund Amount
+                            </th>
+                           @*  <th>
+                               Hash Id
+                            </th> *@
+                            <th>
+                              Utr Number
+                            </th>
+                            <th>
+                              Request date
+                            </th>
+                            <th>
+                              ApproveDate/Reject Date
+                            </th>
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @sno
+                                    @{
+                                        sno++;
+                                    }
+                                </td>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MemberId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Amount)
+                                </td>
+                               @*  <td>
+                                    @if (item.HashId != null)
+                                    {
+                                        @Html.DisplayFor(modelItem => item.HashId)
+                                    }
+                                    else
+                                    {
+                                        <p class=" text-danger"> NA </p>
+                                    }
+                                </td> *@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TokenAmount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Fdate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ApproveDate)
+                                </td>
+                              
+                                <td>
+                                    @if (item.Status == 1)
+                                    {
+                                     <span>Approve</span>
+                                    }
+                                    else if (item.Status == 2)
+                                    {
+                                        <span>Reject</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Pending</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+    <!-- Basic Tables end -->
+</div>
+
+

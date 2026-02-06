@@ -1,0 +1,53 @@
+﻿@using System.Data
+@model DataSet
+@using Newtonsoft.Json;
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+
+
+<div class="col-md-12 mb-2 innerLinkWrap">
+    <div class="card innerLink ">
+        <a href="/account/new-message">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-white mb-0">Support </h6>
+            </div>
+        </a>
+    </div>
+    <div class="card innerLink active ">
+        <a href="/account/inbox-massege">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-white mb-0">InBox </h6>
+            </div>
+        </a>
+    </div>
+    <div class="card innerLink  ">
+        <a href="/account/new-message-outbox">
+            <div class="card-body p-2 text-center">
+                <h6 class="text-white mb-0">OutBox </h6>
+            </div>
+        </a>
+    </div>
+
+
+
+</div>
+<div class="row">
+    <div class="col-12 col-sm-12">
+
+        @foreach (DataRow row in Model.Tables[0].Rows)
+        {
+            <div class="card mb-3">
+                <div class='card-body'>
+                    <p><b>Subject</b><br> @row["Reply"]</p>
+                    <p><b class="text-info">Admin Reply</b><br>@row["MyDetails"]</p>
+                    <p class="text-primary text-end mb-0">@row["SDate"]</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

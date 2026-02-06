@@ -1,0 +1,64 @@
+﻿@model Bigprofits.Models.TblNews
+
+@{
+    ViewData["Title"] = "AddNews";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+
+@if (TempData["nwadd"] != null)
+{
+    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["nwadd"] </div>
+}
+
+
+<div class="row justify-content-center ">
+    <div class="col-12 col-sm-5 mt-5">
+        <!-- Start-->
+        <div class="card shadow mb-4 ">
+            <div class="card-header bg-info py-3">
+
+                <h6 class="m-0 font-weight-bold text-white"> ADD NEWS <span> </span></h6>
+            </div>
+            <div class="card-body">
+                <div class=" ">
+
+
+                    <form asp-action="AddNews" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="control-label"> Heading </label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="News" class="control-label"></label>
+                            <input asp-for="News" class="form-control" />
+                            <span asp-validation-for="News" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NewsDate" class="control-label"></label>
+                            <input asp-for="NewsDate" class="form-control" />
+                            <span asp-validation-for="NewsDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align:center">
+                            <input type="submit" value="ADD NEWS" class="btn btn-primary" />
+                        </div>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- End-->
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+
+
+
+}

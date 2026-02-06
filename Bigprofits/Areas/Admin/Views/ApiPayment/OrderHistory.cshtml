@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "OrderHistory";
+
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+@model IEnumerable<OnlineService>
+@{
+    int i = 1;
+}
+
+<div class="Container-fluid">
+
+    <div class="col-md-12">
+        @if (ViewBag.msg != null)
+        {
+            if (ViewBag.code == 1)
+            {
+                <div class="col-md-12 text-center text-success" style="margin-bottom: 15px;">@ViewBag.msg</div>
+            }
+            else
+            {
+                <div class="col-md-12 text-center text-danger" style="margin-bottom: 15px;">@ViewBag.msg</div>
+            }
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Order History </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr role="row">
+                                    <th>Sno</th>
+                                    <th>Member Id</th>
+                                    @*<th>Name</th>*@
+                                    <th>Service</th>
+                                    <th>Order Id</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="">
+                                        <td class="">@i</td>
+                                        <td class="">@item.Memberid</td>
+                                        @*<td class="">@item.BenfcName</td>*@
+                                        <td class="">@item.ServiceType</td>
+                                        <td class="">@item.OurTxnNo</td>
+                                        <td class="">@item.Amount</td>
+                                        <td class="">@String.Format("{0:dd/MMM/yyyy hh:mm tt}", item.Odate)</td>
+                                        <td>
+                                            @if (item.IsPaid == 0)
+                                            {
+                                                <span class="text-danger">FAILED</span>
+                                            }
+                                            else if (item.IsPaid == 1)
+                                            {
+                                                <span class="text-success">SUCCESS</span>
+                                            }
+                                            else if (item.IsPaid == 2)
+                                            {
+                                                <span class="text-danger">FAILED</span>
+                                            }
+                                        </td>
+                                        <td class="">@item.Messagess</td>
+                                        <td class="">
+                                            @* @if (item.IsPaid != 0)
+                                        { *@
+                                            <a class="btn btn-info" asp-action="OrderDetails" asp-route-txnId="@item.OurTxnNo">Check Status </a>
+                                            @* } *@
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

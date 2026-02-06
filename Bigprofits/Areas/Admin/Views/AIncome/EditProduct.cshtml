@@ -1,0 +1,153 @@
+﻿@model Bigprofits.Models.AddProduct
+
+@{
+    Layout = "_AALayout";
+}
+<br />
+@* <i class="fas fa-arroe-left"></i> *@
+<a href="/britglbl253adpnl/product-list"><i class="fas fa-arrow-left"></i></a>
+<br />
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" asp-action="update-products" asp-controller="britglbl253adpnl" asp-route-id="@Model.Id" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <input asp-for="ProductId" type="hidden" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="control-label">Select Category</label>
+                        <select asp-for="CatId" class="form-control" required asp-items="ViewBag.CList">
+                            <option selected value="">Select Category</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="control-label">Select Sub Category</label>
+                        <select asp-for="SubCatId" class="form-control" required asp-items="ViewBag.SCList">
+                            <option selected value="">Select Sub Category</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ProductName">Product Name</label>
+                        <input type="text" asp-for="ProductName" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ProductDescription">Product Description</label>
+                        <textarea asp-for="ProductDescription" class="form-control"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ProductBv">Product BV</label>
+                        <input id="Price" type="number" asp-for="ProductBv" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Price">Price</label>
+                        <input type="number" asp-for="Price" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Gst">GST (%)</label>
+                        <input type="text" asp-for="Gst" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PriceWithGst">Price with GST</label>
+                        <input style="color:red" type="text" asp-for="PriceWithGst" class="form-control" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="FinalPrice">Final Price</label>
+                        @* &nbsp;&nbsp; <input type="checkbox" class="form-check-input" id="Include_GST_Checkbox" checked>
+                        <label class="form-check-label" for="Include_GST_Checkbox">Include GST</label> *@
+                        <input style="color:red" type="text" asp-for="FinalPrice" class="form-control" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Weight">Weight</label>
+                        <input type="text" asp-for="Weight" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Product_Image">Update Product Image</label>
+                        <input type="file" asp-for="Product_Image" class="form-control" />
+                    </div>
+
+                    <button type="submit" style="font-size:15px;" class="btn btn-primary btn-radius">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Get references to the input fields and checkbox
+        const priceInput = document.getElementById('Price');
+        const gstInput = document.getElementById('Gst');
+        const priceWithGSTInput = document.getElementById('Price_With_GST');
+        const finalPriceInput = document.getElementById('Final_Price');
+        //const includeGSTCheckbox = document.getElementById('Include_GST_Checkbox');
+
+        // Add event listeners
+        priceInput.addEventListener('input', calculatePriceWithGST);
+        gstInput.addEventListener('input', calculatePriceWithGST);
+        //includeGSTCheckbox.addEventListener('change', calculatePriceWithGST);
+
+        // Function to calculate Price_With_GST
+        function calculatePriceWithGST() {
+            const basePrice = parseFloat(priceInput.value) || 0; // Get base price (default to 0 if invalid)
+            const gstPercentage = parseFloat(gstInput.value) || 0; // Get GST percentage (default to 0 if invalid)
+            const includeGST = true //includeGSTCheckbox.checked; // Check if GST should be included
+
+            // Calculate price with GST
+            const priceWithGST = basePrice + (basePrice * gstPercentage / 100);
+
+            // If checkbox is checked, show price with GST; if unchecked, show base price without GST
+            if (includeGST) {
+                finalPriceInput.value = priceWithGST.toFixed(2);
+            } else {
+                finalPriceInput.value = basePrice.toFixed(2);
+            }
+
+            // Update hidden field for Price_With_GST (you can keep this for other purposes)
+            priceWithGSTInput.value = priceWithGST.toFixed(2);
+        }
+
+        // // Initial calculation to populate the fields on page load
+        // calculatePriceWithGST();
+
+        $("#CatId").on("change", function(){
+            var Id = $("#CatId").val()
+            if(Id != ""){
+                getSubCat(Id)
+            }
+        })
+
+        function getSubCat(catId){
+            $.ajax({
+                url: "/britglbl253adpnl/select-sub-category",
+                method: "get",
+                data: { catId: catId },
+                dataType: "text",
+                success: function (data) {
+                    data = JSON.parse(data)
+                    //console.log(data)
+
+                    $("#SubCatId").html('<option selected value="">Select Sub Category</option>')
+                    data.forEach(function (item) {
+                        var option = $("<option>").val(item.subCatId).text(item.name);
+                        $("#SubCatId").append(option);
+                    });
+                }
+            })
+        }
+
+
+    </script>
+}
