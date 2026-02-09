@@ -247,7 +247,7 @@ namespace Bigprofits.Controllers
                     {
                         ds.Tables[0].Rows[i]["spoLogId"].ToString();
                         ds.Tables[0].Rows[i]["name"].ToString();
-                        config2 = config2 + ds.Tables[0].Rows[i]["memberId"].ToString() + " = {'parent': M" + parent + ",'innerHTML': \"<a href='#'><div class='card p-1 bg-default text-white text-center' title='Empty Position' style='margin-bottom:0px;'><div class='card-body' style='display:grid;text-align:center;padding: 10px 5px;place-items: center;'><img src='//assets/img/logo.png' alt='User-Image' style='width: 100px;height: 100px;border-radius: 50%;object-fit: cover;z-index: 99;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);border: 3px solid #828389;background-color: white;'><p>Empty</p><p>Position</p></div></div></a>\"},";
+                        config2 = config2 + ds.Tables[0].Rows[i]["memberId"].ToString() + " = {'parent': M" + parent + ",'innerHTML': \"<a href='#'><div class='card p-1 bg-default text-white text-center' title='Empty Position' style='margin-bottom:0px;'><div class='card-body' style='display:grid;text-align:center;padding: 10px 5px;place-items: center;'><img src='' alt='User-Image' style='width: 100px;height: 100px;border-radius: 50%;object-fit: cover;z-index: 99;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);border: 3px solid #828389;background-color: white;'><p>Empty</p><p>Position</p></div></div></a>\"},";
                         chart_config2 = chart_config2 + ds.Tables[0].Rows[i]["memberId"].ToString() + ",";
                         continue;
                     }

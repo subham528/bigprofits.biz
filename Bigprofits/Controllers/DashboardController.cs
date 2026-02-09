@@ -116,7 +116,7 @@ namespace Bigprofits.Controllers
             return View();
         }
 
-        [HttpGet("account/Logout")]
+        [HttpGet("account/logout")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync("UserAuth");

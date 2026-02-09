@@ -75,6 +75,10 @@
             animation: pulseText 2s ease-in-out infinite;
             color: #fff;
         }
+
+        .dark-mode .alert-danger, .dark-mode .card.alert-danger, .dark-mode .bg-danger-light {
+            background-color: #e74949;
+        }
     </style>
 </head>
 
@@ -128,12 +132,10 @@
 
                 @if (TempData["loginError"] != null)
                 {
-                    <div class="login-error-box" style="color:red">
-                        @TempData["loginError"]
-                    </div>
+                    <div class="alert alert-danger">@TempData["loginError"]</div>
                 }
-                <form asp-action="Login" method="post"  class="was-validated needs-validation" novalidate>
 
+                <form asp-action="Login" method="post"  class="was-validated needs-validation" novalidate>
                     <input type="hidden" name="WalletAddress" id="WalletAddress" />
                     <div class="form-floating is-valid mb-3">
                         <input id="lblWalletConnected" class="form-control" value="connecting..." readonly>

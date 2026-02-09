@@ -47,10 +47,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-
 builder.Services.AddScoped<HomeRepository, HomeRepository>();
 builder.Services.AddScoped<MailRepository, MailRepository>();
-
+builder.Services.AddScoped<IAuditRepository, AuditRepository>();
 builder.Services.AddScoped<CommonMethods, CommonMethods>();
 builder.Services.AddScoped<SqlConnectionClass, SqlConnectionClass>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

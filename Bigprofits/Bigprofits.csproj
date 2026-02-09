@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <Compile Remove="NodeApi\node_modules\**" />
+    <Compile Remove="wwwroot\Allimg\**" />
+    <Compile Remove="wwwroot\assets\js\extensions\**" />
+    <Compile Remove="wwwroot\assets\js\pages\**" />
     <Compile Remove="wwwroot\assets\vendors\**" />
     <Compile Remove="wwwroot\DarkRedDash\**" />
     <Compile Remove="wwwroot\Masterdesign\**" />
@@ -16,6 +19,9 @@
     <Compile Remove="wwwroot\NextPDesign\**" />
     <Compile Remove="wwwroot\ZanexDash\**" />
     <Content Remove="NodeApi\node_modules\**" />
+    <Content Remove="wwwroot\Allimg\**" />
+    <Content Remove="wwwroot\assets\js\extensions\**" />
+    <Content Remove="wwwroot\assets\js\pages\**" />
     <Content Remove="wwwroot\assets\vendors\**" />
     <Content Remove="wwwroot\DarkRedDash\**" />
     <Content Remove="wwwroot\Masterdesign\**" />
@@ -23,6 +29,9 @@
     <Content Remove="wwwroot\NextPDesign\**" />
     <Content Remove="wwwroot\ZanexDash\**" />
     <EmbeddedResource Remove="NodeApi\node_modules\**" />
+    <EmbeddedResource Remove="wwwroot\Allimg\**" />
+    <EmbeddedResource Remove="wwwroot\assets\js\extensions\**" />
+    <EmbeddedResource Remove="wwwroot\assets\js\pages\**" />
     <EmbeddedResource Remove="wwwroot\assets\vendors\**" />
     <EmbeddedResource Remove="wwwroot\DarkRedDash\**" />
     <EmbeddedResource Remove="wwwroot\Masterdesign\**" />
@@ -30,6 +39,9 @@
     <EmbeddedResource Remove="wwwroot\NextPDesign\**" />
     <EmbeddedResource Remove="wwwroot\ZanexDash\**" />
     <None Remove="NodeApi\node_modules\**" />
+    <None Remove="wwwroot\Allimg\**" />
+    <None Remove="wwwroot\assets\js\extensions\**" />
+    <None Remove="wwwroot\assets\js\pages\**" />
     <None Remove="wwwroot\assets\vendors\**" />
     <None Remove="wwwroot\DarkRedDash\**" />
     <None Remove="wwwroot\Masterdesign\**" />
@@ -37,6 +49,9 @@
     <None Remove="wwwroot\NextPDesign\**" />
     <None Remove="wwwroot\ZanexDash\**" />
     <TypeScriptCompile Remove="NodeApi\node_modules\**" />
+    <TypeScriptCompile Remove="wwwroot\Allimg\**" />
+    <TypeScriptCompile Remove="wwwroot\assets\js\extensions\**" />
+    <TypeScriptCompile Remove="wwwroot\assets\js\pages\**" />
     <TypeScriptCompile Remove="wwwroot\assets\vendors\**" />
     <TypeScriptCompile Remove="wwwroot\DarkRedDash\**" />
     <TypeScriptCompile Remove="wwwroot\Masterdesign\**" />
@@ -85,21 +100,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\assets\js\bootstrap.bundle.min.js" />
-    <None Include="wwwroot\assets\js\bootstrap.min.js" />
-    <None Include="wwwroot\assets\js\bootstrap.min.js.map" />
-    <None Include="wwwroot\assets\js\extensions\rater-js.js" />
-    <None Include="wwwroot\assets\js\extensions\sweetalert2.js" />
-    <None Include="wwwroot\assets\js\extensions\toastify.js" />
-    <None Include="wwwroot\assets\js\mazer.js" />
-    <None Include="wwwroot\assets\js\mazer.min.js" />
-    <None Include="wwwroot\assets\js\pages\dashboard.js" />
-    <None Include="wwwroot\assets\js\pages\form-editor.js" />
-    <None Include="wwwroot\assets\js\pages\form-element-select.js" />
-    <None Include="wwwroot\assets\js\pages\horizontal-layout.js" />
-    <None Include="wwwroot\assets\js\pages\ui-apexchart.js" />
-    <None Include="wwwroot\assets\js\pages\ui-chartjs.js" />
-    <None Include="wwwroot\assets\js\vendors.js" />
     <None Include="wwwroot\SCuteAlert\cute-alert.js" />
     <None Include="wwwroot\SCuteAlert\img\error.svg" />
     <None Include="wwwroot\SCuteAlert\img\info.svg" />
@@ -203,14 +203,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Allimg\FundReqImage\" />
-    <Folder Include="wwwroot\Allimg\AadharImage\" />
-    <Folder Include="wwwroot\Allimg\PassBookImage\" />
-    <Folder Include="wwwroot\Allimg\PanCardImage\" />
-    <Folder Include="wwwroot\Allimg\ProfileImage\" />
   </ItemGroup>
 
 </Project>

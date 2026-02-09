@@ -139,7 +139,7 @@ namespace Bigprofits.Controllers
 
                 List<SqlParameter> par = [];
                 par.Add(new SqlParameter("@spoId", isSpo.MemberId));
-                par.Add(new SqlParameter("@address", commonMethods.Encrypt(Walletaddress)));
+                par.Add(new SqlParameter("@address", commonMethods.Encrypt(Walletaddress.ToLower())));
                 par.Add(new SqlParameter("@refPos", memberInfo.RefPos.Trim()));
                 var ds = await _dataAccess.FnRetriveByPro("[SP_Registration]", par);
 

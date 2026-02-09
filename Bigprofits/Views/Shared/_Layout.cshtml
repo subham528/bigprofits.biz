@@ -8,28 +8,23 @@
     <meta name="generator" content="">
     <title>Bigprofits</title>
 
-    <!-- manifest meta -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json" />
-
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="/assets/img/logo.png" sizes="180x180">
     <link rel="icon" href="/assets/img/logo.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/assets/img/logo.png" sizes="16x16" type="image/png">
 
     <!-- Google fonts-->
-
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&amp;display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&amp;display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-
     <!-- swiper carousel css -->
     <link rel="stylesheet" href="~/assets/vendor/swiperjs-6.6.2/swiper-bundle.min.css">
     <link href="~/sweetalert/dist/sweetalert2.min.css" rel="stylesheet" />
-
+	<link href="/scutealert/style.css" rel="stylesheet" />
+	
     <!-- style css for this template -->
     <link href="~/assets/css/style.css" rel="stylesheet" id="style">
     <style>
@@ -78,7 +73,7 @@
                                 </div>
                                 <div class="col-auto">
 
-                                    <a href="/account/Logout" class="btn btn-44 btn-light">
+                                    <a href="/account/logout" class="btn btn-44 btn-light">
                                         <i class="bi bi-box-arrow-right"></i>
                                     </a>
 
@@ -499,7 +494,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="/account/Logout" tabindex="-1">
+                            <a class="nav-link" href="/account/logout" tabindex="-1">
                                 <div class="avatar avatar-40 rounded icon"><i class="bi bi-box-arrow-right"></i></div>
                                 <div class="col">Logout</div>
                                 <div class="arrow"><i class="bi bi-chevron-right"></i></div>
@@ -608,7 +603,7 @@
     <!-- Required jquery and libraries -->
     <script src="~/assets/js/jquery-3.3.1.min.js"></script>
     <script src="~/assets/js/popper.min.js"></script>
-    <script src="~/assets/vendor/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendor/bootstrap-5/js/bootstrap.bundle.min.js"></script>
 
     <!-- cookie js -->
     <script src="~/assets/js/jquery.cookie.js"></script>
@@ -616,9 +611,6 @@
     <!-- Customized jquery file  -->
     <script src="~/assets/js/main.js"></script>
     <script src="~/assets/js/color-scheme.js"></script>
-
-    <!-- PWA app service registration and works -->
-    <script src="~/assets/js/pwa-services.js"></script>
 
     <!-- Chart js script -->
     <script src="~/assets/vendor/chart-js-3.3.1/chart.min.js"></script>
@@ -632,6 +624,7 @@
     <!-- page level custom script -->
     <script src="~/assets/js/app.js"></script>
     <script src="~/sweetalert/dist/sweetalert2.all.min.js"></script>
+    <script src="/scutealert/cute-alert.js"></script>
 
     <script>
         function copyText(id) {
@@ -639,126 +632,16 @@
             document.execCommand('copy');
         }
     </script>
+
     <script type='text/javascript'>
         $("#home a").addClass("active")
 
-
+        $("form").on("submit", function(){
+            $(this).find("input[type='submit']").prop("disabled", true).val("loading...")
+            $(this).find("button[type='submit']").prop("disabled", true).html("loading...")
+        })
     </script>
-    @if (TempData["Ssuc"] != null)
-    {
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: '@TempData["Ssuc"]',
-            })
-        </script>
-    }
-    @if (TempData["Serr"] != null)
-    {
-        <script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: '@TempData["err"]',
-            })
-        </script>
-    }
-    @if (TempData["Sinfo"] != null)
-    {
-        <script>
-            Swal.fire({
-                icon: 'info',
-                title: 'Oops...',
-                text: '@TempData["info"]',
-            })
-        </script>
-    }
-
-    @* ============= CuteAlert ==============*@
-    @if (TempData["Csuc"] != null)
-    {
-        <script>
-            cuteAlert({
-                type: "success",
-                title: "Success..!!",
-                message: "@TempData["Csuc"]",
-                buttonText: "OK",
-            @* closeStyle: "circle",*@
-            @* onClose: function () {
-            // Callback function executed when the alert is closed
-            console.log("Alert closed.");
-            }*@
-
-                                    });
-        </script>
-    }
-
-    @if (TempData["Cerr"] != null)
-    {
-        <script>
-            cuteAlert({
-                type: "error",
-                title: "Oops..!!",
-                message: "@TempData["Cerr"]",
-                buttonText: "OK",
-            });
-        </script>
-    }
-    @if (TempData["Cwar"] != null)
-    {
-        <script>
-            cuteAlert({
-                type: "warning",
-                title: "Ooo..!!",
-                message: "@TempData["Cwar"]",
-                buttonText: "OK",
-            });
-        </script>
-    }
-
-    @* ============= Toastfy ==============*@
-    @if (TempData["Tsuc"] != null)
-    {
-        <script>
-            cuteToast({
-                type: "success",
-                message: "@TempData["Tsuc"]",
-                timer: 5000,
-            });
-        </script>
-    }
-    @if (TempData["Terr"] != null)
-    {
-        <script>
-            cuteToast({
-                type: "error",
-                message: "@TempData["Terr"]",
-                timer: 5000,
-            });
-        </script>
-    }
-    @if (TempData["Twar"] != null)
-    {
-        <script>
-            cuteToast({
-                type: "warning",
-                message: "@TempData["Twar"]",
-                timer: 5000,
-            });
-        </script>
-    }
-
-    <script>
-        function copyText(id) {
-            document.getElementById(id).select();
-            document.execCommand('copy');
-        }
-    </script>
-
+   
     @RenderSection("Scripts", required: false)
 </body>
-
-
-<!-- Mirrored from maxartkiller.com/website/fimobile2/HTML/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 29 May 2025 08:51:26 GMT -->
 </html>

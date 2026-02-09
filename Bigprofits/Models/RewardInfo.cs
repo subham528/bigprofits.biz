@@ -6,13 +6,11 @@ namespace Bigprofits.Models
     public partial class RewardInfo
     {
         public int Id { get; set; }
-        public int? Direct { get; set; }
-        public decimal? SelfPackage { get; set; }
-        public int? TeamSize { get; set; }
-        public decimal? TeamVolume { get; set; }
-        public decimal? Reward { get; set; }
-        public decimal? Salary { get; set; }
-        public string? Type { get; set; }
-        public int? RId { get; set; }
+        public int? RankNo { get; set; }
+        public string? RankName { get; set; }
+        public decimal? LeftBiz { get; set; }
+        public decimal? RightBiz { get; set; }
+        public int? DirectReq { get; set; }
+        public decimal? Amount { get; set; }
     }
 }

@@ -1,28 +1,24 @@
-﻿@model Bigprofits.Models.CmitRequest
-
-@{
-    ViewData["Title"] = "AddfundBp30";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+﻿@{
+	ViewData["Title"] = "AddfundBp30";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
-    .dark-mode .form-control.txtAddress {
-        border: 0 !important;
-        outline: 0;
-        background: none;
-        text-align: center;
-        margin-top: 15px;
-    }
+	.dark-mode .form-control.txtAddress {
+		border: 0 !important;
+		outline: 0;
+		background: none;
+		text-align: center;
+		margin-top: 15px;
+	}
 
-    .p-4 {
-        padding: 5rem;
-    }
+	.p-4 {
+		padding: 5rem;
+	}
 </style>
 
-
-
 <div class="container-fluid ">
-    @* <div class="col-md-12 mb-2 innerLinkWrap">
+	@* <div class="col-md-12 mb-2 innerLinkWrap">
         <div class="card innerLink ">
             <a href="/account/topup-wallet-add">
                 <div class="card-body p-2 text-center">
@@ -54,7 +50,7 @@
             </a>
         </div>
 
-       
+
 
         <div class="card innerLink">
             <a href="/account/wallet-summary">
@@ -64,23 +60,23 @@
             </a>
         </div>
  *@
-    </div>
+</div>
 @if (TempData["msg"] != null)
 {
-    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"] </div>
+	<div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"] </div>
 }
 
-    <div class="d-flex justify-content-center align-items-center vh-100">
-        <!-- Start -->
-        <div class="card shadow-lg rounded-lg w-100" style="max-width: 400px;">
-            <div class="card-header py-3 bg-primary text-center">
-                <h6 class="m-0 font-weight-bold text-white text-lg" style="color:green">Add Fund by Hashid</h6>
-            </div>
+<div class="d-flex justify-content-center mt-4">
+	<!-- Start -->
+	<div class="card shadow-lg rounded-lg w-100" style="max-width: 400px;">
+		<div class="card-header py-3 bg-primary text-center">
+			<h6 class="m-0 font-weight-bold text-white text-lg" style="color:green">Add Fund by Hashid</h6>
+		</div>
 
-            <div class="card-body p-4 text-center">
-            <form action="/account/wallet-add-fund-hshid" method="post">
-                    <!-- USDT Amount -->
-                   @*  <div class="mb-4">
+		<div class="card-body">
+			<form action="/account/wallet-add-fund-bep" method="post">
+				<!-- USDT Amount -->
+				@*  <div class="mb-4">
                         <h5 class="text-warning">Send <strong>@ViewBag.amount USDT (BEP-20)</strong></h5>
                         <p class="text-danger text-sm">Only USDT (BEP-20) will be accepted.</p>
                         <center> <img class="qrCode mx-auto d-block my-3" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=@ViewBag.bp20address" /></center>
@@ -88,7 +84,7 @@
 
                     <!-- Deposit Wallet -->
                     <div class="mb-4">
-                        <label class="text-sm font-semibold d-block text-start">Deposit Wallet</label>
+                        <label class="form-label">Deposit Wallet</label>
                         <div class="input-group w-100">
                             <input type="text" id="txtAddress" value="@ViewBag.bp20address" class="form-control w-full border rounded-lg py-2 px-3" readonly />
                             <button type="button" class="btn btn-outline-success" onclick="copyText('txtAddress')">
@@ -97,47 +93,47 @@
                         </div>
                     </div> *@
 
-                    <!-- Payable Amount -->
-                    <div class="mb-4">
-                        <label class="text-sm font-semibold d-block text-start">Payable Amount</label>
-                        <input id="txtFinalAmount" asp-for="CmitReqAmount" class="form-control w-full border rounded-lg py-2 px-3"   />
-                    </div>
+				<!-- Payable Amount -->
+				<div class="mb-4">
+					<label class="form-label">Payable Amount</label>
+					<input name="amount" class="form-control w-full border rounded-lg py-2 px-3" />
+				</div>
 
-                    <!-- Transaction/Hash ID -->
-                    <div class="mb-4">
-                        <label class="text-sm font-semibold d-block text-start">Enter Transaction/Hash ID</label>
-                        <input asp-for="HashId" class="form-control w-full border rounded-lg py-2 px-3" required />
-                    </div>
+				<!-- Transaction/Hash ID -->
+				<div class="mb-4">
+					<label class="form-label">Enter Transaction/Hash ID</label>
+					<input name="hashId" class="form-control w-full border rounded-lg py-2 px-3" required />
+				</div>
 
-                    <!-- Submit Button -->
-                    <div class="text-center mt-4" id="fundbtn">
-                        <button type="submit" id="fndreq" class="btn bg-primary text-white w-100 py-2 rounded-lg text-lg">
-                            Submit Request
-                        </button>
-                    </div>
+				<!-- Submit Button -->
+				<div class="text-center mt-4" id="fundbtn">
+					<button type="submit" id="fndreq" class="btn bg-primary text-white w-100 py-2 rounded-lg text-lg">
+						Submit Request
+					</button>
+				</div>
 
-                    <!-- Processing Message -->
-                    <div class="form-group mt-3 text-center" id="probtn" style="display: none;">
-                        <p class="text-danger font-weight-bold">Processing...</p>
-                    </div>
+				<!-- Processing Message -->
+				<div class="form-group mt-3 text-center" id="probtn" style="display: none;">
+					<p class="text-danger font-weight-bold">Processing...</p>
+				</div>
 
-                </form>
-            </div>
-        </div>
-        <!-- End -->
-    </div>
+			</form>
+		</div>
+	</div>
+	<!-- End -->
+</div>
 
 
 </div>
 
 
 @section Scripts {
-    <script>
-        $("#fndreq").click(function () {
-            $("#fndreq").hide()
-            $("#probtn").show()
+	<script>
+		$("#fndreq").click(function () {
+			$("#fndreq").hide()
+			$("#probtn").show()
 
-            $('form').submit()
-        })
-    </script>
+			$('form').submit()
+		})
+	</script>
 }

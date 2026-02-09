@@ -17,12 +17,13 @@ namespace Bigprofits.Areas.Admin.Controllers
     [Route("britglbl253adpnl")]
     [Route("admin/[controller]/[action]")]
     [Authorize(AuthenticationSchemes = "AdminAuth")]
-    public class ClosingController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess, IWebHostEnvironment webHostEnvironment) : Controller
+    public class ClosingController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess, IWebHostEnvironment webHostEnvironment, IAuditRepository auditRepository) : Controller
     {
         private readonly ContextClass context = context;
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
         private readonly IWebHostEnvironment webHostEnvironment = webHostEnvironment;
+        private readonly IAuditRepository _auditRepository = auditRepository;
         private string admingo = "";
         public override void OnActionExecuting(ActionExecutingContext _context)
         {
@@ -64,6 +65,8 @@ namespace Bigprofits.Areas.Admin.Controllers
 
                 if (ds.Tables[0].Rows.Count > 0)
                 {
+                    await _auditRepository.LogActionAsync($"{type} CLOSING BY ADMIN", 0, "Admin", $"{type} closing by admin", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                     TempData["msg"] = ds.Tables[0].Rows[0]["msg"].ToString();
                     return Redirect($"/britglbl253adpnl/Daily-Closing/{type}");
                 }

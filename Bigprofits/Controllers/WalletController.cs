@@ -51,162 +51,6 @@ namespace Bigprofits.Controllers
             return View(ds);
         }
 
-        [HttpGet("account/Swap")]
-        public async Task<IActionResult> SwapingWallet()
-        {
-            List<SqlParameter> par = [];
-            par.Add(new SqlParameter("@memberId", mango));
-            var ds = await _dataAccess.FnRetriveByPro("[SpMemberAccount]", par);
-
-            if (ds.Tables[0].Rows.Count > 0)
-            {
-                ViewBag.SpMember = System.Text.Json.JsonSerializer.Serialize(_dataAccess.ConvertDataSetToJson(ds.Tables[0]));
-            }
-            par = [];
-            par.Add(new SqlParameter("@memberId", mango));
-            par.Add(new SqlParameter("@rtype", "ADD FUND TO WALLET Bigprofits"));
-            ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
-            ViewBag.data = ds;
-            return View(ds);
-        }
-
-        [HttpPost("account/stake-hold")]
-        public async Task<IActionResult> SwapingWallet(string type, int sid, decimal amount)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(type) || amount <= 0)
-                {
-                    TempData["msg"] = "All the fields are required!";
-                    return View();
-                }
-
-                if (!type.Equals("HOLD", StringComparison.CurrentCultureIgnoreCase) && !type.Equals("STAKE", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    TempData["msg"] = "Invalid data! Please enter a valid data.";
-                    return View();
-                }
-
-                if (amount < 10)
-                {
-                    TempData["msg"] = "Miminum stake amount is 10 USD.";
-                    return View();
-                }
-
-                var liveRate = await context.UserMasters.Select(x => x.TokenPrice).FirstOrDefaultAsync();
-                if (type.Equals("STAKE", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    var stakeInfo = await context.StakeInfos.FirstOrDefaultAsync(x => x.Id == sid);
-                    if (stakeInfo == null)
-                    {
-                        TempData["msg"] = "Please enter a valid stake plan.";
-                        return View();
-                    }
-
-                    var stakeAmount = new StakeAmount()
-                    {
-                        MemberId = mango,
-                        StakeId = stakeInfo.Id,
-                        Amount = amount,
-                        TokenAmount = amount / liveRate,
-                        Sstatus = 1,
-                        LiveRate = liveRate,
-                        Duration = stakeInfo.Duration,
-                        Sdate = DateTime.Now,
-                        Mdate = DateTime.Now.AddMonths((int)stakeInfo.Duration!),
-                        Rate = stakeInfo.Rate,
-                        ReturnAmount = (amount / liveRate) * stakeInfo.Rate
-                    };
-                    await context.StakeAmounts.AddAsync(stakeAmount);
-                    await context.SaveChangesAsync();
-
-                    TempData["success"] = "Big Profits token has been staked successfully!";
-                    return Redirect("/account/stake-hold");
-                }
-                else
-                {
-                    using (var client = new HttpClient())
-                    {
-                        var response = await client.GetAsync($"{_configuration.GetValue<string>("NodeApiUrl")}/withdrawal");
-                        response.EnsureSuccessStatusCode();
-                        //Console.WriteLine(await response.Content.ReadAsStringAsync());
-                        var statusList = JObject.Parse(await response.Content.ReadAsStringAsync());
-                        if (statusList == null)
-                        {
-                            TempData["msg"] = "Opps! Blockchain API is currently not responding! Please try after sometime.";
-                            return Redirect("/account/stake-hold");
-                        }
-                    }
-
-                    using (var client = new HttpClient())
-                    {
-                        var payload = new
-                        {
-                            tokenName = "OCSK"
-                        };
-                        var response = await client.PostAsJsonAsync($"{_configuration.GetValue<string>("NodeApiUrl")}/fetch-balance", payload);
-                        response.EnsureSuccessStatusCode();
-                        //Console.WriteLine(await response.Content.ReadAsStringAsync());
-                        var statusList = JObject.Parse(await response.Content.ReadAsStringAsync());
-                        if (statusList == null)
-                        {
-                            TempData["msg"] = "Opps! Blockchain API is currently not responding! Please try after sometime.";
-                            return Redirect("/account/stake-hold");
-                        }
-
-                        if (statusList["balance"] == null)
-                        {
-                            TempData["msg"] = "Opps! Blockchain API is currently not responding!! Please try after sometime.";
-                            return Redirect("/account/stake-hold");
-                        }
-
-                        double balance = 0, tokenAmount = ((double)amount / (double)liveRate);
-                        balance = Convert.ToDouble(statusList["balance"]);
-                        if (balance < tokenAmount)
-                        {
-                            TempData["msg"] = "Right now, server is not available to process your withdrawal! Please try after sometime.";
-                            return Redirect("/account/stake-hold");
-                        }
-
-                        var buyToken = new BuyToken()
-                        {
-                            MemberId = mango,
-                            Amount = amount,
-                            TokenAmount = amount / liveRate,
-                            TokenName = "Big Profits",
-                            CRate = liveRate,
-                            RDate = DateTime.Now,
-                            AStatus = 0
-                        };
-                        await context.BuyTokens.AddAsync(buyToken);
-                        await context.SaveChangesAsync();
-                    }
-
-                    var sendToken = await context.BuyTokens.Where(x => x.MemberId == mango && x.AStatus == 0).OrderByDescending(x => x.Id).ToListAsync();
-                    using (var client = new HttpClient())
-                    {
-                        var payload = new
-                        {
-                            userId = sendToken[0].MemberId,
-                            orderId = sendToken[0].Id
-                        };
-                        var response = await client.PostAsJsonAsync($"{_configuration.GetValue<string>("NodeApiUrl")}/send-token", payload);
-                        response.EnsureSuccessStatusCode();
-                        //Console.WriteLine(await response.Content.ReadAsStringAsync());
-                        var statusList = JObject.Parse(await response.Content.ReadAsStringAsync());
-                    }
-
-                    TempData["success"] = "Big Profits token sent to your wallet successfully!";
-                    return Redirect("/account/stake-hold");
-                }
-            }
-            catch (Exception)
-            {
-                TempData["msg"] = "Exception message, please contact to admin";
-            }
-            return View();
-        }
-
         [HttpPost("account/add-wallet-fund")]
         public async Task<IActionResult> AddFundPost()
         {
@@ -286,26 +130,6 @@ namespace Bigprofits.Controllers
             return View(ds);
         }
 
-        [HttpGet("account/topup-wallet-add-Drontoken")]
-        public async Task<IActionResult> DrontokenRequestFund()
-        {
-            ViewBag.ds = Global.Dp20address;
-            ViewBag.memberid = mango;
-            try
-            {
-                List<SqlParameter> par = [];
-                par.Add(new SqlParameter("@memberId", mango));
-                par.Add(new SqlParameter("@rtype", "ADD FUND TO WALLET USDT"));
-                var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
-                ViewBag.data = ds;
-                return View(ds);
-            }
-            catch (Exception)
-            {
-                TempData["msg"] = "Exception message, please contact to admin";
-            }
-            return View();
-        }
 
         [HttpGet("account/topup-wallet-add")]
         public async Task<IActionResult> RequestFund()
@@ -328,43 +152,40 @@ namespace Bigprofits.Controllers
             return View();
         }
 
-        [HttpPost("account/topup-wallet-add")]
-        public async Task<IActionResult> RequestFundPost()
-        {
-            string amount = Request.Form["amount"].ToString().Trim();
+        //[HttpPost("account/topup-wallet-add")]
+        //public async Task<IActionResult> RequestFundPost()
+        //{
+        //    string amount = Request.Form["amount"].ToString().Trim();
 
-            if (amount == null)
-            {
-                TempData["msg"] = "Please enter  amount..!";
-                return RedirectToAction("RequestFund");
-            }
+        //    if (amount == null)
+        //    {
+        //        TempData["msg"] = "Please enter  amount..!";
+        //        return RedirectToAction("RequestFund");
+        //    }
 
-            List<SqlParameter> par = [];
-            par.Add(new SqlParameter("@memberId", mango));
-            par.Add(new SqlParameter("@actionType", "CHECK"));
-            par.Add(new SqlParameter("@amount", amount));
-            par.Add(new SqlParameter("@type", "FUND REQUEST"));
-            var ds = await _dataAccess.FnRetriveByPro("[SP_SendFund]", par);
+        //    List<SqlParameter> par = [];
+        //    par.Add(new SqlParameter("@memberId", mango));
+        //    par.Add(new SqlParameter("@actionType", "CHECK"));
+        //    par.Add(new SqlParameter("@amount", amount));
+        //    par.Add(new SqlParameter("@type", "FUND REQUEST"));
+        //    var ds = await _dataAccess.FnRetriveByPro("[SP_SendFund]", par);
 
-            if (ds.Tables[0].Rows[0]["chk"].ToString() == "1")
-            {
-                return Redirect("/account/wallet-add-fund-bep/" + amount);
-            }
-            else
-            {
-                TempData["error"] = ds.Tables[0].Rows[0]["msg"].ToString();
-            }
-            return Redirect("/account/topup-wallet-add");
-        }
+        //    if (ds.Tables[0].Rows[0]["chk"].ToString() == "1")
+        //    {
+        //        return Redirect("/account/wallet-add-fund-bep/" + amount);
+        //    }
+        //    else
+        //    {
+        //        TempData["error"] = ds.Tables[0].Rows[0]["msg"].ToString();
+        //    }
+        //    return Redirect("/account/topup-wallet-add");
+        //}
 
-        [HttpGet]
-        [Route("account/wallet-add-fund-bep/{amount}")]
-        [Route("account/wallet-add-fund-bep")]
+        [HttpGet("account/wallet-add-fund-bep")]
         public async Task<IActionResult> AddfundBp30(string amount)
         {
             ViewBag.amount = amount;
             ViewBag.bp20address = Global.Bp20Address;
-            // var data = await context.AdminAddressInfos.Where(t => t.DepositAddress == Global.Bp20Address).FirstOrDefaultAsync();
             var data = await context.AdminAddressInfos.Where(a => a.Ctype == "USDT-BEP-20").FirstOrDefaultAsync();
 
             var address = commonMethods.Decrypt(data!.DepositAddress!);
@@ -375,14 +196,14 @@ namespace Bigprofits.Controllers
             return View();
         }
 
-        [HttpPost("account/wallet-add-fund-bep/{amount}/{hashId}")]
+        [HttpPost("account/wallet-add-fund-bep")]
         public async Task<IActionResult> AddfundBp30(double amount, string hashId)
         {
             try
             {
                 string cType = "USDT-BEP-20";
                 double weiValue = 1000000000000000000;
-                string depositAddress = "", tokenAddress = "";
+                string depositAddress = "", tokenAddress = "", memberAddress = "";
 
                 if (string.IsNullOrEmpty(hashId))
                 {
@@ -390,8 +211,24 @@ namespace Bigprofits.Controllers
                     return RedirectToAction("RequestFund");
                 }
 
-                string url = $"https://api.bscscan.com/api?module=proxy&action=eth_getTransactionReceipt&txhash={hashId}&apikey=8V5JN3EH1C7AS1R816K5MCDJEN1B8UCV4F";
-                var StatusList = await commonMethods.GetApiData(url);
+                var client = new HttpClient();
+                var requestBody = new
+                {
+                    jsonrpc = "2.0",
+                    method = "eth_getTransactionReceipt",
+                    @params = new[]
+                    {
+                        hashId
+                    },
+                    id = 1
+                };
+                var request = new HttpRequestMessage(HttpMethod.Post, "https://bsc-dataseed.binance.org")
+                {
+                    Content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json")
+                };
+                var response = await client.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                var StatusList = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
 
                 var data = await context.AdminAddressInfos.FirstOrDefaultAsync(t => t.Ctype == cType);
                 if (data != null)
@@ -400,16 +237,10 @@ namespace Bigprofits.Controllers
                     tokenAddress = data.TokenAddress!.ToUpper();
                 }
 
-                // Check for duplicate transactions
-                bool isDuplicate = await context.CmitRequests.AnyAsync(t => t.HashId == hashId) || await context.FundAmounts.AnyAsync(t => t.HashId == hashId);
+                var memInfo = await context.MemberInfos.Where(x => x.MemberId == mango).FirstOrDefaultAsync();
+                memberAddress = commonMethods.Decrypt(memInfo!.MemAddress!);
 
-                if (isDuplicate)
-                {
-                    TempData["msg"] = "Duplicate Transaction Found! We could not complete your request due to transaction duplicacy.";
-                    return RedirectToAction("RequestFund");
-                }
-
-                if (StatusList["result"] == null || StatusList["result"]!["status"] == null)
+                if (StatusList!["result"] == null || StatusList["result"]!["status"] == null)
                 {
                     TempData["msg"] = "Invalid Transaction! We could not find transaction on the blockchain.";
                     return RedirectToAction("RequestFund");
@@ -433,9 +264,18 @@ namespace Bigprofits.Controllers
 
                 bool isToAddressMatch = logs[0]!["topics"]![2]!.ToString().Contains(depositAddress[2..], StringComparison.CurrentCultureIgnoreCase);
 
-                if (!isToAddressMatch || Convert.ToDouble(tokenAmount) < ((amount - 0.5) * weiValue) || logs[0]!["transactionHash"]!.ToString() != hashId || !logs[0]!["address"]!.ToString().Equals(tokenAddress, StringComparison.CurrentCultureIgnoreCase) || !depositAddress.Equals(Global.Bp20Address, StringComparison.CurrentCultureIgnoreCase))
+                if (!isToAddressMatch || Convert.ToDouble(tokenAmount) < ((amount - 0.5) * weiValue) || logs[0]!["transactionHash"]!.ToString() != hashId || !logs[0]!["address"]!.ToString().Equals(tokenAddress, StringComparison.CurrentCultureIgnoreCase) || !depositAddress.Equals(Global.Bp20Address, StringComparison.CurrentCultureIgnoreCase) || !memberAddress.Equals(StatusList["result"]!["from"]!.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     TempData["msg"] = "Invalid Transaction! We could not verify your transaction.";
+                    return RedirectToAction("RequestFund");
+                }
+
+                var dataCmit = await context.CmitRequests.Where(t => t.HashId == hashId).ToListAsync();
+                var dataAf = await context.FundAmounts.Where(t => t.HashId == hashId).ToListAsync();
+
+                if (dataCmit.Count > 0 || dataAf.Count > 0)
+                {
+                    TempData["msg"] = "Duplicate Transaction Found! We could not complete your request due to transaction duplicacy.";
                     return RedirectToAction("RequestFund");
                 }
 
@@ -465,205 +305,6 @@ namespace Bigprofits.Controllers
             catch (Exception ex)
             {
                 TempData["msg"] = "An error occurred: " + ex.Message;
-            }
-            return View();
-        }
-
-        [HttpPost("account/wallet-add-fund-Dptoken/{amount}/{hashId}")]
-        public async Task<IActionResult> AddfundDp20(double amount, string hashId)
-        {
-            try
-            {
-                string cType = "USDT-Bigprofits-20";
-                double weiValue = 1000000000000000000;
-                string depositAddress = "", tokenAddress = "";
-
-                if (string.IsNullOrEmpty(hashId))
-                {
-                    TempData["msg"] = "Please enter hash ID/txn ID first!";
-                    return Redirect("/account/topup-wallet-add-Drontoken");
-                }
-
-                // Get Transaction Status from BSC
-                string url = $"https://api.bscscan.com/api?module=proxy&action=eth_getTransactionReceipt&txhash={hashId}&apikey=8V5JN3EH1C7AS1R816K5MCDJEN1B8UCV4F";
-                var StatusList = await commonMethods.GetApiData(url);
-
-                var data = await context.AdminAddressInfos.FirstOrDefaultAsync(t => t.Ctype == cType);
-                if (data != null)
-                {
-                    depositAddress = commonMethods.Decrypt(data.DepositAddress!).ToUpper();
-                    tokenAddress = data.TokenAddress!.ToUpper();
-                }
-
-                bool isDuplicate = await context.CmitRequests.AnyAsync(t => t.HashId == hashId) || await context.FundAmounts.AnyAsync(t => t.HashId == hashId);
-
-                if (isDuplicate)
-                {
-                    TempData["msg"] = "Duplicate Transaction Found! We could not complete your request due to transaction duplicacy.";
-                    return Redirect("/account/topup-wallet-add-Drontoken");
-                }
-
-                if (StatusList["result"] == null || StatusList["result"]!["status"] == null)
-                {
-                    TempData["msg"] = "Invalid Transaction! We could not find transaction on the blockchain.";
-                    return Redirect("/account/topup-wallet-add-Drontoken");
-                }
-
-                if (StatusList["result"]!["status"]!.ToString() != "0x1")
-                {
-                    TempData["msg"] = "Transaction failed! Please try again.";
-                    return Redirect("/account/topup-wallet-add-Drontoken");
-                }
-
-                var logs = StatusList["result"]!["logs"];
-                if (logs == null || !logs.Any() || logs[0]?["topics"]?[2] == null || logs[0]?["data"] == null || logs[0]?["address"] == null)
-                {
-                    TempData["msg"] = "Invalid Transaction! Log data is missing.";
-                    return Redirect("/account/topup-wallet-add-Drontoken");
-                }
-
-                string tokenAmount = logs[0]!["data"]!.ToString()[2..];
-                tokenAmount = System.Numerics.BigInteger.Parse(tokenAmount, NumberStyles.AllowHexSpecifier).ToString();
-                bool isToAddressMatch = logs[0]!["topics"]![2]!.ToString().Contains(depositAddress[2..], StringComparison.CurrentCultureIgnoreCase);
-
-                if (!isToAddressMatch || Convert.ToDouble(tokenAmount) < ((amount - 0.5) * weiValue) || logs[0]!["transactionHash"]!.ToString() != hashId || !logs[0]!["address"]!.ToString().Equals(tokenAddress, StringComparison.CurrentCultureIgnoreCase) || !depositAddress.Equals(Global.Dp20address, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    TempData["msg"] = "Invalid Transaction! We could not verify your transaction.";
-                    return Redirect("/account/topup-wallet-add-Drontoken");
-                }
-
-                var par = new List<SqlParameter>
-                {
-                    new("@memberId", mango),
-                    new("@amount", amount),
-                    new("@tokenAmount", tokenAmount),
-                    new("@walletType", "USDT (DP-20)"),
-                    new("@fromAddress", StatusList["result"]!["from"]!.ToString()),
-                    new("@toAddress", StatusList["result"]!["to"]!.ToString()),
-                    new("@hashId", hashId),
-                    new("@actionType", "INSERT"),
-                    new("@type", "FUND REQUEST")
-                };
-
-                var ds = await _dataAccess.FnRetriveByPro("[SP_SendFund]", par);
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    string chk = ds.Tables[0].Rows[0]["chk"].ToString()!;
-                    if (chk == "1") TempData["success"] = ds.Tables[0].Rows[0]["msg"].ToString();
-                    else TempData["error"] = ds.Tables[0].Rows[0]["msg"].ToString();
-                    return Redirect("/account/topup-wallet-add-Drontoken");
-                }
-            }
-            catch (Exception ex)
-            {
-                TempData["msg"] = "An error occurred: " + ex.Message;
-            }
-            return View();
-        }
-
-        [HttpPost("account/wallet-add-fund-hshid")]
-        public async Task<IActionResult> AddfundBp30hshid(CmitRequest cmit)
-        {
-
-            try
-            {
-                string cType = "USDT-BEP-20";
-                double weiValue = 1000000000000000000;
-                string depositAddress = "", /*memberAddress = "",*/ tokenAddress = "", hashId = cmit.HashId!;
-                var amount = cmit.CmitReqAmount;
-
-                if (hashId == "")
-                {
-                    TempData["msg"] = "Please enter hash ID/txn ID first!";
-                    return View();
-                }
-
-                string url = "https://api.bscscan.com/api?module=proxy&action=eth_getTransactionReceipt&txhash=" + hashId + "&apikey=8V5JN3EH1C7AS1R816K5MCDJEN1B8UCV4F";
-                var StatusList = await commonMethods.GetApiData(url);
-
-                var data = await context.AdminAddressInfos.Where(t => t.Ctype == cType).FirstOrDefaultAsync();
-                if (data != null)
-                {
-                    depositAddress = commonMethods.Decrypt(data.DepositAddress!).ToUpper();
-                    tokenAddress = data.TokenAddress!.ToUpper();
-                }
-
-                var dataCmit = await context.CmitRequests.Where(t => t.HashId == hashId).ToListAsync();
-                var dataAf = await context.FundAmounts.Where(t => t.HashId == hashId).ToListAsync();
-
-                if (StatusList["result"] == null || StatusList["result"]!["status"] == null)
-                {
-                    TempData["msg"] = "Invalid Transaction! We could not find transaction on the blockchain. Please submit a valid transaction.";
-                    return RedirectToAction("AddfundBp30");
-                }
-
-                if (StatusList["result"]!["status"]!.ToString() != "0x1")
-                {
-                    TempData["msg"] = "Transaction failed! Please try again";
-                    return RedirectToAction("AddfundBp30");
-                }
-
-                if (StatusList["result"]!["logs"] == null)
-                {
-                    TempData["msg"] = "Sorry! We could not verify your transaction. Please submit a valid transaction.";
-                    return RedirectToAction("AddfundBp30");
-                }
-
-                if (StatusList["result"]!["from"] == null || StatusList["result"]!["logs"]![0]!["topics"]![2] == null || StatusList["result"]!["logs"]![0]!["data"] == null || StatusList["result"]!["logs"]![0]!["address"] == null || StatusList["result"]!["logs"]![0]!["transactionHash"] == null)
-                {
-                    TempData["msg"] = "Invalid Transaction!! We could not verify your transaction. Please submit a valid transaction.";
-                    return RedirectToAction("AddfundBp30");
-                }
-
-                string tokenAmount = StatusList["result"]!["logs"]![0]!["data"]!.ToString();
-                tokenAmount = tokenAmount[2..];
-                tokenAmount = System.Numerics.BigInteger.Parse(tokenAmount, NumberStyles.AllowHexSpecifier).ToString();
-
-                bool isToAddress = StatusList["result"]!["logs"]![0]!["topics"]![2]!.ToString().Contains(depositAddress[2..], StringComparison.CurrentCultureIgnoreCase);
-
-                double margin = 0.5;
-                if (!isToAddress || /*StatusList["result"]!["from"]!.ToString().ToUpper() != memberAddress ||*/ Convert.ToDouble(tokenAmount) < ((Convert.ToDouble(amount) - margin) * weiValue) || StatusList["result"]!["logs"]![0]!["transactionHash"]!.ToString() != hashId || !StatusList["result"]!["logs"]![0]!["address"]!.ToString().Equals(tokenAddress, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    TempData["msg"] = "Invalid Transaction!!! We could not verify your transaction. Please submit a valid transaction.";
-                    return RedirectToAction("AddfundBp30");
-                }
-
-                if (dataCmit.Count > 0 || dataAf.Count > 0)
-                {
-                    TempData["msg"] = "Duplicate Transaction Found! We could not complete your request due to transaction duplicacy.";
-                    return RedirectToAction("AddfundBp30");
-                }
-
-                if (!depositAddress.Equals(Global.Bp20Address, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    TempData["msg"] = "Invalid Transaction! We could not verify your transaction. Please submit a valid transaction.";
-                    return RedirectToAction("AddfundBp30");
-                }
-
-                List<SqlParameter> par = [];
-                par.Add(new SqlParameter("@memberId", mango));
-                par.Add(new SqlParameter("@amount", amount));
-                par.Add(new SqlParameter("@tokenAmount", tokenAmount));
-                par.Add(new SqlParameter("@walletType", "USDT (BEP-20)"));
-                par.Add(new SqlParameter("@fromAddress", StatusList["result"]!["from"]!.ToString()));
-                par.Add(new SqlParameter("@toAddress", StatusList["result"]!["to"]!.ToString()));
-                par.Add(new SqlParameter("@hashId", StatusList["result"]!["logs"]![0]!["transactionHash"]!.ToString()));
-                par.Add(new SqlParameter("@actionType", "INSERT"));
-                par.Add(new SqlParameter("@type", "FUND REQUEST"));
-                var ds = await _dataAccess.FnRetriveByPro("[SP_SendFund]", par);
-
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    string chk = ds.Tables[0].Rows[0]["chk"].ToString()!;
-                    if (chk == "1") TempData["success"] = ds.Tables[0].Rows[0]["msg"].ToString();
-                    else if (chk == "0") TempData["error"] = ds.Tables[0].Rows[0]["msg"].ToString();
-
-                    return RedirectToAction("RequestFund");
-                }
-            }
-            catch (Exception)
-            {
-                TempData["msg"] = "Exception message, please contact to admin";
             }
             return View();
         }
@@ -825,93 +466,34 @@ namespace Bigprofits.Controllers
                 ViewBag.SpMember = System.Text.Json.JsonSerializer.Serialize(_dataAccess.ConvertDataSetToJson(ds.Tables[0]));
             }
 
-            TempData["walletType"] = "TOPUP WALLET";
-
             par = [];
-            par.Add(new SqlParameter("@memberId", mango));
-            par.Add(new SqlParameter("@atype", TempData["walletType"]));
-            par.Add(new SqlParameter("@rtype", "USERTOPUP HISTORY"));
+            par.Add(new SqlParameter("@bymemberId", mango));
+            par.Add(new SqlParameter("@atype", "MEMBER"));
+            par.Add(new SqlParameter("@rtype", "TOPUP HISTORY"));
             ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
             ViewBag.data = ds;
             return View(ds);
-        }
-
-        [HttpGet("account/activate-from-topup-wallet1")]
-        public async Task<IActionResult> TopUpNew()
-        {
-            ViewBag.memberid = mango;
-            List<SqlParameter> par = [];
-            par.Add(new SqlParameter("@memberId", mango));
-            var ds = await _dataAccess.FnRetriveByPro("[SpMemberAccount]", par);
-
-            if (ds.Tables[0].Rows.Count > 0)
-            {
-                ViewBag.SpMember = System.Text.Json.JsonSerializer.Serialize(_dataAccess.ConvertDataSetToJson(ds.Tables[0]));
-            }
-
-            TempData["walletType"] = "EXTRA WALLET";
-
-            par = [];
-            par.Add(new SqlParameter("@memberId", mango));
-            par.Add(new SqlParameter("@atype", TempData["walletType"]));
-            par.Add(new SqlParameter("@rtype", "USERTOPUP HISTORY"));
-            ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
-            ViewBag.data = ds;
-            return View(ds);
-        }
-
-        [HttpPost("SponsorName/{memberId}")]
-        public string GetMemberName(String memberId)
-        {
-            string? result = "";
-            try
-            {
-                var data = context.MemberInfos.Where(x => x.MemberId == memberId).FirstOrDefault();
-                result = data == null ? "No such member exist" : data.MemName;
-            }
-            catch (Exception ex)
-            {
-                result = ex.Message;
-            }
-            return result!;
         }
 
         [HttpPost("account/activate-from-topup-wallet")]
         public async Task<IActionResult> TopUpPost()
         {           
-            string redirectPage = Request.Form["BymemberId"].ToString().Trim() == "EXTRA WALLET" ? "TopUpNew" : "TopUp";
             try
             {
                 string amount = Request.Form["amount"].ToString().Trim();
                 string Memberid = Request.Form["Memberid"].ToString().Trim();
-                string walletType = Request.Form["BymemberId"].ToString().Trim();
 
-                if (walletType == "EXTRA WALLET") Memberid = mango;
-                
                 if (Memberid.Trim() == "")
                 {
                     TempData["msg"] = "Please enter member ID first..!";
-                    return RedirectToAction(redirectPage);
+                    return RedirectToAction("TopUp");
                 }
 
                 if (!decimal.TryParse(amount.ToString(), out decimal result))
                 {
                     TempData["msg"] = "Please enter valid amount..!";
-                    return RedirectToAction(redirectPage);
+                    return RedirectToAction("TopUp");
                 }
-
-                //using (var client = new HttpClient())
-                //{
-                //    var response = await client.GetAsync($"{_configuration.GetValue<string>("NodeApiUrl")}/withdrawal");
-                //    response.EnsureSuccessStatusCode();
-                //    //Console.WriteLine(await response.Content.ReadAsStringAsync());
-                //    var statusList = JObject.Parse(await response.Content.ReadAsStringAsync());
-                //    if (statusList == null)
-                //    {
-                //        TempData["msg"] = "Opps! Blockchain API is currently not responding! Please try after sometime.";
-                //        return RedirectToAction(redirectPage);
-                //    }
-                //}
 
                 string memberId = Memberid.ToString().Trim();
                 var datam = await context.MemberInfos.Where(t => t.MemLogId == memberId || t.MemberId == memberId).FirstOrDefaultAsync();
@@ -923,7 +505,7 @@ namespace Bigprofits.Controllers
 
                 if (ds != null && ds.Tables[0].Rows.Count > 0)
                 {
-                    balance = Convert.ToDecimal(ds.Tables[0].Rows[0][(walletType == "EXTRA WALLET" ? "EW_Available" : "AW_Available")]);
+                    balance = Convert.ToDecimal(ds.Tables[0].Rows[0]["AW_Available"]);
                 }
 
                 ds = new DataSet();
@@ -933,7 +515,6 @@ namespace Bigprofits.Controllers
                 par.Add(new SqlParameter("@byMemberId", mango));
                 par.Add(new SqlParameter("@activationAmount", amount));
                 par.Add(new SqlParameter("@available", balance.ToString()));
-                par.Add(new SqlParameter("@walletType", walletType));
                 par.Add(new SqlParameter("@actionType", "INSERT"));
                 par.Add(new SqlParameter("@type", "TOPUP FROM TOPUP WALLET"));
                 ds = await _dataAccess.FnRetriveByPro("[SP_SendFund]", par);
@@ -941,29 +522,14 @@ namespace Bigprofits.Controllers
                 if (ds.Tables[0].Rows.Count > 0)
                 {
                     TempData["msg"] = ds.Tables[0].Rows[0]["msg"].ToString();
-
-                    if (ds.Tables[0].Rows[0]["Chk"].ToString() == "1")
-                    {
-                        var client = new HttpClient();
-                        var payload = new
-                        {
-                            userId = Memberid,
-                            orderId = ds.Tables[0].Rows[0]["cmitId"].ToString()
-                        };
-                        var response = await client.PostAsJsonAsync($"{_configuration.GetValue<string>("NodeApiUrl")}/send-token", payload);
-                        response.EnsureSuccessStatusCode();
-                        //Console.WriteLine(await response.Content.ReadAsStringAsync());
-                        var statusList = JObject.Parse(await response.Content.ReadAsStringAsync());
-                    }
-
-                    return RedirectToAction(redirectPage);
+                    return RedirectToAction("TopUp");
                 }
             }
             catch (Exception ex)
             {
                 TempData["msg"] = ex.Message.Contains("No connection could be made") ? "Opps! Blockchain API is currently not responding! Please try after sometime." : "Exception message, please contact to admin";
             }
-            return RedirectToAction(redirectPage);
+            return RedirectToAction("TopUp");
         }
 
         //[HttpGet("account/Electcity-recharge")]
@@ -1293,177 +859,209 @@ namespace Bigprofits.Controllers
             }
         }
 
-        [HttpGet("account/products")]
-        public async Task<IActionResult> Products(int? subCategoryId)
+        //[HttpGet("account/products")]
+        //public async Task<IActionResult> Products(int? subCategoryId)
+        //{
+        //    var categoryList = await context.ProductCats.ToListAsync();
+        //    ViewBag.CategoryList = categoryList;
+
+        //    var subCategoryList = await context.ProductSubCats.ToListAsync();
+        //    ViewBag.SubCategoryList = subCategoryList;
+
+        //    //var categorySubCategoryMap = categoryList.ToDictionary(category => category.CatName,
+        //    //    category => subCategoryList.Where(sc => sc.CatId == category.Id).ToList()
+        //    //);
+        //    //ViewBag.CategorySubCategoryMap = categorySubCategoryMap;
+
+        //    List<SqlParameter> par = [];
+        //    if (subCategoryId == null)
+        //    {
+        //        par.Add(new SqlParameter("@atype", "SELECT_PRODUCT"));
+        //        var data = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
+        //        ViewBag.data = data.Tables[0];
+        //    }
+        //    else
+        //    {
+        //        par.Add(new SqlParameter("@atype", "SELECT_PRODUCT BY ID"));
+        //        par.Add(new SqlParameter("@subCatId", subCategoryId));
+        //        var data = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
+        //        ViewBag.data = data.Tables[0];
+        //    }
+
+        //    return View();
+        //}
+
+        //[HttpGet("account/member-products-history")]
+        //public async Task<IActionResult> MemberProductsHistory()
+        //{
+        //    List<SqlParameter> par = [];
+        //    par.Add(new SqlParameter("@userId", mango));
+        //    par.Add(new SqlParameter("@atype", "PRODUCT HISTORY"));
+        //    var ds = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
+        //    return View(ds);
+        //}
+
+        //[HttpGet("account/add-cart")]
+        //public async Task<IActionResult> AddToCart(string ProductId)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var addres = await context.MemberInfos.Where(x => x.MemberId == mango).FirstOrDefaultAsync();
+        //        if (addres!.MemAddress == "" || addres.MemAddress == null)
+        //        {
+        //            TempData["error"] = "Please Fill Your Address First.";
+        //            return RedirectToAction("profile", "Account");
+        //        }
+
+        //        List<SqlParameter> par = [];
+        //        par.Add(new SqlParameter("@atype", "ADD_TO_CART"));
+        //        par.Add(new SqlParameter("@userId", mango));
+        //        par.Add(new SqlParameter("@pId", ProductId));
+        //        try
+        //        {
+        //            var data = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
+        //            TempData["msg"] = data.Tables[0].Rows[0]["msg"].ToString();
+        //            return RedirectToAction("products");
+        //        }
+        //        catch
+        //        {
+        //            TempData["error"] = "SomeThing Went Wrong";
+        //            return RedirectToAction("products");
+        //        }
+        //    }
+        //    return RedirectToAction("products");
+        //}
+
+        //[HttpGet("account/cartlist")]
+        //public async Task<IActionResult> CartList()
+        //{
+        //    List<SqlParameter> par = [];
+        //    par.Add(new SqlParameter("@atype", "GET_CART"));
+        //    par.Add(new SqlParameter("@userId", mango));
+        //    var ds = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
+        //    ViewBag.data = String.Format("{0:0.00}", ds.Tables[1].Rows[0]["totalCartPrice"]);
+
+        //    par = [];
+        //    par.Add(new SqlParameter("@memberId", mango));
+        //    var dsa = await _dataAccess.FnRetriveByPro("[SpMemberAccount]", par);
+        //    if (dsa.Tables[0].Rows.Count > 0)
+        //    {
+        //        ViewBag.availableWallet = string.Format("{0:0.00}", dsa.Tables[0].Rows[0]["AW_Available"]);
+        //    }
+        //    return View(ds);
+        //}
+
+        //[HttpPost("account/cart/remove/{Id}")]
+        //public async Task<IActionResult> Remove(int Id)
+        //{
+        //    var cartcount = await context.TableCarts.FindAsync(Id);
+        //    if (cartcount != null)
+        //    {
+        //        context.TableCarts.Remove(cartcount);
+        //        await context.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction("CartList");
+        //}
+
+        //[HttpPost("account/UpdateQty/{Id}")]
+        //public async Task<IActionResult> UpdateProdQty(int Id, int quant)
+        //{
+        //    var cartcount = await context.TableCarts.FindAsync(Id);
+        //    if (cartcount != null)
+        //    {
+        //        if (quant < 0 && cartcount.Quantity > 1)
+        //        {
+        //            cartcount.Quantity += quant;
+        //        }
+        //        if (quant > 0)
+        //        {
+        //            cartcount.Quantity += quant;
+        //        }
+        //        await context.SaveChangesAsync();
+        //    }
+        //    return RedirectToAction("CartList");
+        //}
+
+        //[HttpPost("account/place-ordered-standalone")]
+        //public async Task<IActionResult> PlaceOrder()
+        //{
+        //    var memmob = Request.Form["memberId"].ToString().Trim();
+        //    try
+        //    {
+        //        if (memmob == "")
+        //        {
+        //            TempData["error"] = "Failed! Please Enter Member ID";
+        //            return RedirectToAction("CartList");
+        //        }
+
+        //        var data1 = await context.MemberInfos.Where(x => x.MemberId == memmob).FirstOrDefaultAsync();
+        //        if (data1 == null)
+        //        {
+        //            TempData["error"] = "Failed! Invalid member.";
+        //            return RedirectToAction("CartList");
+        //        }
+        //        var card = await context.TableCarts.FirstOrDefaultAsync();
+        //        if (card == null)
+        //        {
+        //            TempData["error"] = "Failed! Your Cart Empty Please Select Product.";
+        //            return RedirectToAction("CartList");
+        //        }
+        //        decimal available = 0;
+        //        List<SqlParameter> par = [];
+        //        par.Add(new SqlParameter("@memberId", mango));
+        //        var dsa = await _dataAccess.FnRetriveByPro("[SpMemberAccount]", par);
+        //        if (dsa.Tables[0].Rows.Count > 0)
+        //        {
+        //            available = Convert.ToDecimal(dsa.Tables[0].Rows[0]["AW_Available"]);
+        //        }
+
+        //        par = [];
+        //        par.Add(new SqlParameter("@atype", "Place Order"));
+        //        par.Add(new SqlParameter("@userId", data1.MemberId));
+        //        par.Add(new SqlParameter("@byUserId", mango));
+        //        par.Add(new SqlParameter("@walletBal", available));
+        //        var data = await _dataAccess.FnRetriveByPro("[SP_PlaceOrder]", par);
+
+        //        TempData["msg"] = data.Tables[0].Rows[0]["msg"].ToString();
+        //    }
+        //    catch
+        //    {
+        //        TempData["error"] = "SomeThing Went Wrong";
+        //        return RedirectToAction("CartList");
+        //    }
+        //    return RedirectToAction("CartList");
+        //}
+
+        [HttpPost("account/address-info")]
+        public async Task<JsonResult> GetAddressInfo(string currency)
         {
-            var categoryList = await context.ProductCats.ToListAsync();
-            ViewBag.CategoryList = categoryList;
-
-            var subCategoryList = await context.ProductSubCats.ToListAsync();
-            ViewBag.SubCategoryList = subCategoryList;
-
-            //var categorySubCategoryMap = categoryList.ToDictionary(category => category.CatName,
-            //    category => subCategoryList.Where(sc => sc.CatId == category.Id).ToList()
-            //);
-            //ViewBag.CategorySubCategoryMap = categorySubCategoryMap;
-
-            List<SqlParameter> par = [];
-            if (subCategoryId == null)
+            var data = await context.AdminAddressInfos.Where(x => x.Ctype == currency).FirstOrDefaultAsync();
+            if (data != null)
             {
-                par.Add(new SqlParameter("@atype", "SELECT_PRODUCT"));
-                var data = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
-                ViewBag.data = data.Tables[0];
-            }
-            else
-            {
-                par.Add(new SqlParameter("@atype", "SELECT_PRODUCT BY ID"));
-                par.Add(new SqlParameter("@subCatId", subCategoryId));
-                var data = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
-                ViewBag.data = data.Tables[0];
-            }
-
-            return View();
-        }
-
-        [HttpGet("account/member-products-history")]
-        public async Task<IActionResult> MemberProductsHistory()
-        {
-            List<SqlParameter> par = [];
-            par.Add(new SqlParameter("@userId", mango));
-            par.Add(new SqlParameter("@atype", "PRODUCT HISTORY"));
-            var ds = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
-            return View(ds);
-        }
-
-        [HttpGet("account/add-cart")]
-        public async Task<IActionResult> AddToCart(string ProductId)
-        {
-            if (ModelState.IsValid)
-            {
-                var addres = await context.MemberInfos.Where(x => x.MemberId == mango).FirstOrDefaultAsync();
-                if (addres!.MemAddress == "" || addres.MemAddress == null)
+                return Json(new
                 {
-                    TempData["error"] = "Please Fill Your Address First.";
-                    return RedirectToAction("profile", "Account");
-                }
-
-                List<SqlParameter> par = [];
-                par.Add(new SqlParameter("@atype", "ADD_TO_CART"));
-                par.Add(new SqlParameter("@userId", mango));
-                par.Add(new SqlParameter("@pId", ProductId));
-                try
-                {
-                    var data = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
-                    TempData["msg"] = data.Tables[0].Rows[0]["msg"].ToString();
-                    return RedirectToAction("products");
-                }
-                catch
-                {
-                    TempData["error"] = "SomeThing Went Wrong";
-                    return RedirectToAction("products");
-                }
+                    depositAddress = commonMethods.Decrypt(data.DepositAddress!),
+                    tokenAddress = data.TokenAddress,
+                    contractAbi = data.ContractAbi
+                });
             }
-            return RedirectToAction("products");
+            else return Json("Failed! Could not find address info.");
         }
 
-        [HttpGet("account/cartlist")]
-        public async Task<IActionResult> CartList()
+        [HttpPost("SponsorName/{memberId}")]
+        public string GetMemberName(String memberId)
         {
-            List<SqlParameter> par = [];
-            par.Add(new SqlParameter("@atype", "GET_CART"));
-            par.Add(new SqlParameter("@userId", mango));
-            var ds = await _dataAccess.FnRetriveByPro("[SP_ManageProducts]", par);
-            ViewBag.data = String.Format("{0:0.00}", ds.Tables[1].Rows[0]["totalCartPrice"]);
-
-            par = [];
-            par.Add(new SqlParameter("@memberId", mango));
-            var dsa = await _dataAccess.FnRetriveByPro("[SpMemberAccount]", par);
-            if (dsa.Tables[0].Rows.Count > 0)
-            {
-                ViewBag.availableWallet = string.Format("{0:0.00}", dsa.Tables[0].Rows[0]["AW_Available"]);
-            }
-            return View(ds);
-        }
-
-        [HttpPost("account/cart/remove/{Id}")]
-        public async Task<IActionResult> Remove(int Id)
-        {
-            var cartcount = await context.TableCarts.FindAsync(Id);
-            if (cartcount != null)
-            {
-                context.TableCarts.Remove(cartcount);
-                await context.SaveChangesAsync();
-            }
-            return RedirectToAction("CartList");
-        }
-
-        [HttpPost("account/UpdateQty/{Id}")]
-        public async Task<IActionResult> UpdateProdQty(int Id, int quant)
-        {
-            var cartcount = await context.TableCarts.FindAsync(Id);
-            if (cartcount != null)
-            {
-                if (quant < 0 && cartcount.Quantity > 1)
-                {
-                    cartcount.Quantity += quant;
-                }
-                if (quant > 0)
-                {
-                    cartcount.Quantity += quant;
-                }
-                await context.SaveChangesAsync();
-            }
-            return RedirectToAction("CartList");
-        }
-
-        [HttpPost("account/place-ordered-standalone")]
-        public async Task<IActionResult> PlaceOrder()
-        {
-            var memmob = Request.Form["memberId"].ToString().Trim();
+            string? result = "";
             try
             {
-                if (memmob == "")
-                {
-                    TempData["error"] = "Failed! Please Enter Member ID";
-                    return RedirectToAction("CartList");
-                }
-
-                var data1 = await context.MemberInfos.Where(x => x.MemberId == memmob).FirstOrDefaultAsync();
-                if (data1 == null)
-                {
-                    TempData["error"] = "Failed! Invalid member.";
-                    return RedirectToAction("CartList");
-                }
-                var card = await context.TableCarts.FirstOrDefaultAsync();
-                if (card == null)
-                {
-                    TempData["error"] = "Failed! Your Cart Empty Please Select Product.";
-                    return RedirectToAction("CartList");
-                }
-                decimal available = 0;
-                List<SqlParameter> par = [];
-                par.Add(new SqlParameter("@memberId", mango));
-                var dsa = await _dataAccess.FnRetriveByPro("[SpMemberAccount]", par);
-                if (dsa.Tables[0].Rows.Count > 0)
-                {
-                    available = Convert.ToDecimal(dsa.Tables[0].Rows[0]["AW_Available"]);
-                }
-
-                par = [];
-                par.Add(new SqlParameter("@atype", "Place Order"));
-                par.Add(new SqlParameter("@userId", data1.MemberId));
-                par.Add(new SqlParameter("@byUserId", mango));
-                par.Add(new SqlParameter("@walletBal", available));
-                var data = await _dataAccess.FnRetriveByPro("[SP_PlaceOrder]", par);
-
-                TempData["msg"] = data.Tables[0].Rows[0]["msg"].ToString();
+                var data = context.MemberInfos.Where(x => x.MemberId == memberId).FirstOrDefault();
+                return data == null ? "❌ No such member exists" : $"✅ {data.MemLogId}";
             }
-            catch
+            catch (Exception ex)
             {
-                TempData["error"] = "SomeThing Went Wrong";
-                return RedirectToAction("CartList");
+                result = ex.Message;
             }
-            return RedirectToAction("CartList");
+            return result!;
         }
 
         [HttpPost("account/GetName")]
@@ -1473,7 +1071,7 @@ namespace Bigprofits.Controllers
             try
             {
                 var data = context.MemberInfos.FirstOrDefault(x => x.MemberId == memberId);
-                result = data == null ? "No such member exist" : data.MemName;
+                return data == null ? "❌ No such member exists" : $"✅ {data.MemLogId}";
             }
             catch (Exception ex)
             {

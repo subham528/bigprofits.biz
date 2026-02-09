@@ -2,182 +2,117 @@
 @model DataSet
 @using Newtonsoft.Json;
 @using Bigprofits.Common;
-
 @{
-    ViewData["Title"] = "TopUp";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "TopUp";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 
-    dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
-    decimal totalStake = 0;
-    foreach (DataRow row in Model.Tables[0].Rows)
-    {
-        totalStake += string.IsNullOrEmpty(row["DINIP"]?.ToString()) ? 0 : Convert.ToDecimal(row["DINIP"]);
-    }
-
-}<script src="~/node_module/jquery/dist/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="~/SweetAlert/dist/sweetalert2.min.css" rel="stylesheet">
+	dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
+}
 
 @if (TempData["msg"] != null)
 {
-    <div class="alert alert-success"> @TempData["msg"] </div>
-
-    // <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"] </div>
+	<div class="alert alert-success"> @TempData["msg"] </div>
 }
-
-
-
 
 <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;" id="showmsg"></div>
 
-
 <div class="row justify-content-center">
-    <div class="col-12 col-md-6 col-lg-4">
-        <!-- Start -->
-        <div class="card shadow-lg rounded-lg mb-4">
-            <div class="card-header py-3 bg-primary text-center">
-                <h6 class="m-0 font-weight-bold text-white text-lg" style="color:green">  Swap And TopUp Wallet</h6>
-            </div>
+	<div class="col-12 col-md-6 col-lg-4">
+		<!-- Start -->
+		<div class="card shadow-lg rounded-lg mb-4">
+			<div class="card-header py-3 bg-primary text-center">
+				<h6 class="m-0 font-weight-bold text-white text-lg" style="color:green">  Swap And TopUp Wallet</h6>
+			</div>
 
-            <div class="card-body p-4">
-                <!-- Error or Username Display -->
-                <div class="text-center text-red-500 font-semibold" id="UserName"></div>
+			<div class="card-body p-4">
+				<!-- Error or Username Display -->
+				<div class="text-center text-red-500 font-semibold" id="UserName"></div>
 
-                <!-- Topup Wallet Display -->
-                <div class="text-center my-3">
-                    <p class="text-sm font-semibold text-purple-600 mb-1">   TopUp Wallet</p>
-                    <p class="text-lg font-bold text-purple-700">$@income.AW_Available</p>
-                </div>
+				<!-- Topup Wallet Display -->
+				<div class="text-center my-3">
+					<p class="text-sm font-semibold text-purple-600 mb-1">   TopUp Wallet</p>
+					<p class="text-lg font-bold text-purple-700">$@income.AW_Available</p>
+				</div>
 
-                <div asp-validation-summary="All" class="text-danger"></div>
+				<form asp-action="TopUp" method="post">
+					<div class="mb-4">
+						<label class="text-sm font-semibold">Member Id</label>
+						<input id="Memberid" name="Memberid" class="form-control w-full border rounded-lg py-2 px-3" placeholder="Enter MemberID" required />
+					</div>
 
-                <form asp-action="TopUp" method="post">
-                    <input type="hidden" id="BymemberId" name="BymemberId" value='@TempData["walletType"]' />
+					<div class="mb-4">
+						<label class="text-sm font-semibold">Amount ($)</label>
+						<input id="amount" name="amount" class="form-control w-full border rounded-lg py-2 px-3" placeholder="Min 30 & mul of 1" required />
+					</div>
 
-                    <div class="mb-4">
-                        <label class="text-sm font-semibold">Member Id</label>
-                        <input id="Memberid" name="Memberid" 
-                               class="form-control w-full border rounded-lg py-2 px-3"
-                               placeholder="Enter MemberID" required />
-                    </div>
-                    <!-- Amount Input -->
-                    <div class="mb-4">
-                        <label class="text-sm font-semibold">Amount ($)</label>
-                        <input id="amount" name="amount"
-                               class="form-control w-full border rounded-lg py-2 px-3"
-                               placeholder="Min $ 10" required />
-                    </div>
+					<!-- Submit Button -->
+					<div class="text-center mt-4" id="topbtn">
+						<button type="submit" id="btnsubmit" class="btn bg-primary text-white w-full py-2 rounded-lg text-lg">
+							Topup
+						</button>
+					</div>
 
-                    <!-- Submit Button -->
-                    <div class="text-center mt-4" id="topbtn">
-                        <button type="submit" id="btnsubmit" class="btn bg-primary text-white w-full py-2 rounded-lg text-lg">
-                            Swap And TopUp
-                        </button>
-                    </div>
-
-                    <!-- Processing Message (Hidden by default) -->
-                    <div class="text-center mt-3 hidden" id="processbtn">
-                        <p class="text-red-600 font-bold">Processing...</p>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- End -->
-    </div>
+					<!-- Processing Message (Hidden by default) -->
+					<div class="text-center mt-3 hidden" id="processbtn">
+						<p class="text-red-600 font-bold">Processing...</p>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- End -->
+	</div>
 </div>
 
 <div class="col-12 col-sm-12">
-    <div class="card ">
-        <div class="card-header">
-            <h3 class="card-title mb-0"> TOPUP HISTORY </h3>
-        </div>
-        <div class="mb-3 fw-bold">
-            🧮 My Total Stake: <span class="text-primary">@($"{totalStake:0} DINP")</span>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table id="data-table" class="table table-bordered text-nowrap mb-0">
-                    <thead>
-                        <tr>
+	<div class="card ">
+		<div class="card-header">
+			<h3 class="card-title mb-0"> TOPUP HISTORY </h3>
+		</div>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table id="data-table" class="table table-bordered text-nowrap mb-0">
+					<thead>
+						<tr>
+							<th>
+								Sno
+							</th>
 
-                            <th>
-                                Sno
-                            </th>
+							<th>
+								User Id
+							</th>
+							<th>
+								Amount
+							</th>
+							<th>
+								By Member
+							</th>
+							<th>
+								Date
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						@{
+							int sno2 = 1;
+						}
 
-                            <th>
-                                User Id
-                            </th>
-                          
-                           
-                            <th>
-                                Top up Amount
-                            </th>
-                            <th>
-                                Stake
-                            </th>
-                            <th>
-                                Bigprofits Rate
-                            </th>
-                            <th>
-                               Roi package
-                            </th>
-                            <th>
-                                Type
-                            </th>
-                            <th>
-                                By Member Id
-                            </th>
-                            <th>
-                                Date
-                            </th>
-                            <th>
-                                My Stake
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int sno2 = 1;
-                        }
+						@foreach (DataRow row in Model.Tables[0].Rows)
+						{
+							<tr>
+								<td>@sno2</td>
+								<td> @row["memberId"]</td>
+								<td>@("$" + Convert.ToDecimal(row["cmitReqAmount"]).ToString("0.00"))</td>
+								<td>@row["byMemberId"]</td>
+								<td>@row["cmitsdate"]</td>
+							</tr>
+							sno2++;
+						}
 
-                        @foreach (DataRow row in Model.Tables[0].Rows)
-                        {
-                            <tr>
-                                <td>@sno2</td>
-                                <td> @row["memberId"]</td>
-
-                                <td>@("$" + Convert.ToDecimal(row["cmitReqAmount"]).ToString("0.00"))</td>
-
-                                <td>@($"{Convert.ToDecimal(row["DINIP"]).ToString("0")} DINP")</td>
-                                <td>@Convert.ToDecimal(row["topupWallet"]).ToString("0")</td>
-
-                              
-                                <td>@("$" + Convert.ToDecimal(row["usdtWalelt"]).ToString("0.00"))</td>
-                                <td>@row["WalletType"]</td>
-                                <td>@row["byMemberId"]</td>
-                                <td>@row["cmitsdate"]</td>
-
-
-                                <td>
-                                    @if (!string.IsNullOrEmpty(row["hshid"]?.ToString()))
-                                    {
-                                        <a href="https://bscscan.com/tx/@row["hshid"]" target="_blank">View</a>
-                                    }
-                                    else
-                                    {
-                                       
-                                    }
-                                </td>
-
-                            </tr>
-                            sno2++;
-                        }
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script src="~/SweetAlert/dist/sweetalert2.min.js"></script>
@@ -187,155 +122,155 @@
 
 @section Scripts {
 
-    <script>
+	<script>
 
-        $(function () {
-            $("#topbtn").show()
-            $("#processbtn").hide()
-        });
+		$(function () {
+			$("#topbtn").show()
+			$("#processbtn").hide()
+		});
 
-    </script>
+	</script>
 
-    <script>
-        $("form").on("submit", function(){
-            $("#topbtn").hide()
-            $("#processbtn").show()
-        })
-
-
-
-        //===========================================================================================================================
-
-        // $("#btnsubmit").on("click", function () {
-
-        //     var Amount = $("#txtAmount").val().trim()
-        //     var member = $("#member").val().trim()
-
-        //     if (isNaN(Amount)) $("#showmsg").text("Plese Enter package Amount");
-        //     else if (member == "") $("#showmsg").text("Plese enter valid memberid");
-        //     else {
-
-        //         $("#topbtn").hide()
-        //         $("#processbtn").show()
-
-        //         $.ajax({
-        //             url: "/TopUp/isTopUpValid/",
-        //             method: "post",
-        //             data: { Amount: Amount, member: member },
-        //             dataType: "Json",
-        //             success: function (data) {
-        //                 console.log(data)
-
-        //                 Swal.fire({
-        //                     icon: data.includes("Failed!") ? 'error' : 'success',
-        //                     title: data.includes("Failed!") ? 'Topup Failed!' : 'Topup Successfull!',
-        //                     text: data,
-        //                 }).then(() => {
-        //                     location.href = location.pathname;
-        //                 })
-
-        //                 //$("#showmsg").text(data);
-
-        //                 //$("#PinType").val("");
-        //                 //$("#ttlamount").val("");
-
-        //                 //setTimeout(location.reload.bind(location), 15000);
-
-        //                 // location.reload();
-        //             }
-        //         })
-
-        //     }
-        // })
-
-        //============================================================================================================================
+	<script>
+		$("form").on("submit", function(){
+			$("#topbtn").hide()
+			$("#processbtn").show()
+		})
 
 
 
+		//===========================================================================================================================
 
-        $("#Memberid").keyup(function () {
-            if ($(this).val() != "") {
-                IsSponsorExist($(this).val());
-            }
-            else $("#UserName").val("");
-        })
-        function IsSponsorExist(memberId) {
-            try {
-                $.ajax({
-                    url: "/SponsorName/" + memberId,
-                    method: 'post',
-                    data: { memberId: memberId },
-                    dataType: "text",
-                    success: function (data) {
-                        console.log(data);
-                        $("#UserName").text(data);
-                    }
-                });
-            } catch (e) {
-                console.log(e)
-            }
-        }
-        //=========================== DROP DOWN FOR MULTIPLE package =============================
+		// $("#btnsubmit").on("click", function () {
 
-        $("#PinType").on("change", function () {
-            var pintype = parseFloat($("#PinType").val().trim())
-            $("#package").html("<option selected>Select Amount</option>");
-            $.ajax({
-                url: "/TopUp/getPackage/",
-                method: "post",
-                data: { pintype: pintype },
-                dataType: "Json",
-                success: function (data) {
-                    console.log(data)
-                    for (var i = 0; i < data.length; i++) {
-                        $("#package").append("<option value='" + data[i].paBinary + "'>" + data[i].packageAmount + "</option>")
-                    }
-                }
-            })
+		//     var Amount = $("#txtAmount").val().trim()
+		//     var member = $("#member").val().trim()
 
-        })
+		//     if (isNaN(Amount)) $("#showmsg").text("Plese Enter package Amount");
+		//     else if (member == "") $("#showmsg").text("Plese enter valid memberid");
+		//     else {
 
-                                                // ================================================================================
+		//         $("#topbtn").hide()
+		//         $("#processbtn").show()
+
+		//         $.ajax({
+		//             url: "/TopUp/isTopUpValid/",
+		//             method: "post",
+		//             data: { Amount: Amount, member: member },
+		//             dataType: "Json",
+		//             success: function (data) {
+		//                 console.log(data)
+
+		//                 Swal.fire({
+		//                     icon: data.includes("Failed!") ? 'error' : 'success',
+		//                     title: data.includes("Failed!") ? 'Topup Failed!' : 'Topup Successfull!',
+		//                     text: data,
+		//                 }).then(() => {
+		//                     location.href = location.pathname;
+		//                 })
+
+		//                 //$("#showmsg").text(data);
+
+		//                 //$("#PinType").val("");
+		//                 //$("#ttlamount").val("");
+
+		//                 //setTimeout(location.reload.bind(location), 15000);
+
+		//                 // location.reload();
+		//             }
+		//         })
+
+		//     }
+		// })
+
+		//============================================================================================================================
 
 
 
 
+		$("#Memberid").keyup(function () {
+			if ($(this).val() != "") {
+				IsSponsorExist($(this).val());
+			}
+			else $("#UserName").val("");
+		})
+		function IsSponsorExist(memberId) {
+			try {
+				$.ajax({
+					url: "/SponsorName/" + memberId,
+					method: 'post',
+					data: { memberId: memberId },
+					dataType: "text",
+					success: function (data) {
+						console.log(data);
+						$("#UserName").text(data);
+					}
+				});
+			} catch (e) {
+				console.log(e)
+			}
+		}
+		//=========================== DROP DOWN FOR MULTIPLE package =============================
+
+		$("#PinType").on("change", function () {
+			var pintype = parseFloat($("#PinType").val().trim())
+			$("#package").html("<option selected>Select Amount</option>");
+			$.ajax({
+				url: "/TopUp/getPackage/",
+				method: "post",
+				data: { pintype: pintype },
+				dataType: "Json",
+				success: function (data) {
+					console.log(data)
+					for (var i = 0; i < data.length; i++) {
+						$("#package").append("<option value='" + data[i].paBinary + "'>" + data[i].packageAmount + "</option>")
+					}
+				}
+			})
+
+		})
+
+												// ================================================================================
 
 
-                                                    //$("#member").keyup(function () {
-                                                    //    if ($(this).val() != "") {
-                                                    //        isMemberIdExist($(this).val());
-                                                    //    }
-                                                    //    //else $("#txtSpName").val("");
-                                                    //})
-                                                    //function isMemberIdExist(idMember) {
-                                                    //    try {
-                                                    //        $.ajax({
-                                                    //            url: "/TopUp/isMemberIdExist/",
-                                                    //            method: 'post',
-                                                    //            data: { idMember: idMember },
-                                                    //            dataType: "text",
-                                                    //            success: function (data) {
-                                                    //                console.log(data);
-                                                    //                if (data == "1") {
-                                                    //                    $("#btnsubmit").removeAttr("disabled");
-                                                    //                    $("#DigMsg").text("");
-                                                    //                }
-                                                    //                else {
-                                                    //                    $("#btnsubmit").attr("disabled", "disabled");
-                                                    //                    $("#DigMsg").text("Member id does not exists..!");
-                                                    //                }
-                                                    //            }
-                                                    //        });
-                                                    //    } catch (e) {
-                                                    //        console.log(e)
-                                                    //    }
-                                                    //}
 
 
 
 
-    </script>
+													//$("#member").keyup(function () {
+													//    if ($(this).val() != "") {
+													//        isMemberIdExist($(this).val());
+													//    }
+													//    //else $("#txtSpName").val("");
+													//})
+													//function isMemberIdExist(idMember) {
+													//    try {
+													//        $.ajax({
+													//            url: "/TopUp/isMemberIdExist/",
+													//            method: 'post',
+													//            data: { idMember: idMember },
+													//            dataType: "text",
+													//            success: function (data) {
+													//                console.log(data);
+													//                if (data == "1") {
+													//                    $("#btnsubmit").removeAttr("disabled");
+													//                    $("#DigMsg").text("");
+													//                }
+													//                else {
+													//                    $("#btnsubmit").attr("disabled", "disabled");
+													//                    $("#DigMsg").text("Member id does not exists..!");
+													//                }
+													//            }
+													//        });
+													//    } catch (e) {
+													//        console.log(e)
+													//    }
+													//}
+
+
+
+
+	</script>
 
 }
 

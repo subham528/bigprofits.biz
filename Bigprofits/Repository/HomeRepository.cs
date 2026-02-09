@@ -43,24 +43,24 @@ namespace Bigprofits.Repository
             }).ToListAsync();
         }
 
-        public async Task<List<ProductCat>> ProductCat()
-        {
-            return await context.ProductCats.Select(x => new ProductCat()
-            {
-                CatName = x.CatName,
-                Id = x.Id
+        //public async Task<List<ProductCat>> ProductCat()
+        //{
+        //    return await context.ProductCats.Select(x => new ProductCat()
+        //    {
+        //        CatName = x.CatName,
+        //        Id = x.Id
 
-            }).ToListAsync();
-        }
+        //    }).ToListAsync();
+        //}
 
-        public async Task<List<ProductSubCat>> ProductSubCat()
-        {
-            return await context.ProductSubCats.Select(x => new ProductSubCat()
-            {
-                SubCatName = x.SubCatName,
-                Id = x.Id
-            }).ToListAsync();
-        }
+        //public async Task<List<ProductSubCat>> ProductSubCat()
+        //{
+        //    return await context.ProductSubCats.Select(x => new ProductSubCat()
+        //    {
+        //        SubCatName = x.SubCatName,
+        //        Id = x.Id
+        //    }).ToListAsync();
+        //}
 
         public string GetPaginationBtn(string url, int pageSize, int recordCount, int currentPage)
         {

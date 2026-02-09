@@ -119,8 +119,7 @@
 							<div class="row">
 								<div class="col-12">
 									<h4 class="fw-normal mb-2">
-										@income.withdrawal?.ToString("0.00")
-										<span class="small text-muted">$</span>
+										@income.team
 									</h4>
 
 									<p class="text-muted size-12">Total Team</p>
@@ -405,6 +404,7 @@
 		</div>
 	</div>
 </div>
+
 <div class="row mb-3">
 	<div class="col-12 col-md-3">
 		<div class="card shadow-sm mb-2">
@@ -560,7 +560,7 @@
 
 	</div>
 </div> *@
-
+</div>
 
 <div class="row mb-3 mt-3">
 	<div class="col">
@@ -568,7 +568,6 @@
 			Total Income<br><small class="fw-normal text-muted"> $@income.totalIncome</small>
 		</h6>
 	</div>
-
 </div>
 <div class="row mb-4">
 	<div class="col-12 px-0">
@@ -583,7 +582,7 @@
 					</div>
 					<div class="col align-self-center ps-0">
 						<p class="text-color-theme mb-0">ROI</p>
-							<p class="text-muted size-12">ROI Income</p>
+						<p class="text-muted size-12">ROI Income</p>
 					</div>
 					<div class="col align-self-center text-end">
 						<p class="mb-0">$@income.roiIncome?.ToString("0.00")</p>
@@ -603,8 +602,8 @@
 						<p class="text-muted size-12">Direct Sponsor Income</p>
 					</div>
 					<div class="col align-self-center text-end">
-							<p class="mb-0">$@income.directIncome?.ToString("0.00")</p>
-							<p class="text-muted size-12">$@income.directIncome?.ToString("0.00")</p>
+						<p class="mb-0">$@income.directIncome?.ToString("0.00")</p>
+						<p class="text-muted size-12">$@income.directIncome?.ToString("0.00")</p>
 					</div>
 				</div>
 			</li>
@@ -654,11 +653,11 @@
 					</div>
 					<div class="col align-self-center ps-0">
 						<p class="text-color-theme mb-0">Rank Matching Income</p>
-							<p class="text-muted size-12">Rank Matching Income</p>
+						<p class="text-muted size-12">Rank Matching Income</p>
 					</div>
 					<div class="col align-self-center text-end">
-							<p class="mb-0">$@income.salary?.ToString("0.00")</p>
-							<p class="text-muted size-12">$@income.salary?.ToString("0.00")</p>
+						<p class="mb-0">$@income.salary?.ToString("0.00")</p>
+						<p class="text-muted size-12">$@income.salary?.ToString("0.00")</p>
 					</div>
 				</div>
 			</li>

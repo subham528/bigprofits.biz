@@ -1,0 +1,72 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+@{
+	ViewData["Title"] = "Matching Income";
+	Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+<div class="page-heading">
+	<section class="section">
+		<div class="card">
+			<div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+				MATCHING INCOME
+			</div>
+			<form action="/britglbl253adpnl/matching-income" method="get" class="searchForm">
+				<input name="userId" class="form-control" placeholder="Member ID" value="@ViewBag.userId">
+
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">From</span>
+					</div>
+					<input name="date" type="date" class="form-control" value="@ViewBag.date">
+				</div>
+
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">To</span>
+					</div>
+					<input name="date1" type="date" class="form-control" value="@ViewBag.date1">
+				</div>
+
+				<button class="btn btn-outline-primary" type="submit">
+					<i class="bi bi-search"></i>
+				</button>
+				<a href="/britglbl253adpnl/matching-income" class="btn btn-danger form-control">Clear Filter</a>
+			</form>
+			<div class="card-body mt-3 overflow-auto">
+				<table class="table table-responsive text-nowrap text-center">
+					<thead>
+						<tr>
+							<th>Sno</th>
+							<th>Member</th>
+							<th>Amount</th>
+							<th>Matching Amount</th>
+							<th>Rate</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (DataRow row in Model.Tables[0].Rows)
+						{
+							<tr>
+								<td>@row["srn"]</td>
+								<td>@row["memname"] / @row["memberId"]</td>
+								<td>$@string.Format("{0:0.####}", row["amount"])</td>
+								<td>$@string.Format("{0:0.####}", row["bnryMatch"])</td>
+								<td>@string.Format("{0:0.####}", row["Rate"])%</td>
+								<td>@row["bdate"]</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+				<ul class="pagination mt-3">
+					@Html.Raw(ViewBag.pgnHtml)
+				</ul>
+			</div>
+		</div>
+
+	</section>
+</div>
+
+

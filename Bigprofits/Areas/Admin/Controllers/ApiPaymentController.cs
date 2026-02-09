@@ -86,72 +86,72 @@ namespace Bigprofits.Areas.Admin.Controllers
             return RedirectToAction("AdminFundRequest", "ApiPayment");
         }
 
-        [HttpGet("AFund-History")]
-        public async Task<IActionResult> AdminFundHistory()
-        {
-            List<SqlParameter> par = [];
-            var adminfund = await _dataAccess.FnRetriveByPro("[SpApiFundDetail]", par);
-            ViewBag.adminfund = adminfund.Tables[0];
+        //[HttpGet("AFund-History")]
+        //public async Task<IActionResult> AdminFundHistory()
+        //{
+        //    List<SqlParameter> par = [];
+        //    var adminfund = await _dataAccess.FnRetriveByPro("[SpApiFundDetail]", par);
+        //    ViewBag.adminfund = adminfund.Tables[0];
 
-            var data = await context.TblApiPaymentReqs.ToListAsync();
-            return View(data);
-        }
+        //    var data = await context.TblApiPaymentReqs.ToListAsync();
+        //    return View(data);
+        //}
 
-        [HttpGet("Approvepayreq")]
-        public async Task<IActionResult> Approvepayreq()
-        {
+        //[HttpGet("Approvepayreq")]
+        //public async Task<IActionResult> Approvepayreq()
+        //{
 
-            List<SqlParameter> par = [];
-            var adminfund = await _dataAccess.FnRetriveByPro("[SpApiFundDetail]", par);
+        //    List<SqlParameter> par = [];
+        //    var adminfund = await _dataAccess.FnRetriveByPro("[SpApiFundDetail]", par);
 
-            ViewBag.adminfund = adminfund.Tables[0];
-            ViewBag.totalFundReq = adminfund.Tables[0].Rows[0]["totalFundReq"];
-            ViewBag.approvedFund = adminfund.Tables[0].Rows[0]["approvedFund"];
-            ViewBag.pendingFund = adminfund.Tables[0].Rows[0]["pendingFund"];
-            ViewBag.withdrawalAmount = adminfund.Tables[0].Rows[0]["withdrawalAmount"];
-            ViewBag.apiCharge = adminfund.Tables[0].Rows[0]["apiCharge"];
-            ViewBag.discount = adminfund.Tables[0].Rows[0]["discount"];
-            ViewBag.available = adminfund.Tables[0].Rows[0]["available"];
+        //    ViewBag.adminfund = adminfund.Tables[0];
+        //    ViewBag.totalFundReq = adminfund.Tables[0].Rows[0]["totalFundReq"];
+        //    ViewBag.approvedFund = adminfund.Tables[0].Rows[0]["approvedFund"];
+        //    ViewBag.pendingFund = adminfund.Tables[0].Rows[0]["pendingFund"];
+        //    ViewBag.withdrawalAmount = adminfund.Tables[0].Rows[0]["withdrawalAmount"];
+        //    ViewBag.apiCharge = adminfund.Tables[0].Rows[0]["apiCharge"];
+        //    ViewBag.discount = adminfund.Tables[0].Rows[0]["discount"];
+        //    ViewBag.available = adminfund.Tables[0].Rows[0]["available"];
 
-            var data = await context.TblApiPaymentReqs.ToListAsync();
+        //    var data = await context.TblApiPaymentReqs.ToListAsync();
 
-            if (TempData["code"] != null)
-            {
-                ViewBag.code = TempData["code"];
-                ViewBag.msg = TempData["msg"];
-            }
-            return View(data);
-        }
+        //    if (TempData["code"] != null)
+        //    {
+        //        ViewBag.code = TempData["code"];
+        //        ViewBag.msg = TempData["msg"];
+        //    }
+        //    return View(data);
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> ApiFundRequestApprove(int? fundid, int? id)
-        {
-            var data = await context.TblApiPaymentReqs.Where(x => x.Id == fundid).FirstOrDefaultAsync();
-            if (id == 1)
-            {
-                TempData["code"] = 1;
-                TempData["msg"] = "Request Approved";
-                data!.ReqStatus = 1;
-                data.ApproveDate = DateTime.Now;
-                context.Update(data);
-                await context.SaveChangesAsync();
-            }
-            else if (id == 0)
-            {
-                TempData["code"] = 1;
-                TempData["msg"] = "Request Rejected";
-                data!.ReqStatus = 2;
-                data.ApproveDate = DateTime.Now;
-                context.Update(data);
-                await context.SaveChangesAsync();
-            }
-            else
-            {
-                TempData["code"] = 1;
-                TempData["msg"] = "Something Went Wrong";
-            }
-            return RedirectToAction("Approvepayreq");
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> ApiFundRequestApprove(int? fundid, int? id)
+        //{
+        //    var data = await context.TblApiPaymentReqs.Where(x => x.Id == fundid).FirstOrDefaultAsync();
+        //    if (id == 1)
+        //    {
+        //        TempData["code"] = 1;
+        //        TempData["msg"] = "Request Approved";
+        //        data!.ReqStatus = 1;
+        //        data.ApproveDate = DateTime.Now;
+        //        context.Update(data);
+        //        await context.SaveChangesAsync();
+        //    }
+        //    else if (id == 0)
+        //    {
+        //        TempData["code"] = 1;
+        //        TempData["msg"] = "Request Rejected";
+        //        data!.ReqStatus = 2;
+        //        data.ApproveDate = DateTime.Now;
+        //        context.Update(data);
+        //        await context.SaveChangesAsync();
+        //    }
+        //    else
+        //    {
+        //        TempData["code"] = 1;
+        //        TempData["msg"] = "Something Went Wrong";
+        //    }
+        //    return RedirectToAction("Approvepayreq");
+        //}
 
         [HttpGet("Order-History")]
         public async Task<IActionResult> OrderHistory()

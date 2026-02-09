@@ -19,13 +19,14 @@ namespace Bigprofits.Areas.Admin.Controllers
     [Route("britglbl253adpnl")]
     [Route("admin/[controller]/[action]")]
     [Authorize(AuthenticationSchemes = "AdminAuth")]
-    public class AWalletController(ContextClass context, HomeRepository homeRepository, CommonMethods commonMethods, SqlConnectionClass dataAccess, IConfiguration configuration) : Controller
+    public class AWalletController(ContextClass context, HomeRepository homeRepository, CommonMethods commonMethods, SqlConnectionClass dataAccess, IConfiguration configuration, IAuditRepository auditRepository) : Controller
     {
         private readonly ContextClass context = context;
         private readonly HomeRepository homeRepository = homeRepository;
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
         private readonly IConfiguration _configuration = configuration;
+        private readonly IAuditRepository _auditRepository = auditRepository;
         private string admingo = "";
         public override void OnActionExecuting(ActionExecutingContext _context)
         {
@@ -119,13 +120,34 @@ namespace Bigprofits.Areas.Admin.Controllers
         }
 
         [HttpGet("manage-fund-Histry")]
-        public async Task<IActionResult> CreditDebitHistry()
+        public async Task<IActionResult> CreditDebitHistry(int? page, string? userId, string? date, string? date1)
         {
+            ViewBag.userId = userId;
+            ViewBag.date = date;
+            ViewBag.date1 = date1;
+
             List<SqlParameter> par = [];
+            if (page != null && page > 0) par.Add(new SqlParameter("@index", page > 0 ? page : 0));
+            if (userId != null) par.Add(new SqlParameter("@memberId", userId));
+            if (date != null) par.Add(new SqlParameter("@fromDate", date));
+            if (date1 != null) par.Add(new SqlParameter("@toDate", date1));
+
             par.Add(new SqlParameter("@hashId", "TOPUP"));
             par.Add(new SqlParameter("@rtype", "ADMIN FUND"));
-
             var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
+            ViewBag.data = ds;
+
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                string url = $"/britglbl253adpnl/manage-fund-Histry?";
+                if (userId != null) url += $"userId={userId}&";
+                if (date != null) url += $"date={date}&";
+                if (date1 != null) url += $"date={date1}&";
+                url += $"page=";
+
+                ViewBag.pgnHtml = homeRepository.GetPaginationBtn(url, Convert.ToInt32(ds.Tables[1].Rows[0]["size"]), Convert.ToInt32(ds.Tables[1].Rows[0]["rCount"]), (int)(page == null ? 0 : page));
+            }
+
             return View(ds);
         }
 
@@ -148,8 +170,10 @@ namespace Bigprofits.Areas.Admin.Controllers
                     par.Add(new SqlParameter("@type", "ADMIN FUND"));
                     var ds = await _dataAccess.FnRetriveByPro("[SP_SendFund]", par);
 
+                    await _auditRepository.LogActionAsync($"ADD FUND BY - {model.Ftype}", 0, "Admin", $"By admin fund '{model.Ftype}', memberid is {memberId} and fund amount is {model.Amount}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                     TempData["msg"] = ds.Tables[0].Rows[0]["msg"].ToString();
-                    RedirectToAction("FundAdd");
+                    return Redirect("/britglbl253adpnl/manage-fund");
                 }
             }
             catch (Exception)
@@ -221,6 +245,8 @@ namespace Bigprofits.Areas.Admin.Controllers
                     string logId = ds.Tables[0].Rows[0]["memLogId"].ToString()!;
                     string name = ds.Tables[0].Rows[0]["memName"].ToString()!;
                     memberId = ds.Tables[0].Rows[0]["memberId"].ToString()!;
+
+                    await _auditRepository.LogActionAsync($"TOPUP BY ADMIN", 0, "Admin", $"Topup by admin, memberid is {memberId} and amount is {fund.CmitReqAmount.ToString()!.Trim()}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
                 }
 
                 TempData["msg"] = ds.Tables[0].Rows[0]["msg"].ToString();
@@ -233,16 +259,34 @@ namespace Bigprofits.Areas.Admin.Controllers
             }
         }
 
-        [HttpGet("topup-history")]
-        public async Task<IActionResult> TopupHistory()
+        [HttpGet]
+        [Route("topup-history")]
+        public async Task<IActionResult> TopupHistory(int? page, string? userId, string? date, string? date1)
         {
-            List<SqlParameter> par = [];
-            par.Add(new SqlParameter("@rtype", "TOPUP HISTORY"));
-            par.Add(new SqlParameter("@atype", "MEMBER"));
+            ViewBag.userId = userId;
+            ViewBag.date = date;
+            ViewBag.date1 = date1;
 
+            List<SqlParameter> par = [];
+            if (page != null && page > 0) par.Add(new SqlParameter("@index", page > 0 ? page : 0));
+            if (userId != null) par.Add(new SqlParameter("@memberId", userId));
+            if (date != null) par.Add(new SqlParameter("@fromDate", date));
+            if (date1 != null) par.Add(new SqlParameter("@toDate", date1));
+
+            par.Add(new SqlParameter("@rtype", "TOPUP HISTORY"));
             var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
             ViewBag.data = ds;
 
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                string url = $"/britglbl253adpnl/topup-history?";
+                if (userId != null) url += $"userId={userId}&";
+                if (date != null) url += $"date={date}&";
+                if (date1 != null) url += $"date={date1}&";
+                url += $"page=";
+
+                ViewBag.pgnHtml = homeRepository.GetPaginationBtn(url, Convert.ToInt32(ds.Tables[1].Rows[0]["size"]), Convert.ToInt32(ds.Tables[1].Rows[0]["rCount"]), (int)(page == null ? 0 : page));
+            }
             return View(ds);
         }
 
@@ -353,7 +397,7 @@ namespace Bigprofits.Areas.Admin.Controllers
             try
             {
                 var data = context.MemberInfos.Where(x => x.MemberId == memberId).FirstOrDefault();
-                return data == null ? "❌ No such sponsor exists" : $"✅ {data.MemLogId}";
+                return data == null ? "❌ No such member exists" : $"✅ {data.MemLogId}";
             }
             catch (Exception ex)
             {

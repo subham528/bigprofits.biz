@@ -214,28 +214,6 @@ namespace Bigprofits.Areas.Admin.Controllers
             else return Json("Failed! Could not find address info.");
         }
 
-        [HttpPost("dron-address-info")]
-        public async Task<JsonResult> GetAddressInfoDrontoken(string currency)
-        {
-            currency = currency == "USDT" ? "USDT-BEP-20" : "CPC-BEP-20";
-
-            var data = await context.AdminAddressInfos.Where(x => x.Ctype == "USDT-Bigprofits-20").FirstOrDefaultAsync();
-            if (data != null)
-            {
-                currency = "USDT-Bigprofits-20";
-                return Json(new
-                {
-                    depositAddress = commonMethods.Decrypt(data.DepositAddress!),
-                    tokenAddress = data.TokenAddress,
-                    withdrawalAddress = commonMethods.Decrypt(data.WithdrawalAddress!),
-                    privateKey = (currency == "CPC-BEP-20" ? "b4f1e4fbe6a9bb915a4675f4d3984a7b9282b529cfee055e9a004c065a397e8d" : "0xb79933eaf32cd456c39ba723576c2afe114924cbe2eca0a225d841d7a58f13c7"),
-                    contractAbi = data.ContractAbi,
-                    contractAddress = data.ContractAddress
-                });
-            }
-            else return Json("Failed! Could not find address info.");
-        }
-
         [HttpGet("pay-token/{id}")]
         public async Task<IActionResult> PayToken(string id)
         {

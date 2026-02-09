@@ -355,7 +355,7 @@
         }
 
         .card .card-header ~ .card-body {
-            padding-top: 0
+            /* padding-top: 0; */
         }
 
     .card .card-content {
@@ -367,7 +367,7 @@
     }
 
     .card .card-body {
-        padding: 1.5rem
+        /* padding: 1.5rem; */
     }
 
     .card .card-heading {

@@ -18,19 +18,18 @@ namespace Bigprofits.Data
         }
 
         public virtual DbSet<AccountBinary> AccountBinaries { get; set; } = null!;
+        public virtual DbSet<AccountBinaryReturn> AccountBinaryReturns { get; set; } = null!;
         public virtual DbSet<AccountLevel> AccountLevels { get; set; } = null!;
         public virtual DbSet<AccountSummary> AccountSummaries { get; set; } = null!;
         public virtual DbSet<AccountVirtual> AccountVirtuals { get; set; } = null!;
         public virtual DbSet<Achiever> Achievers { get; set; } = null!;
         public virtual DbSet<AchieversIncome> AchieversIncomes { get; set; } = null!;
         public virtual DbSet<Achivement> Achivements { get; set; } = null!;
-        public virtual DbSet<AddProduct> AddProducts { get; set; } = null!;
+        public virtual DbSet<ActionLog> ActionLogs { get; set; } = null!;
         public virtual DbSet<AddressInfo> AddressInfos { get; set; } = null!;
         public virtual DbSet<AdminAction> AdminActions { get; set; } = null!;
         public virtual DbSet<AdminAddressInfo> AdminAddressInfos { get; set; } = null!;
-        public virtual DbSet<AlteredWithdrawal> AlteredWithdrawals { get; set; } = null!;
         public virtual DbSet<BuyToken> BuyTokens { get; set; } = null!;
-        public virtual DbSet<ClientSystemInfo> ClientSystemInfos { get; set; } = null!;
         public virtual DbSet<CmitRequest> CmitRequests { get; set; } = null!;
         public virtual DbSet<ComplainMail> ComplainMails { get; set; } = null!;
         public virtual DbSet<ContactUsTable> ContactUsTables { get; set; } = null!;
@@ -41,13 +40,11 @@ namespace Bigprofits.Data
         public virtual DbSet<ListCircle> ListCircles { get; set; } = null!;
         public virtual DbSet<ListCountry> ListCountries { get; set; } = null!;
         public virtual DbSet<ListLevel> ListLevels { get; set; } = null!;
-        public virtual DbSet<ListMatrixLvl> ListMatrixLvls { get; set; } = null!;
         public virtual DbSet<ListOperator> ListOperators { get; set; } = null!;
         public virtual DbSet<ListState> ListStates { get; set; } = null!;
         public virtual DbSet<Matrix2> Matrix2s { get; set; } = null!;
         public virtual DbSet<MatrixIncome> MatrixIncomes { get; set; } = null!;
         public virtual DbSet<MatrixInfo> MatrixInfos { get; set; } = null!;
-        public virtual DbSet<MemPageOlog> MemPageOlogs { get; set; } = null!;
         public virtual DbSet<MemberDirect> MemberDirects { get; set; } = null!;
         public virtual DbSet<MemberInfo> MemberInfos { get; set; } = null!;
         public virtual DbSet<MemberInfoBackup> MemberInfoBackups { get; set; } = null!;
@@ -56,28 +53,17 @@ namespace Bigprofits.Data
         public virtual DbSet<MemberWidInfo> MemberWidInfos { get; set; } = null!;
         public virtual DbSet<MemberWidInfoBackup> MemberWidInfoBackups { get; set; } = null!;
         public virtual DbSet<OnlineService> OnlineServices { get; set; } = null!;
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<PinDetail> PinDetails { get; set; } = null!;
         public virtual DbSet<Poster> Posters { get; set; } = null!;
-        public virtual DbSet<ProductCat> ProductCats { get; set; } = null!;
-        public virtual DbSet<ProductRequest> ProductRequests { get; set; } = null!;
-        public virtual DbSet<ProductSubCat> ProductSubCats { get; set; } = null!;
         public virtual DbSet<Reward> Rewards { get; set; } = null!;
         public virtual DbSet<RewardInfo> RewardInfos { get; set; } = null!;
         public virtual DbSet<RewardReturn> RewardReturns { get; set; } = null!;
         public virtual DbSet<SmsAdmin> SmsAdmins { get; set; } = null!;
-        public virtual DbSet<StakeAmount> StakeAmounts { get; set; } = null!;
-        public virtual DbSet<StakeInfo> StakeInfos { get; set; } = null!;
-        public virtual DbSet<TableCart> TableCarts { get; set; } = null!;
         public virtual DbSet<TableSupport> TableSupports { get; set; } = null!;
-        public virtual DbSet<TblApiPaymentReq> TblApiPaymentReqs { get; set; } = null!;
         public virtual DbSet<TblNews> TblNews { get; set; } = null!;
         public virtual DbSet<TeamDetail> TeamDetails { get; set; } = null!;
         public virtual DbSet<TeamInfo> TeamInfos { get; set; } = null!;
-        public virtual DbSet<TokenGrowthRate> TokenGrowthRates { get; set; } = null!;
-        public virtual DbSet<UmTryingUpdate> UmTryingUpdates { get; set; } = null!;
         public virtual DbSet<UnilevelPurchase> UnilevelPurchases { get; set; } = null!;
-        public virtual DbSet<UpgradeTable> UpgradeTables { get; set; } = null!;
         public virtual DbSet<UserMaster> UserMasters { get; set; } = null!;
         public virtual DbSet<UserMasterSubAdmin> UserMasterSubAdmins { get; set; } = null!;
 
@@ -162,6 +148,45 @@ namespace Bigprofits.Data
                 entity.Property(e => e.Tds)
                     .HasColumnType("money")
                     .HasColumnName("tds");
+            });
+
+            modelBuilder.Entity<AccountBinaryReturn>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("AccountBinaryReturn");
+
+                entity.Property(e => e.AdminCharge).HasColumnType("money");
+
+                entity.Property(e => e.Amount).HasColumnType("money");
+
+                entity.Property(e => e.Bdate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("bdate");
+
+                entity.Property(e => e.BnryMatch)
+                    .HasColumnType("money")
+                    .HasColumnName("bnryMatch");
+
+                entity.Property(e => e.BnrySno).HasColumnName("bnrySno");
+
+                entity.Property(e => e.Bstatus).HasColumnName("bstatus");
+
+                entity.Property(e => e.FinalAmount).HasColumnType("money");
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("ID");
+
+                entity.Property(e => e.MemberId)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Rate).HasColumnType("money");
+
+                entity.Property(e => e.Tds)
+                    .HasColumnType("money")
+                    .HasColumnName("TDS");
             });
 
             modelBuilder.Entity<AccountLevel>(entity =>
@@ -494,65 +519,15 @@ namespace Bigprofits.Data
                     .HasColumnName("walAddress");
             });
 
-            modelBuilder.Entity<AddProduct>(entity =>
+            modelBuilder.Entity<ActionLog>(entity =>
             {
-                entity.ToTable("Add_Product");
+                entity.Property(e => e.ActionType).HasMaxLength(50);
 
-                entity.Property(e => e.DateAdded).HasColumnType("date");
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.Dpprise).HasColumnType("money");
+                entity.Property(e => e.IpAddress).HasMaxLength(100);
 
-                entity.Property(e => e.Field1)
-                    .HasColumnType("money")
-                    .HasColumnName("field1");
-
-                entity.Property(e => e.Field2)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("field2");
-
-                entity.Property(e => e.Field3).HasColumnName("field3");
-
-                entity.Property(e => e.FinalPrice)
-                    .HasColumnType("money")
-                    .HasColumnName("Final_Price");
-
-                entity.Property(e => e.Gst)
-                    .HasColumnType("decimal(18, 0)")
-                    .HasColumnName("GST");
-
-                entity.Property(e => e.PacketType)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("Packet_Type");
-
-                entity.Property(e => e.Price).HasColumnType("money");
-
-                entity.Property(e => e.PriceWithGst)
-                    .HasColumnType("money")
-                    .HasColumnName("PriceWithGST");
-
-                entity.Property(e => e.ProductBv)
-                    .HasColumnType("money")
-                    .HasColumnName("Product_BV");
-
-                entity.Property(e => e.ProductDescription).HasColumnName("Product_Description");
-
-                entity.Property(e => e.ProductId)
-                    .HasMaxLength(100)
-                    .HasColumnName("Product_Id");
-
-                entity.Property(e => e.ProductImage)
-                    .HasMaxLength(500)
-                    .HasColumnName("Product_Image");
-
-                entity.Property(e => e.ProductName)
-                    .HasMaxLength(1000)
-                    .HasColumnName("Product_Name");
-
-                entity.Property(e => e.Weight)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.UserType).HasMaxLength(50);
             });
 
             modelBuilder.Entity<AddressInfo>(entity =>
@@ -626,37 +601,6 @@ namespace Bigprofits.Data
                 entity.Property(e => e.WithdrawalAddress).HasColumnName("withdrawalAddress");
             });
 
-            modelBuilder.Entity<AlteredWithdrawal>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("alteredWithdrawal");
-
-                entity.Property(e => e.Adate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("adate");
-
-                entity.Property(e => e.Atype)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("atype");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("ID");
-
-                entity.Property(e => e.MemberId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("memberId");
-
-                entity.Property(e => e.WidId).HasColumnName("widId");
-
-                entity.Property(e => e.WithdrawalUsdt)
-                    .HasColumnType("money")
-                    .HasColumnName("withdrawalUsdt");
-            });
-
             modelBuilder.Entity<BuyToken>(entity =>
             {
                 entity.ToTable("BuyToken");
@@ -698,33 +642,6 @@ namespace Bigprofits.Data
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("tokenName");
-            });
-
-            modelBuilder.Entity<ClientSystemInfo>(entity =>
-            {
-                entity.ToTable("ClientSystemInfo");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.AType)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("aType");
-
-                entity.Property(e => e.ClientIp).HasColumnName("clientIp");
-
-                entity.Property(e => e.Error).HasColumnName("error");
-
-                entity.Property(e => e.ErrorMessage).HasColumnName("errorMessage");
-
-                entity.Property(e => e.MemberId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("memberId");
-
-                entity.Property(e => e.Rdate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("rdate");
             });
 
             modelBuilder.Entity<CmitRequest>(entity =>
@@ -1065,27 +982,6 @@ namespace Bigprofits.Data
                 entity.Property(e => e.Lvl).HasColumnName("lvl");
             });
 
-            modelBuilder.Entity<ListMatrixLvl>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("ListMatrixLvl");
-
-                entity.Property(e => e.Amount)
-                    .HasColumnType("money")
-                    .HasColumnName("amount");
-
-                entity.Property(e => e.Downline).HasColumnName("downline");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("ID");
-
-                entity.Property(e => e.Lvl).HasColumnName("lvl");
-
-                entity.Property(e => e.MatrixNo).HasColumnName("matrixNo");
-            });
-
             modelBuilder.Entity<ListOperator>(entity =>
             {
                 entity.ToTable("ListOperator");
@@ -1270,26 +1166,6 @@ namespace Bigprofits.Data
                 entity.Property(e => e.Upgrade)
                     .HasColumnType("money")
                     .HasColumnName("upgrade");
-            });
-
-            modelBuilder.Entity<MemPageOlog>(entity =>
-            {
-                entity.ToTable("MemPageOLog");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.MemberId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("memberId");
-
-                entity.Property(e => e.ODate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("oDate");
-
-                entity.Property(e => e.PageName)
-                    .HasMaxLength(200)
-                    .HasColumnName("pageName");
             });
 
             modelBuilder.Entity<MemberDirect>(entity =>
@@ -2313,55 +2189,6 @@ namespace Bigprofits.Data
                     .HasColumnName("User_txn_no");
             });
 
-            modelBuilder.Entity<OrderDetail>(entity =>
-            {
-                entity.ToTable("Order_Details");
-
-                entity.Property(e => e.AmountWithGst)
-                    .HasColumnType("money")
-                    .HasColumnName("Amount_With_GST");
-
-                entity.Property(e => e.FinalPrice)
-                    .HasColumnType("money")
-                    .HasColumnName("Final_Price");
-
-                entity.Property(e => e.Gst).HasColumnName("GST");
-
-                entity.Property(e => e.GstAmount)
-                    .HasColumnType("money")
-                    .HasColumnName("GST_Amount");
-
-                entity.Property(e => e.Memberid)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("memberid");
-
-                entity.Property(e => e.OrderId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Price).HasColumnType("money");
-
-                entity.Property(e => e.ProductBv)
-                    .HasColumnType("money")
-                    .HasColumnName("Product_BV");
-
-                entity.Property(e => e.ProductId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("Product_Id");
-
-                entity.Property(e => e.ProductName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("Product_Name");
-
-                entity.Property(e => e.UserType)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("User_Type");
-            });
-
             modelBuilder.Entity<PinDetail>(entity =>
             {
                 entity.HasKey(e => e.Sono);
@@ -2423,102 +2250,6 @@ namespace Bigprofits.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<ProductCat>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("ProductCat");
-
-                entity.Property(e => e.CatName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("ID");
-
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
-
-                entity.Property(e => e.LastUpdate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("lastUpdate");
-            });
-
-            modelBuilder.Entity<ProductRequest>(entity =>
-            {
-                entity.ToTable("Product_Request");
-
-                entity.Property(e => e.ApprovedDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("Approved_Date");
-
-                entity.Property(e => e.DeliveryAddress)
-                    .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasColumnName("Delivery_Address");
-
-                entity.Property(e => e.FinalAmount)
-                    .HasColumnType("money")
-                    .HasColumnName("Final_Amount");
-
-                entity.Property(e => e.Memberid)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("memberid");
-
-                entity.Property(e => e.OrderId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.OrderNotes).HasColumnName("Order_Notes");
-
-                entity.Property(e => e.OrderStatus).HasColumnName("Order_Status");
-
-                entity.Property(e => e.ProductBv)
-                    .HasColumnType("money")
-                    .HasColumnName("Product_BV");
-
-                entity.Property(e => e.RequestDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("Request_Date");
-
-                entity.Property(e => e.TotalGst)
-                    .HasColumnType("money")
-                    .HasColumnName("Total_GST");
-
-                entity.Property(e => e.TotalPrice)
-                    .HasColumnType("money")
-                    .HasColumnName("Total_Price");
-
-                entity.Property(e => e.TotalProducts).HasColumnName("Total_Products");
-
-                entity.Property(e => e.UserType)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("User_Type");
-            });
-
-            modelBuilder.Entity<ProductSubCat>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("ProductSubCat");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("ID");
-
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
-
-                entity.Property(e => e.LastUpdate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("lastUpdate");
-
-                entity.Property(e => e.SubCatName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<Reward>(entity =>
             {
                 entity.ToTable("Reward");
@@ -2573,36 +2304,23 @@ namespace Bigprofits.Data
 
             modelBuilder.Entity<RewardInfo>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.ToTable("RewardInfo");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Amount).HasColumnType("money");
 
-                entity.Property(e => e.Direct).HasColumnName("DIRECT");
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("ID");
 
-                entity.Property(e => e.RId).HasColumnName("R_ID");
+                entity.Property(e => e.LeftBiz).HasColumnType("money");
 
-                entity.Property(e => e.Reward)
-                    .HasColumnType("money")
-                    .HasColumnName("REWARD");
+                entity.Property(e => e.RankName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Salary)
-                    .HasColumnType("money")
-                    .HasColumnName("SALARY");
-
-                entity.Property(e => e.SelfPackage)
-                    .HasColumnType("money")
-                    .HasColumnName("SELF_PACKAGE");
-
-                entity.Property(e => e.TeamSize).HasColumnName("TEAM_SIZE");
-
-                entity.Property(e => e.TeamVolume)
-                    .HasColumnType("money")
-                    .HasColumnName("TEAM_VOLUME");
-
-                entity.Property(e => e.Type)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("TYPE");
+                entity.Property(e => e.RightBiz).HasColumnType("money");
             });
 
             modelBuilder.Entity<RewardReturn>(entity =>
@@ -2677,72 +2395,6 @@ namespace Bigprofits.Data
                     .HasColumnName("status");
             });
 
-            modelBuilder.Entity<StakeAmount>(entity =>
-            {
-                entity.ToTable("StakeAmount");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Amount)
-                    .HasColumnType("money")
-                    .HasColumnName("amount");
-
-                entity.Property(e => e.LiveRate).HasColumnType("money");
-
-                entity.Property(e => e.Mdate).HasColumnType("datetime");
-
-                entity.Property(e => e.MemberId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Rate).HasColumnType("money");
-
-                entity.Property(e => e.ReturnAmount).HasColumnType("money");
-
-                entity.Property(e => e.Sdate).HasColumnType("datetime");
-
-                entity.Property(e => e.TokenAmount).HasColumnType("money");
-            });
-
-            modelBuilder.Entity<StakeInfo>(entity =>
-            {
-                entity.ToTable("StakeInfo");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.PlanDetail)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PlanName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Rate).HasColumnType("money");
-            });
-
-            modelBuilder.Entity<TableCart>(entity =>
-            {
-                entity.ToTable("Table_Cart");
-
-                entity.Property(e => e.DateAdded).HasColumnType("date");
-
-                entity.Property(e => e.Memberid)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("memberid");
-
-                entity.Property(e => e.ProductId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("Product_Id");
-
-                entity.Property(e => e.UserType)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("User_Type");
-            });
-
             modelBuilder.Entity<TableSupport>(entity =>
             {
                 entity.HasKey(e => e.Srno);
@@ -2770,42 +2422,6 @@ namespace Bigprofits.Data
                 entity.Property(e => e.ToBy)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<TblApiPaymentReq>(entity =>
-            {
-                entity.ToTable("tblApiPaymentReq");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.AdminId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.AdminReqid)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Admindescription).IsUnicode(false);
-
-                entity.Property(e => e.ApproveDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("approveDate");
-
-                entity.Property(e => e.ProjName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("projName");
-
-                entity.Property(e => e.ReqAmount)
-                    .HasColumnType("money")
-                    .HasColumnName("reqAmount");
-
-                entity.Property(e => e.ReqDate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("reqDate");
-
-                entity.Property(e => e.ReqStatus).HasColumnName("reqStatus");
             });
 
             modelBuilder.Entity<TblNews>(entity =>
@@ -2894,42 +2510,6 @@ namespace Bigprofits.Data
                     .HasColumnName("spoId");
             });
 
-            modelBuilder.Entity<TokenGrowthRate>(entity =>
-            {
-                entity.ToTable("TokenGrowthRate");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Price).HasColumnType("money");
-            });
-
-            modelBuilder.Entity<UmTryingUpdate>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("umTryingUpdate");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("ID");
-
-                entity.Property(e => e.TokenAddress)
-                    .HasMaxLength(200)
-                    .HasColumnName("tokenAddress");
-
-                entity.Property(e => e.TrxAddress)
-                    .HasMaxLength(200)
-                    .HasColumnName("trxAddress");
-
-                entity.Property(e => e.TrxAddressD)
-                    .HasMaxLength(200)
-                    .HasColumnName("trxAddressD");
-
-                entity.Property(e => e.Udate)
-                    .HasColumnType("datetime")
-                    .HasColumnName("udate");
-            });
-
             modelBuilder.Entity<UnilevelPurchase>(entity =>
             {
                 entity.ToTable("UnilevelPurchase");
@@ -2989,63 +2569,6 @@ namespace Bigprofits.Data
                 entity.Property(e => e.Ustatus).HasColumnName("ustatus");
 
                 entity.Property(e => e.WillCount).HasColumnName("willCount");
-            });
-
-            modelBuilder.Entity<UpgradeTable>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("UpgradeTable");
-
-                entity.Property(e => e.AdminCharge).HasColumnType("money");
-
-                entity.Property(e => e.Ammount).HasColumnType("money");
-
-                entity.Property(e => e.Bymemberid)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.CmitId)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("cmitId");
-
-                entity.Property(e => e.Crntslab).HasColumnName("CRNTSLAB");
-
-                entity.Property(e => e.Ddate).HasColumnType("datetime");
-
-                entity.Property(e => e.FinalAmount).HasColumnType("money");
-
-                entity.Property(e => e.HasId)
-                    .HasMaxLength(200)
-                    .HasColumnName("hasId");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("ID");
-
-                entity.Property(e => e.LvlNo).HasColumnName("lvlNo");
-
-                entity.Property(e => e.Memberid)
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasColumnName("memberid");
-
-                entity.Property(e => e.Mypackage)
-                    .HasColumnType("money")
-                    .HasColumnName("mypackage");
-
-                entity.Property(e => e.Package)
-                    .HasColumnType("money")
-                    .HasColumnName("package");
-
-                entity.Property(e => e.Rpcharge)
-                    .HasColumnType("money")
-                    .HasColumnName("rpcharge");
-
-                entity.Property(e => e.Tds)
-                    .HasColumnType("money")
-                    .HasColumnName("TDS");
             });
 
             modelBuilder.Entity<UserMaster>(entity =>

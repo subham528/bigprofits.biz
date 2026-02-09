@@ -1,35 +1,31 @@
 ﻿@model Bigprofits.Models.FundAmount
-
 @{
     ViewData["Title"] = "FundAdd";
     Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
 }
-
 
 @if (TempData["msg"] != null)
 {
     <p style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"]  </p>
 }
 
-
-
 <div class="row justify-content-center ">
     <div class="col-12 col-sm-5 mt-5">
         <!-- Start-->
         <div class="card shadow mb-4 ">
             <div class="card-header bg-info py-3">
-
                 <h6 class="m-0 font-weight-bold text-white"> FUND ADD <span> </span></h6>
             </div>
             <div class="card-body">
                 <form asp-action="FundAdd">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
-                        <div class="text-center " style="color:red;" id="UserName"></div>
+                        <div class="text-center" id="UserName"></div>
                         <label asp-for="MemberId" class="control-label"></label>
                         <input required asp-for="MemberId" class="form-control text-uppercase" />
                         <span asp-validation-for="MemberId" class="text-danger"></span>
                     </div>
+
                     <div class="form-group">
                         <label class="control-label"> Fund Type </label>
                         <select asp-for="Ftype" class="form-control " required aria-label="Fund Type">
@@ -38,7 +34,6 @@
                             <option value="DEBIT"> DEBIT </option>
                         </select>
                     </div>
-
 
                     <div class="form-group">
                         <label class="control-label"> Fund Amount </label>

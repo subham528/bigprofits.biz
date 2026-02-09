@@ -55,7 +55,7 @@ namespace Bigprofits.Controllers
 
                 if (string.IsNullOrEmpty(memberInfo.MemAddress))
                 {
-                    memberInfo.MemAddress = commonMethods.Encrypt(Request.Form["MemAddress"].ToString());
+                    memberInfo.MemAddress = commonMethods.Encrypt(Request.Form["MemAddress"].ToString().ToLower());
                 }
 
                 context.Update(memberInfo);

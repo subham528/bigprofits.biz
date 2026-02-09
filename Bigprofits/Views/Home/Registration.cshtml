@@ -257,6 +257,10 @@
         .dark-mode .form-control option {
             background-color: #07130C
         }
+
+        .dark-mode .alert-danger, .dark-mode .card.alert-danger, .dark-mode .bg-danger-light {
+            background-color: #e74949;
+        }
     </style>
 </head>
 
@@ -350,11 +354,7 @@
                                 <i class="bi bi-arrow-left"></i>
                             </a>
                         </div>
-                                               
-                        @if (TempData["msgDR"] != null)
-                        {
-                            <div style="text-align: center;padding: 5px;color:red;font-weight: 900;"> @TempData["msgDR"] </div>
-                        }
+
                         <div class="col-auto">
                             <a class="btn btn-light btn-44 invisible"></a>
                         </div>
@@ -369,6 +369,12 @@
                     </a>
                 </div>
                 <h1 class="mb-4 text-color-theme">Sign up</h1>
+
+                @if (TempData["msgDR"] != null)
+                {
+                    <div class="alert alert-danger"> @TempData["msgDR"] </div>
+                }
+
                 <form class="was-validated" action="/account/create-account" id="registrationForm" method="post">
                     <div class="form-floating is-valid mb-1">
                         <input asp-for="SpoId" value="@ViewBag.SpoId" type="text" class="form-control" placeholder="Sponsor Id" required>

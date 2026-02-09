@@ -1,111 +1,74 @@
 ﻿@using System.Data
 @model DataSet
 @using Bigprofits.Common;
-
 @{
-    ViewData["Title"] = "DIRECT BONUS";
-    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+	ViewData["Title"] = "Matching History";
+	Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
 }
 
-
 <div class="page-heading">
-    <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
-                Matching Income
-            </div>
-            <div class="card-body mt-3 overflow-auto">
-                <table class="table table-responsive text-nowrap" id="datatable">
-                    <thead>
-                        <tr>
+	<section class="section">
+		<div class="card">
+			<div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+				MATCHING HISTORY
+			</div>
+			<form action="/britglbl253adpnl/matching-history" method="get" class="searchForm">
+				<input name="userId" class="form-control" placeholder="Member ID" value="@ViewBag.userId">
 
-                            <th>
-                                Sno
-                            </th>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">From</span>
+					</div>
+					<input name="date" type="date" class="form-control" value="@ViewBag.date">
+				</div>
 
-                            <th>
-                                Memberid
-                            </th>
-                            <th>
-                                Matching
-                            </th>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">To</span>
+					</div>
+					<input name="date1" type="date" class="form-control" value="@ViewBag.date1">
+				</div>
 
-                            <th>
-                                Rate
-                            </th>
-                            <th>
-                                Amount
-                            </th>
+				<button class="btn btn-outline-primary" type="submit">
+					<i class="bi bi-search"></i>
+				</button>
+				<a href="/britglbl253adpnl/matching-history" class="btn btn-danger form-control">Clear Filter</a>
+			</form>
+			<div class="card-body mt-3 overflow-auto">
+				<table class="table table-responsive text-nowrap text-center">
+					<thead>
+						<tr>
+							<th>Sno</th>
+							<th>Member</th>
+							<th>Matching Amount</th>
+							<th>Daily Amount</th>
+							<th>Count</th>
+							<th>Rate</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (DataRow row in Model.Tables[0].Rows)
+						{
+							<tr>
+								<td>@row["srn"]</td>
+								<td>@row["memname"] / @row["memberId"]</td>
+								<td>$@string.Format("{0:0.####}", row["bnryMatch"])</td>
+								<td>$@string.Format("{0:0.####}", row["bnryAmount"])</td>
+								<td>@row["bcount"]</td>
+								<td>@string.Format("{0:0.####}", row["rpcharge"])%</td>
+								<td>@row["bnryCDate"]</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+				<ul class="pagination mt-3">
+					@Html.Raw(ViewBag.pgnHtml)
+				</ul>
+			</div>
+		</div>
 
-
-
-                            <th>
-                                Date
-                            </th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int sno2 = 1;
-                        }
-
-                        @foreach (DataRow row in Model.Tables[0].Rows)
-                        {
-                            <tr>
-                                <td>@sno2</td>
-                                <td>@row["Memberid"]</td>
-                                <td>@("$" + Convert.ToDecimal(row["bnryMatch"]).ToString("0.00"))</td>
-
-
-                                <td>@(Convert.ToDecimal(row["rpcharge"]).ToString("0.00") + "%")</td>
-                                <td>@("$" + Convert.ToDecimal(row["bnryAmount"]).ToString("0.00"))</td>
-
-
-
-                                <td>@row["bnryCDate"]</td>
-
-
-
-
-
-
-                            </tr>
-                            sno2++;
-                        }
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </section>
-    <!-- Basic Tables end -->
+	</section>
 </div>
 
 
-
-
-
-<script>
-
-    $(document).ready(function () {
-
-        $("#dt").hide()
-
-        $('#datatable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'excel', 'pdf', 'print'
-            ]
-
-        });
-
-        $(".buttons-excel").append('&nbsp;<i class="fa fa-file-excel"></i>')
-        $(".buttons-pdf").append('&nbsp;<i class="fa fa-file-pdf"></i>')
-        $(".buttons-print").append('&nbsp;<i class="fa fa-print"></i>')
-
-    });
-
-</script>

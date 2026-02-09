@@ -1,1 +1,0 @@
-(function(e){var a=e(".owl-carousel-icons2");a.owlCarousel({loop:!0,rewind:!1,margin:25,animateIn:"fadeInDown",animateOut:"fadeOutDown",autoplay:!1,autoplayTimeout:5e3,autoplayHoverPause:!0,dots:!1,nav:!0,autoplay:!0,responsiveClass:!0,responsive:{0:{items:1,nav:!0},600:{items:3,nav:!0},1300:{items:5,nav:!0}}})})(jQuery);

@@ -1,100 +1,72 @@
 ﻿@using System.Data
 @model DataSet
 @using Bigprofits.Common;
-
 @{
-    ViewData["Title"] = "ADailyROI";
-    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+	ViewData["Title"] = "ROI Income";
+	Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
 }
 
-
 <div class="page-heading">
-    <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
-                DAILY ROI
-            </div>
-            <div class="card-body mt-3 overflow-auto">
-                <table class="table table-responsive text-nowrap" id="datatable">
-                    <thead>
-                        <tr>
-                            <th>
-                                Sno
-                            </th>
-                            <th>
-                              Member Id
-                            </th>
-                          
-                            <th>
-                               Amount
-                            </th>
-                            <th>
-                                Package
-                            </th>
-                            <th>
-                                Date
-                            </th>
-                             <th>
-                             Rate
-                            </th>
+	<section class="section">
+		<div class="card">
+			<div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+				ROI INCOME
+			</div>
+			<form action="/britglbl253adpnl/roi-income" method="get" class="searchForm">
+				<input name="userId" class="form-control" placeholder="Member ID" value="@ViewBag.userId">
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int sno2 = 1;
-                        }
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">From</span>
+					</div>
+					<input name="date" type="date" class="form-control" value="@ViewBag.date">
+				</div>
 
-                        @foreach (DataRow row in Model.Tables[0].Rows)
-                        {
-                            <tr>
-                                <td>@sno2</td>
-                                <td>@row["memberId"]</td>
-                            
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">To</span>
+					</div>
+					<input name="date1" type="date" class="form-control" value="@ViewBag.date1">
+				</div>
 
-                                <td>@("$" + Convert.ToDecimal(row["RoiAmount"]).ToString("0.00"))</td>
-                                <td>@("$" + Convert.ToDecimal(row["mempackage"]).ToString("0.00"))</td>
-                                
-                            
-                                <td>@row["roidate"]</td>
-                                <td>@(Convert.ToDecimal(row["rpcharge"]).ToString("0.00") + "%")</td>
+				<button class="btn btn-outline-primary" type="submit">
+					<i class="bi bi-search"></i>
+				</button>
+				<a href="/britglbl253adpnl/roi-income" class="btn btn-danger form-control">Clear Filter</a>
+			</form>
+			<div class="card-body mt-3 overflow-auto">
+				<table class="table table-responsive text-nowrap text-center">
+					<thead>
+						<tr>
+							<th>Sno</th>
+							<th>Member</th>
+							<th>Amount</th>
+							<th>Package</th>
+							<th>Rate</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (DataRow row in Model.Tables[0].Rows)
+						{
+							<tr>
+								<td>@row["srn"]</td>
+								<td>@row["memname"] / @row["memberId"]</td>
+								<td>$@string.Format("{0:0.####}", row["roiAmount"])</td>
+								<td>$@string.Format("{0:0.####}", row["mempackage"])</td>
+								<td>@string.Format("{0:0.####}", row["rpcharge"])%</td>
+								<td>@row["roiDate"]</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+				<ul class="pagination mt-3">
+					@Html.Raw(ViewBag.pgnHtml)
+				</ul>
+			</div>
+		</div>
 
-                            </tr>
-                            sno2++;
-                        }
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </section>
-    <!-- Basic Tables end -->
+	</section>
 </div>
 
 
-
-
-
-<script>
-
-    $(document).ready(function () {
-
-        $("#dt").hide()
-
-        $('#datatable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'excel', 'pdf', 'print'
-            ]
-
-        });
-
-        $(".buttons-excel").append('&nbsp;<i class="fa fa-file-excel"></i>')
-        $(".buttons-pdf").append('&nbsp;<i class="fa fa-file-pdf"></i>')
-        $(".buttons-print").append('&nbsp;<i class="fa fa-print"></i>')
-
-    });
-
-</script>

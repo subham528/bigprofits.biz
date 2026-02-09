@@ -2,6 +2,8 @@ https://britglobal.live/britglbl253adpnl/sign-in
 userid: brtglb371usry
 pass: lvpsk@4gds1
 
+Scaffold-DbContext "Server=.;DataBase=Bigprofits;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -contextdir Data -OutputDir Models -context ContextClass -Force
+
 start/stop nodejs server on the server
 npx pm2 start index.js --name NodeApi
 npx pm2 stop NodeApi

@@ -2,68 +2,76 @@
 @model DataSet
 @using Bigprofits.Common;
 @{
-    ViewData["Title"] = "Histroy";
-    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+	ViewData["Title"] = "Histroy";
+	Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
 }
 
 <div class="page-heading">
-    <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
-                Credit Debit Histroy
-            </div>
-            <div class="card-body mt-3 overflow-auto">
-                <table class="table table-responsive text-nowrap" id="datatable">
-                    <thead>
-                        <tr>
-                            <th>
-                                Sno
-                            </th>
-                            <th>
-                                Memberid
-                            </th>
-                            <th>
-                              Amount
-                            </th>
-                            <th>
-                               Type
-                            </th>
-                            <th>
-                                Date
-                            </th>
-                            <th>
-                               Status
-                            </th>
-                          
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int sno2 = 1;
-                        }
+	<!-- Basic Tables start -->
+	<section class="section">
+		<div class="card">
+			<div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
+				Credit Debit Histroy
+			</div>
+			<form action="/britglbl253adpnl/manage-fund-Histry" method="get" class="searchForm">
+				<input name="userId" class="form-control" placeholder="Member ID" value="@ViewBag.userId">
 
-                        @foreach (DataRow row in Model.Tables[0].Rows)
-                        {
-                            <tr>
-                                <td>@sno2</td>
-                                <td>@row["memberId"]</td>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">From</span>
+					</div>
+					<input name="date" type="date" class="form-control" value="@ViewBag.date">
+				</div>
 
-                                <td>@("$" + Convert.ToDecimal(row["amount"]).ToString("0.00"))</td>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">To</span>
+					</div>
+					<input name="date1" type="date" class="form-control" value="@ViewBag.date1">
+				</div>
 
-                                <td>@row["ftype"]</td>
-                                <td>@row["fdate"]</td>
-                                <td>@row["details"]</td>
+				<button class="btn btn-outline-primary" type="submit">
+					<i class="bi bi-search"></i>
+				</button>
+				<a href="/britglbl253adpnl/manage-fund-Histry" class="btn btn-danger form-control">Clear Filter</a>
+			</form>
+			<div class="card-body mt-3 overflow-auto">
+				<table class="table table-responsive text-nowrap" id="datatable">
+					<thead>
+						<tr>
+							<th>Sno</th>
+							<th>Member</th>
+							<th>Amount</th>
+							<th>Type</th>
+							<th>Date</th>
+							<th>Details</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (DataRow row in Model.Tables[0].Rows)
+						{
+							<tr>
+								<td>@row["srn"]</td>
+								<td>@row["memName"] / @row["memberId"]</td>
+								<td>$@string.Format("{0:0.####}", row["amount"])</td>
+								<td>@row["ftype"]</td>
+								<td>@row["fdate"]</td>
+								<td>
+									@row["details"]
+									@if (row["details"].ToString() == "Add fund by paying USDT (BEP-20)")
+									{
+										<a href="https://bscscan.com/tx/@row["hashId"]" target="_blank" class="btn btn-link">View</a>
+									}
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+				<ul class="pagination mt-3">
+					@Html.Raw(ViewBag.pgnHtml)
+				</ul>
+			</div>
+		</div>
 
-                            </tr>
-                            sno2++;
-                        }
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </section>
-    <!-- Basic Tables end -->
+	</section>
 </div>

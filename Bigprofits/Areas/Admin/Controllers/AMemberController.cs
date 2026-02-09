@@ -10,6 +10,7 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using System;
 
 namespace Bigprofits.Areas.Admin.Controllers
 {
@@ -17,12 +18,13 @@ namespace Bigprofits.Areas.Admin.Controllers
     [Route("britglbl253adpnl")]
     [Route("britglbl253adpnl/[controller]/[action]")]
     [Authorize(AuthenticationSchemes = "AdminAuth")]
-    public class AMemberController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess, HomeRepository homeRepository) : Controller
+    public class AMemberController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess, HomeRepository homeRepository, IAuditRepository auditRepository) : Controller
     {
         private readonly ContextClass context = context;
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
         private readonly HomeRepository homeRepository = homeRepository;
+        private readonly IAuditRepository _auditRepository = auditRepository;
 
         private string admingo = "";
         public override void OnActionExecuting(ActionExecutingContext _context)
@@ -80,6 +82,8 @@ namespace Bigprofits.Areas.Admin.Controllers
                 ];
                 await _dataAccess.FnRetriveByPro("[SP_Action]", par);
 
+                await _auditRepository.LogActionAsync($"USER BLOCKED BY ADMIN", 0, "Admin", $"User blocked by admin, memberid is {id}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 TempData["msg"] = "Member Blocked";
                 return Json("");
             }
@@ -102,6 +106,8 @@ namespace Bigprofits.Areas.Admin.Controllers
                     new SqlParameter("@type", "UNBLOCK")
                 ];
                 await _dataAccess.FnRetriveByPro("[SP_Action]", par);
+
+                await _auditRepository.LogActionAsync($"USER UNBLOCKED BY ADMIN", 0, "Admin", $"User unblocked by admin, memberid is {id}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
 
                 TempData["msg"] = "Member Blocked";
                 return Json("");
@@ -153,10 +159,10 @@ namespace Bigprofits.Areas.Admin.Controllers
             var data = await context.MemberInfos.Where(x => x.MemberId == id || x.MemId == Convert.ToInt32(id)).FirstOrDefaultAsync();
             if (data != null)
             {
-                ViewBag.mobile = commonMethods.Decrypt(data.MemMobile!);
-                ViewBag.memaddress = commonMethods.Decrypt(data.MemAddress!);
-                ViewBag.mememail = commonMethods.Decrypt(data.MemEmail!);
-                ViewBag.memlogpass = commonMethods.Decrypt(data.MemLogPass!);
+                data.MemMobile = commonMethods.Decrypt(data.MemMobile!);
+                data.MemAddress = commonMethods.Decrypt(data.MemAddress!);
+                data.MemEmail = commonMethods.Decrypt(data.MemEmail!);
+                data.MemLogPass = commonMethods.Decrypt(data.MemLogPass!);
               
                 return View(data);
             }
@@ -179,27 +185,29 @@ namespace Bigprofits.Areas.Admin.Controllers
                     par.Add(new SqlParameter("@memberId", memberInfo.MemberId));
                     var ds = await _dataAccess.FnRetriveByPro("[SP_MemberInfoUpdate]", par);
 
-                    memberInfo.MemName = info.MemName?.Trim();
-                    memberInfo.MemMobile = commonMethods.Encrypt(info.MemMobile?.Trim() ?? "");
-                    memberInfo.MemEmail = commonMethods.Encrypt(info.MemEmail?.Trim() ?? "");
-                    memberInfo.MemState = info.MemState;
-                    memberInfo.MemAddress = commonMethods.Encrypt(info.MemAddress?.Trim() ?? "");
-                   
-                    memberInfo.MemLogPass = commonMethods.Encrypt(info.MemLogPass?.Trim() ?? "");
+                    //memberInfo.MemName = info.MemName?.Trim();
+                    //memberInfo.MemMobile = commonMethods.Encrypt(info.MemMobile?.Trim() ?? "");
+                    //memberInfo.MemEmail = commonMethods.Encrypt(info.MemEmail?.Trim() ?? "");
+                    //memberInfo.MemState = info.MemState;
+                    memberInfo.MemAddress = commonMethods.Encrypt(info.MemAddress?.Trim().ToLower() ?? "");
+                    
+                    //memberInfo.MemLogPass = commonMethods.Encrypt(info.MemLogPass?.Trim() ?? "");
 
                     context.Update(memberInfo);
                     await context.SaveChangesAsync();
 
+                    await _auditRepository.LogActionAsync($"USER INFO UPDATE BY ADMIN", 0, "Admin", $"User update by admin, memberid is {memberId}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                     TempData["msg"] = preMsg + "Detail successfully updated";
-                    return Redirect($"/britglbl253adpnl/Member-Update/{info.MemId}");
+                    return Redirect($"/britglbl253adpnl/Member-Update/{info.MemberId}");
                 }
             }
             catch (Exception)
             {
                 TempData["msg"] = "Exception message, please contact to admin";
-                return Redirect($"/britglbl253adpnl/Member-Update/{info.MemId}");
+                return Redirect($"/britglbl253adpnl/Member-Update/{info.MemberId}");
             }
-            return Redirect($"/britglbl253adpnl/Member-Update/{info.MemId}");
+            return Redirect($"/britglbl253adpnl/Member-Update/{info.MemberId}");
         }
 
         [HttpGet]

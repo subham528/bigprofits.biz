@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	@* <meta name="viewport" content="width=device-width, initial-scale=1.0"> *@
 	<title> @TempData["ProjectName"] | @ViewData["Title"] </title>
+	<link href="/images/logo.png" rel="icon" />
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -71,6 +72,11 @@
 				width: auto;
 				margin: 0 5px;
 			}
+
+			.searchForm .input-group {
+				width: auto;
+				align-items: center
+			}
 	</style>
 
 </head>
@@ -127,7 +133,7 @@
 								<li class="submenu-item">
 									<a href="/britglbl253adpnl/member-list-block">BLOCK MEMBERS LIST</a>
 								</li>
-								
+
 								@*  <li class="submenu-item ">
                                     <a asp-controller="britglbl253adpnl" asp-action="list-Update"> UPDATE MEMBERS LIST </a>
                                 </li> *@
@@ -156,12 +162,12 @@
 								<span> FUND WALLET</span>
 							</a>
 							<ul class="submenu">
-								<li class="submenu-item">
+								@* <li class="submenu-item">
 									<a asp-controller="britglbl253adpnl" asp-action="Request">FUND REQUEST</a>
-								</li>
-								<li class="submenu-item">
+								</li> *@
+								@* <li class="submenu-item">
 									<a asp-controller="britglbl253adpnl" asp-action="FHistory">FUND HISTORY</a>
-								</li>
+								</li> *@
 								<li class="submenu-item">
 									<a asp-controller="britglbl253adpnl" asp-action="manage-fund">ADD FUND</a>
 								</li>
@@ -195,21 +201,23 @@
                                 <a asp-controller="britglbl253adpnl" asp-action="CreditDebitHistry">CREDIT/DEBIT HISTORY</a>
                                 </li> *@
 								<li class="submenu-item">
-									<a asp-controller="britglbl253adpnl" asp-action="Roi-Income">DAILY RETRUN INCOME</a>
-								</li>
-								<li class="submenu-item">
-									<a asp-controller="britglbl253adpnl" asp-action="Sponsor-Income">DIRECT SPONSOR INCOME</a>
-								</li>
-								<li class="submenu-item">
-									<a asp-controller="britglbl253adpnl" asp-action="Matching-Income">MATCHING INCOME</a>
+									<a asp-controller="britglbl253adpnl" asp-action="roi-income">ROI INCOME</a>
 								</li>
 
 								<li class="submenu-item">
-									<a asp-controller="britglbl253adpnl" asp-action="DropReward-Income">REWARD BONUS</a>
+									<a asp-controller="britglbl253adpnl" asp-action="sponsor-income">DIRECT SPONSOR INCOME</a>
 								</li>
 
 								<li class="submenu-item">
-									<a asp-controller="britglbl253adpnl" asp-action="SallaryD-Income">DAILY SALARY INCOME</a>
+									<a asp-controller="britglbl253adpnl" asp-action="matching-history">MATCHING HISTORY</a>
+								</li>
+
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="matching-income">MATCHING INCOME</a>
+								</li>
+
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="additional-income">RANK MATCHING BONUS</a>
 								</li>
 
 								@* <li class="submenu-item ">
@@ -482,7 +490,7 @@
 			$(this).find("button[type='submit']").prop("disabled", true).html("loading...")
 		})
 	</script>
-	
+
 	@RenderSection("Scripts", required: false)
 
 </body>

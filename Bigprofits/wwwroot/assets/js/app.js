@@ -18,19 +18,6 @@ $(window).on('load', function () {
             }, 4000)
             break;
 
-        case "signin":
-            var passworderrorEl = document.getElementById('passworderror')
-            var tooltip = new bootstrap.Tooltip(passworderrorEl, {
-                boundary: document.body // or document.querySelector('#boundary')
-            })
-            break;
-
-        case "signup":
-            var passworderrorEl = document.getElementById('passworderror')
-            var tooltip = new bootstrap.Tooltip(passworderrorEl, {
-                boundary: document.body // or document.querySelector('#boundary')
-            })
-            break;
         case "verify":
 
             document.getElementById('timer').innerHTML = '03' + ':' + '00';
@@ -61,10 +48,6 @@ $(window).on('load', function () {
 
         case "landing":
             var toastElList = document.getElementById('toastinstall');
-            var toastElinit = new bootstrap.Toast(toastElList, {
-                //autohide: !1,
-            });
-            toastElinit.show();
 
             /* PWA add to phone Install ap button */
             var btnAdd = document.getElementById('addtohome')
@@ -125,70 +108,6 @@ $(window).on('load', function () {
 
             })
 
-            /* Progress circle */
-            var progressCircles1 = new ProgressBar.Circle(circleprogressone, {
-                color: '#7297F8',
-                // This has to be the same size as the maximum width to
-                // prevent clipping
-                strokeWidth: 10,
-                trailWidth: 10,
-                easing: 'easeInOut',
-                trailColor: '#d8e0f9',
-                duration: 1400,
-                text: {
-                    autoStyleContainer: false
-                },
-                from: { color: '#7297F8', width: 10 },
-                to: { color: '#7297F8', width: 10 },
-                // Set default step function for all animate calls
-                step: function (state, circle) {
-                    circle.path.setAttribute('stroke', state.color);
-                    circle.path.setAttribute('stroke-width', state.width);
-
-                    var value = Math.round(circle.value() * 100);
-                    if (value === 0) {
-                        // circle.setText('');
-                    } else {
-                        //  circle.setText(value + "<small>%<small>");
-                    }
-
-                }
-            });
-            // progressCircles1.text.style.fontSize = '20px';
-            progressCircles1.animate(0.65);  // Number from 0.0 to 1.0
-
-            var progressCircles2 = new ProgressBar.Circle(circleprogresstwo, {
-                color: '#3AC79B',
-                // This has to be the same size as the maximum width to
-                // prevent clipping
-                strokeWidth: 10,
-                trailWidth: 10,
-                easing: 'easeInOut',
-                trailColor: '#d8f4eb',
-                duration: 1400,
-                text: {
-                    autoStyleContainer: false
-                },
-                from: { color: '#3AC79B', width: 10 },
-                to: { color: '#3AC79B', width: 10 },
-                // Set default step function for all animate calls
-                step: function (state, circle) {
-                    circle.path.setAttribute('stroke', state.color);
-                    circle.path.setAttribute('stroke-width', state.width);
-
-                    var value = Math.round(circle.value() * 100);
-                    if (value === 0) {
-                        //  circle.setText('');
-                    } else {
-                        // circle.setText(value + "<small>%<small>");
-                    }
-
-                }
-            });
-            // progressCircles2.text.style.fontSize = '20px';
-            progressCircles2.animate(0.85);  // Number from 0.0 to 1.0
-
-
 
             /* swiper carousel cardwiper */
             var swiper1 = new Swiper(".cardswiper", {
@@ -206,12 +125,6 @@ $(window).on('load', function () {
 
             /* app install toast message */
             var toastElList = document.getElementById('toastinstall');
-            var toastElinit = new bootstrap.Toast(toastElList, {
-                // autohide: "!1",
-                autohide: true,
-                delay: 5000,
-            });
-            toastElinit.show();
 
             /* PWA add to phone Install ap button */
             var btnAdd = document.getElementById('addtohome');
@@ -344,133 +257,6 @@ $(window).on('load', function () {
             $('#daterange').on('apply.daterangepicker', function (ev, picker) {
                 $('.textdate').text(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
             });
-
-            /* Progress circle */
-            var progressCircles1 = new ProgressBar.Circle(circleprogressone, {
-                color: '#7297F8',
-                // This has to be the same size as the maximum width to
-                // prevent clipping
-                strokeWidth: 10,
-                trailWidth: 10,
-                easing: 'easeInOut',
-                trailColor: '#d8e0f9',
-                duration: 1400,
-                text: {
-                    autoStyleContainer: false
-                },
-                from: { color: '#7297F8', width: 10 },
-                to: { color: '#7297F8', width: 10 },
-                // Set default step function for all animate calls
-                step: function (state, circle) {
-                    circle.path.setAttribute('stroke', state.color);
-                    circle.path.setAttribute('stroke-width', state.width);
-
-                    var value = Math.round(circle.value() * 100);
-                    if (value === 0) {
-                        // circle.setText('');
-                    } else {
-                        //  circle.setText(value + "<small>%<small>");
-                    }
-
-                }
-            });
-            // progressCircles1.text.style.fontSize = '20px';
-            progressCircles1.animate(0.65);  // Number from 0.0 to 1.0
-
-            var progressCircles2 = new ProgressBar.Circle(circleprogresstwo, {
-                color: '#3AC79B',
-                // This has to be the same size as the maximum width to
-                // prevent clipping
-                strokeWidth: 10,
-                trailWidth: 10,
-                easing: 'easeInOut',
-                trailColor: '#d8f4eb',
-                duration: 1400,
-                text: {
-                    autoStyleContainer: false
-                },
-                from: { color: '#3AC79B', width: 10 },
-                to: { color: '#3AC79B', width: 10 },
-                // Set default step function for all animate calls
-                step: function (state, circle) {
-                    circle.path.setAttribute('stroke', state.color);
-                    circle.path.setAttribute('stroke-width', state.width);
-
-                    var value = Math.round(circle.value() * 100);
-                    if (value === 0) {
-                        //  circle.setText('');
-                    } else {
-                        // circle.setText(value + "<small>%<small>");
-                    }
-
-                }
-            });
-            // progressCircles2.text.style.fontSize = '20px';
-            progressCircles2.animate(0.85);  // Number from 0.0 to 1.0
-
-            /* Progress circle */
-            var progressCircles3 = new ProgressBar.Circle(circleprogressthree, {
-                color: '#F73563',
-                // This has to be the same size as the maximum width to
-                // prevent clipping
-                strokeWidth: 10,
-                trailWidth: 10,
-                easing: 'easeInOut',
-                trailColor: '#fdd7e0',
-                duration: 1400,
-                text: {
-                    autoStyleContainer: false
-                },
-                from: { color: '#F73563', width: 10 },
-                to: { color: '#F73563', width: 10 },
-                // Set default step function for all animate calls
-                step: function (state, circle) {
-                    circle.path.setAttribute('stroke', state.color);
-                    circle.path.setAttribute('stroke-width', state.width);
-
-                    var value = Math.round(circle.value() * 100);
-                    if (value === 0) {
-                        // circle.setText('');
-                    } else {
-                        //  circle.setText(value + "<small>%<small>");
-                    }
-
-                }
-            });
-            // progressCircles1.text.style.fontSize = '20px';
-            progressCircles3.animate(0.65);  // Number from 0.0 to 1.0
-
-            var progressCircles4 = new ProgressBar.Circle(circleprogressfour, {
-                color: '#FFBD17',
-                // This has to be the same size as the maximum width to
-                // prevent clipping
-                strokeWidth: 10,
-                trailWidth: 10,
-                easing: 'easeInOut',
-                trailColor: '#fff2d1',
-                duration: 1400,
-                text: {
-                    autoStyleContainer: false
-                },
-                from: { color: '#FFBD17', width: 10 },
-                to: { color: '#FFBD17', width: 10 },
-                // Set default step function for all animate calls
-                step: function (state, circle) {
-                    circle.path.setAttribute('stroke', state.color);
-                    circle.path.setAttribute('stroke-width', state.width);
-
-                    var value = Math.round(circle.value() * 100);
-                    if (value === 0) {
-                        //  circle.setText('');
-                    } else {
-                        // circle.setText(value + "<small>%<small>");
-                    }
-
-                }
-            });
-            // progressCircles2.text.style.fontSize = '20px';
-            progressCircles4.animate(0.85);  // Number from 0.0 to 1.0
-
 
             /* chart js areachart */
             var areachart1 = document.getElementById('smallchart1').getContext('2d');

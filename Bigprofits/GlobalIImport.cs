@@ -35,7 +35,7 @@ class Global
     //Referral Link
     public const string RefLink = "https://www.technotycoon.in/Auth/Registration?spoId=";
     //BEP-20 address
-    public const string Bp20Address = "0xDc93CB0521930b72Da1f0020a2c2099eD71a8cF6";
-    public const string Dp20address = "0x6009af4a30c39CD79561BaBd5291746178d0d6F5";
+    public const string Bp20Address = "0x8fC484BA0BD008A47004dCc676a6F4101Ad438D1";
+    public const string Dp20address = "0x8fC484BA0BD008A47004dCc676a6F4101Ad438D1";
 
 }

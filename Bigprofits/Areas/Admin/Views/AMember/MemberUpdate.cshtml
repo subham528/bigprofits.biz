@@ -1,152 +1,98 @@
 ﻿@model Bigprofits.Models.MemberInfo
-
 @{
-    ViewData["Title"] = "MemberUpdate";
-    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+	ViewData["Title"] = "MemberUpdate";
+	Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
 }
 
 @if (TempData["msg"] != null)
 {
-    <div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"] </div>
+	<div style="text-align: center;padding: 5px;color: #b7114e;font-weight: 900;"> @TempData["msg"] </div>
 }
 
 <div class="container-fluid ">
-    <div class="card shadow mb-4">
-        <div class="card-header bg-info py-3">
-            <h6 class="m-0 font-weight-bold text-white">Member Update</h6>
-        </div>
-        <div class="card-body">
-            <form action="/britglbl253adpnl/Member-Update" method="post">
+	<div class="card shadow mb-4">
+		<div class="card-header bg-info py-3">
+			<h6 class="m-0 font-weight-bold text-white">Member Update</h6>
+		</div>
+		<div class="card-body">
+			<form action="/britglbl253adpnl/Member-Update" method="post">
+				<div class="row">
+					<div class="col-4">
+						<div class="mb-3">
+							<label class="form-label">Member ID</label>
+							<input asp-for="MemberId" readonly class="form-control" />
+						</div>
+					</div>
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="MemId" />
-                <!-- Row start-->
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                           <label>Member ID</label>
-                <input asp-for="MemberId" readonly class="form-control" />
-                <span asp-validation-for="MemberId" class="text-danger"></span>
-            </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>User Password</label>
-                            <input asp-for="MemLogPass" value="@ViewBag.memlogpass" class="form-control" />
-                <span asp-validation-for="MemLogPass" class="text-danger"></span>
-            </div>
-                    </div>
-                    <div class="col-4">
-                         <div class="form-group">
-                            <label>Sponsor ID</label>    
-                            <input asp-for="SpoId" readonly class="form-control" />
-                <span asp-validation-for="SpoId" class="text-danger"></span>
-            </div>
-                    </div>
-                </div>
-                  <!-- Row end-->
-                    <!-- Row start-->
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>Open Level</label>
-                            <input asp-for="MemRank" class="form-control" />
-                            <span asp-validation-for="MemRank" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>User Name </label>
-                <input asp-for="MemName" class="form-control" />
-                <span asp-validation-for="MemName" class="text-danger"></span>
-            </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>Registration Date </label>
-                            <input asp-for="MemReg" class="form-control" />
-                            <span asp-validation-for="MemReg" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-                  <!-- Row end-->
+					@* <div class="col-4">
+						<div class="mb-3">
+							<label class="form-label">User Password</label>
+							<input asp-for="MemLogPass" class="form-control" />
+						</div>
+					</div> *@
 
-                      <!-- Row start-->
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>Wallet Address USDT (BEP-20)</label>
-                            <input asp-for="MemAddress" value="@ViewBag.memaddress" class="form-control" />
-                <span asp-validation-for="MemAddress" class="text-danger"></span>
-            </div>
-                    </div>
-                    <div class="col-4">
-                      
-            <div class="form-group">
-                            <label>Mobile</label>
-                <input asp-for="MemMobile" value="@ViewBag.mobile" class="form-control" />
-                <span asp-validation-for="MemMobile" class="text-danger"></span>
-            </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>Email ID</label>
-                            <input asp-for="MemEmail" value="@ViewBag.mememail" class="form-control" />
-                <span asp-validation-for="MemEmail" class="text-danger"></span>
-            </div>
-                    </div>
-                </div>
-                  <!-- Row end-->
+					<div class="col-4">
+						<div class="mb-3">
+							<label class="form-label">Sponsor ID</label>
+							<input asp-for="SpoId" readonly class="form-control" />
+						</div>
+					</div>
 
-                       <!-- Row start-->
-                <div class="row">
-                    @* <div class="col-4">
-                      <div class="form-group">
-                <label asp-for="MemGender" class="control-label"></label>
-                <input asp-for="MemGender" class="form-control" />
-                <span asp-validation-for="MemGender" class="text-danger"></span>
-            </div>
-                    </div> *@
-                 @*    <div class="col-4">
-                        <div class="form-group">
-                <label asp-for="MemDob" class="control-label"></label>
-                <input asp-for="MemDob" class="form-control" />
-                <span asp-validation-for="MemDob" class="text-danger"></span>
-            </div>
-                    </div> *@
-                  
-                </div>
-                
-                
-               
-            
-         
-                  <!-- Row end-->
+					@* <div class="col-4">
+						<div class="mb-3">
+							<label class="form-label">Open Level</label>
+							<input asp-for="MemRank" class="form-control" />
+						</div>
+					</div> *@
 
-  @*  ===========================================================================================*@
+					@* <div class="col-4">
+						<div class="mb-3">
+							<label class="form-label">User Name</label>
+							<input asp-for="MemName" class="form-control" />
+						</div>
+					</div> *@
 
-                       <!-- Row start-->
-             
-             
-               
+					<div class="col-4">
+						<div class="mb-3">
+							<label class="form-label">Registration Date </label>
+							<input asp-for="MemReg" class="form-control" />
+						</div>
+					</div>
 
-          
-               
+					<div class="col-4">
+						<div class="mb-3">
+							<label class="form-label">Wallet Address USDT (BEP-20)</label>
+							<input asp-for="MemAddress" class="form-control" />
+						</div>
+					</div>
 
-                
+					@* <div class="col-4">
+						<div class="mb-3">
+							<label class="form-label">Mobile</label>
+							<input asp-for="MemMobile" class="form-control" />
+						</div>
+					</div>
 
-                    <div class="form-group text-center">
-                <input type="submit" value="UPDATE" class="btn btn-info" />
-            </div>
-                   
-            </form>
-        </div>
-    </div>
+					<div class="col-4">
+						<div class="mb-3">
+							<label class="form-label">Email ID</label>
+							<input asp-for="MemEmail" class="form-control" />
+						</div>
+					</div> *@
+				</div>
+
+				<div class="mb-3 text-center">
+					<input type="submit" value="UPDATE" class="btn btn-info" />
+				</div>
+
+			</form>
+		</div>
+	</div>
 </div>
 
 
 
 @section Scripts {
-    
+
 
 }

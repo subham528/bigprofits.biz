@@ -7,15 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     dynamic income = JsonConvert.DeserializeObject(ViewBag.SpMember)[0];
-    decimal totalStake = 0;
-    foreach (DataRow row in Model.Tables[0].Rows)
-    {
-        totalStake += string.IsNullOrEmpty(row["DINIP"]?.ToString()) ? 0 : Convert.ToDecimal(row["DINIP"]);
-    }
 }
-<script src="~/node_module/jquery/dist/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="~/SweetAlert/dist/sweetalert2.min.css" rel="stylesheet">
 
 @if (TempData["msg"] != null)
 {
@@ -78,9 +70,6 @@
     <div class="card ">
         <div class="card-header">
             <h3 class="card-title mb-0"> TOPUP HISTORY </h3>
-        </div>
-        <div class="mb-3 fw-bold">
-            🧮 My Total Stake: <span class="text-primary">@($"{totalStake:0} DINP")</span>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -168,20 +157,12 @@
     </div>
 </div>
 
-<script src="~/SweetAlert/dist/sweetalert2.min.js"></script>
-
-
-
-
 @section Scripts {
-
     <script>
-
         $(function () {
             $("#topbtn").show()
             $("#processbtn").hide()
         });
-
     </script>
 
     <script>

@@ -1,70 +1,70 @@
 ﻿@using System.Data
 @model DataSet
 @using Bigprofits.Common;
-
-
 @{
-    ViewData["Title"] = "Topup History";
-    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+	ViewData["Title"] = "Topup History";
+	Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
 }
 
-
 <div class="page-heading">
-    <!-- Basic Tables start -->
-    <section class="section">
-        <div class="card">
-            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
-                TOPUP HISTROY
-            </div>
-            <div class="card-body mt-3 overflow-auto">
-                <table class="table table-responsive text-nowrap text-center" id="table1">
-                    <thead>
-                        <tr>
+	<section class="section">
+		<div class="card">
+			<div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+				TOPUP HISTROY
+			</div>
+			<form action="/britglbl253adpnl/topup-history" method="get" class="searchForm">
+				<input name="userId" class="form-control" placeholder="Member ID" value="@ViewBag.userId">
 
-                            <th>
-                                Sno
-                            </th>
-                            <th>
-                                Member Id
-                            </th>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">From</span>
+					</div>
+					<input name="date" type="date" class="form-control" value="@ViewBag.date">
+				</div>
 
-                            <th>
-                                Member Package
-                            </th>
-                            <th>
-                                Date
-                            </th>
-                           
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            int sno2 = 1;
-                        }
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">To</span>
+					</div>
+					<input name="date1" type="date" class="form-control" value="@ViewBag.date1">
+				</div>
 
-                        @foreach (DataRow row in Model.Tables[0].Rows)
-                        {
-                            <tr>
-                                <td>@sno2</td>
-                                <td>@row["memberId"]</td>
-                          
-                              
-                           
-                                <td>@("$" + Convert.ToDecimal(row["cmitReqAmount"]).ToString("0.00"))</td>
-                                <td>@row["cmitsdate"]</td>
-                             
+				<button class="btn btn-outline-primary" type="submit">
+					<i class="bi bi-search"></i>
+				</button>
+				<a href="/britglbl253adpnl/topup-history" class="btn btn-danger form-control">Clear Filter</a>
+			</form>
+			<div class="card-body mt-3 overflow-auto">
+				<table class="table table-responsive text-nowrap text-center">
+					<thead>
+						<tr>
+							<th>Sno</th>
+							<th>User</th>
+							<th>By Member</th>
+							<th>Amount</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (DataRow row in Model.Tables[0].Rows)
+						{
+							<tr>
+								<td>@row["srn"]</td>
+								<td>@row["memname"] / @row["memberId"]</td>
+								<td>@row["byMemName"] / @row["byMemberId"]</td>
+								<td>$@string.Format("{0:0.####}", row["cmitReqAmount"])</td>
+								<td>@row["cmitsdate"]</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+				<ul class="pagination mt-3">
+					@Html.Raw(ViewBag.pgnHtml)
+				</ul>
+			</div>
+		</div>
 
-                            </tr>
-                            sno2++;
-                        }
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </section>
-    <!-- Basic Tables end -->
+	</section>
 </div>
 
 
