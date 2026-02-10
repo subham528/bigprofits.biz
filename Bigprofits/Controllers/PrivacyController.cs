@@ -10,12 +10,13 @@ using System.Security.Claims;
 namespace Bigprofits.Controllers
 {
     [Authorize(AuthenticationSchemes = "UserAuth")]
-    public class PrivacyController(ContextClass context, HomeRepository homeRepository, IWebHostEnvironment webHostEnvironment, CommonMethods commonMethods) : Controller
+    public class PrivacyController(ContextClass context, HomeRepository homeRepository, IWebHostEnvironment webHostEnvironment, CommonMethods commonMethods, IAuditRepository auditRepository) : Controller
     {
         private readonly ContextClass context = context;
         private readonly HomeRepository homeRepository = homeRepository;
         private readonly IWebHostEnvironment webHostEnvironment = webHostEnvironment;
         private readonly CommonMethods commonMethods = commonMethods;
+        private readonly IAuditRepository _auditRepository = auditRepository;
         private string mango = "";
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -49,17 +50,24 @@ namespace Bigprofits.Controllers
             var memberInfo = await context.MemberInfos.Where(x => x.MemberId == mango).FirstOrDefaultAsync();
             try
             {
-                memberInfo!.MemName = Request.Form["MemName"].ToString();
-                memberInfo.MemMobile = commonMethods.Encrypt(Request.Form["MemMobile"].ToString());
-                memberInfo.MemEmail = commonMethods.Encrypt(Request.Form["MemEmail"].ToString());
+                string memName = Request.Form["MemName"].ToString().Trim();
+                string memMobile = Request.Form["MemMobile"].ToString().Trim();
+                string memEmail = Request.Form["MemEmail"].ToString().Trim();
+                string memAddress = Request.Form["MemAddress"].ToString().Trim().ToLower();
 
-                if (string.IsNullOrEmpty(memberInfo.MemAddress))
+                memberInfo!.MemName = memName;
+                memberInfo.MemMobile = commonMethods.Encrypt(memMobile);
+                memberInfo.MemEmail = commonMethods.Encrypt(memEmail);
+
+                if (string.IsNullOrEmpty(memAddress))
                 {
-                    memberInfo.MemAddress = commonMethods.Encrypt(Request.Form["MemAddress"].ToString().ToLower());
+                    memberInfo.MemAddress = commonMethods.Encrypt(memAddress);
                 }
 
                 context.Update(memberInfo);
                 await context.SaveChangesAsync();
+
+                await _auditRepository.LogActionAsync($"MEMBER PROFILE UPDATE", 0, mango, $"Member profile updated, member ID : {mango}, updated details - memName : {memName}, memMobile : {memMobile}, memEmail : {memEmail}, memAddress : {memAddress}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
 
                 TempData["msg"] = "Your Profile Details Updated Successfully...!";
                 return Redirect("/account/profile");
@@ -83,12 +91,19 @@ namespace Bigprofits.Controllers
         {
             var memberInfo = await context.MemberInfos.Where(x => x.MemberId == mango).FirstOrDefaultAsync();
 
-            memberInfo!.MemAcNo = commonMethods.Encrypt(Request.Form["MemAcNo"].ToString());
-            memberInfo.MemAcIfsc = Request.Form["MemAcIfsc"].ToString();
-            memberInfo.MemAcName = Request.Form["MemAcName"].ToString();
+            string accountNo = Request.Form["MemAcNo"].ToString().Trim();
+            string ifsc = Request.Form["MemAcIfsc"].ToString().Trim();
+            string accountName = Request.Form["MemAcName"].ToString().Trim();
+
+            memberInfo!.MemAcNo = commonMethods.Encrypt(accountNo);
+            memberInfo.MemAcIfsc = ifsc;
+            memberInfo.MemAcName = accountName;
 
             context.Update(memberInfo);
             await context.SaveChangesAsync();
+
+            await _auditRepository.LogActionAsync($"MEMBER BANK DETAILS UPDATE", 0, mango, $"Member bank details updated, member ID : {mango}, updated details - MemAcNo : {accountNo}, MemAcIfsc : {ifsc}, MemAcName : {accountName}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
             return View(memberInfo);
         }
 
@@ -126,8 +141,12 @@ namespace Bigprofits.Controllers
 
                 res = "Password Changed Successfull..!";
 
+                await _auditRepository.LogActionAsync($"MEMBER RESET PASSWORD SUCCESS", 0, mango, $"Member reset password success, member ID : {mango}, old password : {op}, new password {np}, confirm password : {cp}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 return Json(res);
             }
+
+            await _auditRepository.LogActionAsync($"MEMBER RESET PASSWORD FAILED", 0, mango, $"Member reset password failed, member ID : {mango}, current password : {commonMethods.Decrypt(data.MemLogPass!)}, entered current password : {op}, new password {np}, confirm password : {cp}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
             return Json(res);
         }
 

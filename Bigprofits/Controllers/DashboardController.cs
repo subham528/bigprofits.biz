@@ -11,11 +11,12 @@ using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bigprofits.Controllers
 {
     [Authorize(AuthenticationSchemes = "UserAuth")]
-    public class DashboardController(ILogger<HomeController> logger, ContextClass context, HomeRepository homeRepository, MailRepository mailRepository, CommonMethods commonMethods, SqlConnectionClass dataAccess) : Controller
+    public class DashboardController(ILogger<HomeController> logger, ContextClass context, HomeRepository homeRepository, MailRepository mailRepository, CommonMethods commonMethods, SqlConnectionClass dataAccess, IAuditRepository auditRepository) : Controller
     {
         private readonly ILogger<HomeController> _logger = logger;
         private readonly ContextClass context = context;
@@ -23,6 +24,7 @@ namespace Bigprofits.Controllers
         private readonly MailRepository mailRepository = mailRepository;
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
+        private readonly IAuditRepository _auditRepository = auditRepository;
         private string mango = "";
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -63,6 +65,12 @@ namespace Bigprofits.Controllers
         {
             try
             {
+                var unreadMsg = await context.TableSupports.Where(x => x.ToBy == mango && x.MyStatus == 1).ToListAsync();
+                if (unreadMsg.Count > 0)
+                {
+                    await _auditRepository.LogActionAsync($"MEMBER READ INBOX", 0, mango, $"Member read inbox message (sent/replied from admin), member ID : {mango}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+                }
+
                 List<SqlParameter> par = [];
                 par.Add(new SqlParameter("@memberId", mango));
                 par.Add(new SqlParameter("@atype", "MEMBER"));
@@ -105,6 +113,9 @@ namespace Bigprofits.Controllers
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
                     TempData["msg"] = ds.Tables[0].Rows[0]["msg"].ToString();
+
+                    await _auditRepository.LogActionAsync($"MEMBER SENT SUPPORT REQUEST", 0, mango, $"Member sent support request, subject : {model.MySubject}, message : {model.MyDetails}, message from our side : {TempData["msg"]}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                     return RedirectToAction("support");
                 }
             }
@@ -119,7 +130,11 @@ namespace Bigprofits.Controllers
         [HttpGet("account/logout")]
         public async Task<IActionResult> Logout()
         {
+            string logoutMember = mango;
             await HttpContext.SignOutAsync("UserAuth");
+
+            await _auditRepository.LogActionAsync($"MEMBER LOGGED OUT", 0, logoutMember, $"Member logged out, member ID : {logoutMember}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
             return Redirect("/account/sign-in");
         }
 

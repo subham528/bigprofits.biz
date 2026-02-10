@@ -144,6 +144,9 @@ namespace Bigprofits.Areas.Admin.Controllers
                 };
 
                 await HttpContext.SignInAsync("UserAuth", principal, authProperties);
+
+                await _auditRepository.LogActionAsync($"MEMBER LOGIN FROM ADMIN", 0, "Admin", $"A member login by admin, memberid is {data.MemberId}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 return RedirectToAction("Dashboard", "Dashboard");
             }
             else
@@ -283,6 +286,19 @@ namespace Bigprofits.Areas.Admin.Controllers
             return Redirect("/britglbl253adpnl/update-token");
         }
 
+        [HttpGet]
+        [Route("account-ledger/{id}/{type}")]
+        public async Task<IActionResult> MemberLedger(string id, string type)
+        {
+            ViewBag.type = type;
+
+            List<SqlParameter> par = [];
+            par.Add(new SqlParameter("@memberid", id));
+            par.Add(new SqlParameter("@type", type));
+            var ds = await _dataAccess.FnRetriveByPro("[SP_AccountLedger]", par);
+
+            return View(ds);
+        }
 
 
     }

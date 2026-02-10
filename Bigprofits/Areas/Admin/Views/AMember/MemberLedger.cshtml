@@ -1,0 +1,73 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "Account Ledger";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+}
+
+<div class="page-heading">
+    <section class="section">
+        <div class="card">
+            <div class="card-header" style="background: #435ebe;color: white;padding: 15px;">
+                Income Account Ledger
+                @if (Model != null)
+                {
+                    <span class="badge bg-white text-dark">
+                        @Model.Tables[0].Rows[0]["memName"].ToString() / @Model.Tables[0].Rows[0]["memberId"].ToString()
+                    </span>
+                }
+            </div>
+            <div class="card-body mt-3 overflow-auto">
+                <table class="table table-responsive text-nowrap" id="datatable">
+                    <thead>
+                        <tr>
+                            <th>Sno</th>
+                            <th>Opening Bal.</th>
+                            <th>Amount</th>
+                            <th>Credit/Debit</th>
+                            <th>Closing Bal.</th>
+                            <th>Date</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int sno2 = 1;
+                        }
+                        @foreach (DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>@sno2</td>
+                                <td>@string.Format("{0:0.####}", row["openingBalance"])</td>
+                                <td>@string.Format("{0:0.####}", row["amount"])</td>
+                                <td>@Html.Raw(row["aType"].ToString() == "CREDIT" ? "<span class='text-success'>CREDIT</span>" : "<span class='text-danger'>DEBIT</span>")</td>
+                                <td>@string.Format("{0:0.####}", row["closingBalance"])</td>
+                                <td>@row["aDate"]</td>
+                                <td>@row["actionName"]</td>
+                            </tr>
+                            sno2++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#dt").hide()
+
+        $('#datatable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ]
+
+        });
+        $(".buttons-excel").append('&nbsp;<i class="fa fa-file-excel"></i>')
+        $(".buttons-pdf").append('&nbsp;<i class="fa fa-file-pdf"></i>')
+        $(".buttons-print").append('&nbsp;<i class="fa fa-print"></i>')
+    });
+</script>

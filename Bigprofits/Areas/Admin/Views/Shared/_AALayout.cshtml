@@ -327,7 +327,12 @@
                         </ul>
                         </li> *@
 
-						<li class="sidebar-item  has-sub">
+						<li class="sidebar-item has-sub">
+							@if (ViewBag.msgCount > 0)
+							{
+								<div class="indicator">@ViewBag.msgCount</div>
+							}
+
 							<a href="#" class='sidebar-link'>
 								<i class="bi bi-stack"></i>
 								<span>SUPPORT</span>

@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Bigprofits.Controllers
 {
     [Authorize(AuthenticationSchemes = "UserAuth")]
-    public class WalletController(ContextClass context, IWebHostEnvironment webHostEnvironment, IConfiguration configuration, CommonMethods commonMethods, SqlConnectionClass dataAccess, HomeRepository homeRepository) : Controller
+    public class WalletController(ContextClass context, IWebHostEnvironment webHostEnvironment, IConfiguration configuration, CommonMethods commonMethods, SqlConnectionClass dataAccess, HomeRepository homeRepository, IAuditRepository auditRepository) : Controller
     {
         private readonly ContextClass context = context;
         private readonly IWebHostEnvironment webHostEnvironment = webHostEnvironment;
@@ -25,6 +25,7 @@ namespace Bigprofits.Controllers
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
         private readonly HomeRepository homeRepository = homeRepository;
+        private readonly IAuditRepository _auditRepository = auditRepository;
         private string mango = "";
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -84,8 +85,12 @@ namespace Bigprofits.Controllers
 
                 if (ds.Tables[0].Rows.Count > 0)
                 {
+                    int chk = Convert.ToInt16(ds.Tables[0].Rows[0]["msg"]);
+                    string msg = ds.Tables[0].Rows[0]["msg"].ToString()!;
 
-                    TempData["msg"] = ds.Tables[0].Rows[0]["msg"].ToString();
+                    await _auditRepository.LogActionAsync($"ADD FUND FROM INCOME", chk, mango, $"Member add fund from income, member ID : {mango}, amount is {amount}, message from our side : {msg}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
+                    TempData["msg"] = msg;
                     return RedirectToAction("AddFund");
                 }
             }
@@ -295,9 +300,13 @@ namespace Bigprofits.Controllers
                 var ds = await _dataAccess.FnRetriveByPro("[SP_SendFund]", par);
                 if (ds.Tables[0].Rows.Count > 0)
                 {
-                    string chk = ds.Tables[0].Rows[0]["chk"].ToString()!;
-                    if (chk == "1") TempData["success"] = ds.Tables[0].Rows[0]["msg"].ToString();
-                    else TempData["error"] = ds.Tables[0].Rows[0]["msg"].ToString();
+                    int chk = Convert.ToInt16(ds.Tables[0].Rows[0]["chk"]);
+                    string msg = ds.Tables[0].Rows[0]["msg"].ToString()!;
+
+                    if (chk == 1) TempData["success"] = msg;
+                    else TempData["error"] = msg;
+
+                    await _auditRepository.LogActionAsync($"ADD FUND PAYING USDT", chk, mango, $"Member add fund paying USDT, member ID : {mango}, amount is {amount}, message from our side : {msg}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
 
                     return RedirectToAction("RequestFund");
                 }
@@ -422,7 +431,12 @@ namespace Bigprofits.Controllers
 
                 if (ds.Tables[0].Rows.Count > 0)
                 {
-                    TempData["msg"] = ds.Tables[0].Rows[0]["msg"].ToString();
+                    int chk = Convert.ToInt16(ds.Tables[0].Rows[0]["chk"]);
+                    string msg = ds.Tables[0].Rows[0]["msg"].ToString()!;
+
+                    await _auditRepository.LogActionAsync($"MEMBER P2P TRANSFER", chk, mango, $"Member P2P transfer, member ID : {mango}, amount is {amount}, message from our side : {msg}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
+                    TempData["msg"] = msg;
                     return RedirectToAction("Transfer");
                 }
             }
@@ -521,7 +535,12 @@ namespace Bigprofits.Controllers
 
                 if (ds.Tables[0].Rows.Count > 0)
                 {
-                    TempData["msg"] = ds.Tables[0].Rows[0]["msg"].ToString();
+                    int chk = Convert.ToInt16(ds.Tables[0].Rows[0]["chk"]);
+                    string msg = ds.Tables[0].Rows[0]["msg"].ToString()!;
+
+                    await _auditRepository.LogActionAsync($"MEMBER TOPUP", chk, mango, $"Member topup, member ID : {Memberid}, byMemberId : {mango}, amount is {amount}, message from our side : {msg}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
+                    TempData["msg"] = msg;
                     return RedirectToAction("TopUp");
                 }
             }

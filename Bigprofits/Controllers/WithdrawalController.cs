@@ -12,12 +12,13 @@ using System.Security.Claims;
 namespace Bigprofits.Controllers
 {
     [Authorize(AuthenticationSchemes = "UserAuth")]
-    public class WithdrawalController(ContextClass context, IConfiguration configuration, CommonMethods commonMethods, SqlConnectionClass dataAccess) : Controller
+    public class WithdrawalController(ContextClass context, IConfiguration configuration, CommonMethods commonMethods, SqlConnectionClass dataAccess, IAuditRepository auditRepository) : Controller
     {
         private readonly ContextClass context = context;
         private readonly IConfiguration _configuration = configuration;
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
+        private readonly IAuditRepository _auditRepository = auditRepository;
         private string mango = "";
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -94,9 +95,14 @@ namespace Bigprofits.Controllers
                 par.Add(new SqlParameter("@wType", "USDT"));
                 par.Add(new SqlParameter("@Dtel", ""));
                 par.Add(new SqlParameter("@usdPrice", _configuration.GetValue<string>("usdRate")));
-
                 ds = await _dataAccess.FnRetriveByPro("[Amountinsert]", par);
-                TempData["success"] = ds.Tables[0].Rows[0]["msg"].ToString();
+
+                int chk = Convert.ToInt16(ds.Tables[0].Rows[0]["msg"]);
+                string msg = ds.Tables[0].Rows[0]["msg"].ToString()!;
+
+                TempData["success"] = msg;
+
+                await _auditRepository.LogActionAsync($"MEMBER MAIN WITHDRAWAL", chk, mango, $"Member main withdrawal (all income), member ID : {mango}, amount is {amount}, message from our side : {msg}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
 
                 return RedirectToAction("Withdrawal");
             }

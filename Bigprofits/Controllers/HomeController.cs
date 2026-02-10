@@ -13,10 +13,11 @@ using System.Security.Claims;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bigprofits.Controllers
 {
-    public class HomeController(ILogger<HomeController> logger, ContextClass context, HomeRepository homeRepository, MailRepository mailRepository, CommonMethods commonMethods, SqlConnectionClass dataAccess, IConfiguration configuration) : Controller
+    public class HomeController(ILogger<HomeController> logger, ContextClass context, HomeRepository homeRepository, MailRepository mailRepository, CommonMethods commonMethods, SqlConnectionClass dataAccess, IConfiguration configuration, IAuditRepository auditRepository) : Controller
     {
         private readonly ILogger<HomeController> _logger = logger;
         private readonly ContextClass context = context;
@@ -25,6 +26,7 @@ namespace Bigprofits.Controllers
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
         private readonly IConfiguration _configuration = configuration;
+        private readonly IAuditRepository _auditRepository = auditRepository;
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -77,8 +79,14 @@ namespace Bigprofits.Controllers
                 };
 
                 await HttpContext.SignInAsync("UserAuth", principal, authProperties);
+
+                await _auditRepository.LogActionAsync($"MEMBER LOGIN ATTEMP SUCCESS", 0, data.MemberId!, $"A member login attempt success, wallet is {Walletaddress} and member ID is {data.MemberId!}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 return Redirect((TempData["ReturnUrl"] == null ? "/account/home" : TempData["ReturnUrl"]!.ToString()!));
             }
+
+            await _auditRepository.LogActionAsync($"MEMBER LOGIN ATTEMP FAILED", 0, "USER", $"A member login attempt failed, wallet is {Walletaddress}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
             TempData["loginError"] = "Wallet Address MisMatch..";
             return View();
         }
@@ -137,6 +145,8 @@ namespace Bigprofits.Controllers
                 //    return RedirectToAction("Registration");
                 //}
 
+                await _auditRepository.LogActionAsync($"MEMBER REGISTRATION ATTEMPT", 0, "USER", $"A new registration attepted by a user, spoId : {isSpo.MemberId}, address : {Walletaddress}, refPos : {memberInfo.RefPos.Trim()}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 List<SqlParameter> par = [];
                 par.Add(new SqlParameter("@spoId", isSpo.MemberId));
                 par.Add(new SqlParameter("@address", commonMethods.Encrypt(Walletaddress.ToLower())));
@@ -149,6 +159,8 @@ namespace Bigprofits.Controllers
 
                 //mailRepository.SendMail(memberInfo.MemEmail, mailMsg, "Registration Successfull!");
 
+                await _auditRepository.LogActionAsync($"MEMBER REGISTRATION SUCCESSFULL", 0, ds.Tables[0].Rows[0]["memberId"].ToString()!, $"A new registration successfull, spoId : {isSpo.MemberId}, address : {Walletaddress}, refPos : {memberInfo.RefPos.Trim()}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 return RedirectToAction("Registration");
             }
             catch (Exception)
@@ -160,7 +172,7 @@ namespace Bigprofits.Controllers
 
         [HttpPost]
         [Route("account/SponsorName/{spoId}")]
-        public string GetSponsorName(String spoId)
+        public string GetSponsorName(string spoId)
         {
             string? result = "";
             try
@@ -186,16 +198,34 @@ namespace Bigprofits.Controllers
         {
             var MemberId = Request.Form["memberid"].ToString();
             var data = await context.MemberInfos.Where(x => x.MemberId == MemberId).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                string memEmail = commonMethods.Decrypt(data!.MemEmail!);
+                string? password = data.MemLogPass;
+                string? mobile = commonMethods.Decrypt(data.MemMobile!);
 
-            string memEmail = commonMethods.Decrypt(data!.MemEmail!);
-            string? password = data.MemLogPass;
-            string? mobile = commonMethods.Decrypt(data.MemMobile!);
+                string mailMsg = "Your Requested Log-in Information <br><br> Hi " + data.MemName + ", <br><br> You have requested to retrieve your log-in data for your Bigprofits Account. <br><br> Your log-in data is: <br><br> USER ID: " + data.MemLogId + " <br> Password: " + commonMethods.Decrypt(data.MemLogPass!) + " <br><br> Login at the following link: <br> https://Bigprofits.io/account/sign-in <br><br> Best regards, <br><br> Member Support <br> Bigprofits";
 
-            string mailMsg = "Your Requested Log-in Information <br><br> Hi " + data.MemName + ", <br><br> You have requested to retrieve your log-in data for your Bigprofits Account. <br><br> Your log-in data is: <br><br> USER ID: " + data.MemLogId + " <br> Password: " + commonMethods.Decrypt(data.MemLogPass!) + " <br><br> Login at the following link: <br> https://Bigprofits.io/account/sign-in <br><br> Best regards, <br><br> Member Support <br> Bigprofits";
+                if (await mailRepository.SendMail(memEmail, mailMsg.ToString(), "Recover Password!") == "1")
+                {
+                    await _auditRepository.LogActionAsync($"MEMBER FORGET PASSWORD SUCCESS", 0, data.MemberId!, $"A member forget email failed, entered member ID : {MemberId}, member email : {memEmail}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
 
-            if (await mailRepository.SendMail(memEmail, mailMsg.ToString(), "Recover Password!") == "1")
-                TempData["forgetMsg"] = "Your account login credentials has been sent to your registered email. Thank You!";
-            else TempData["forgetMsg"] = "Failed : Opps! Something went wrong. Could not send email.";
+                    TempData["forgetMsg"] = "Your account login credentials has been sent to your registered email. Thank You!";
+                }
+                else
+                {
+                    await _auditRepository.LogActionAsync($"MEMBER FORGET EMAIL FAILED", 0, data.MemberId!, $"A member forget email failed, member ID : {data.MemberId!}, member email : {memEmail}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
+                    TempData["forgetMsg"] = "Failed : Opps! Something went wrong. Could not send email.";
+                }
+            }
+            else
+            {
+                await _auditRepository.LogActionAsync($"MEMBER FORGET PASSWORD FAILED", 0, MemberId, $"A member forget email failed, entered member ID : {MemberId}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
+                TempData["forgetMsg"] = "Failed : Could not find the user, please enter a valid user ID.";
+            }
+
 
             //string website, msg, thanks, dltId;
             //website = "Dear Member";
