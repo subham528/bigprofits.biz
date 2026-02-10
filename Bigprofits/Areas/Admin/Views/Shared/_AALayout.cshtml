@@ -309,20 +309,20 @@
                             </ul>
                         </li> *@
 
-						@*  <li class="sidebar-item  has-sub">
+						@*  <li class="sidebar-item has-sub">
                         <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
                         <span>PAYMENT API </span>
                         </a>
-                        <ul class="submenu ">
-                        <li class="submenu-item ">
+                        <ul class="submenu">
+                        <li class="submenu-item">
                         <a asp-area="Admin" asp-controller="ApiPayment" asp-action="AdminFundRequest">FUND REQUEST</a>
                         </li>
-                        <li class="submenu-item ">
+                        <li class="submenu-item">
                         <a asp-area="Admin" asp-controller="ApiPayment" asp-action="AdminFundHistory">FUND HISTORY</a>
                         </li>
-                        <li class="submenu-item ">
-                        <a asp-area="Admin" asp-controller="ApiPayment" asp-action="OrderHistory">ORDER HISTORY</a>
+                        <li class="submenu-item">
+                        <a asp-area="Admin" asp-controller="ApiPayment" asp-action="order-history">ORDER HISTORY</a>
                         </li>
                         </ul>
                         </li> *@
@@ -337,7 +337,7 @@
 									<a asp-controller="britglbl253adpnl" asp-action="support-system">INBOX</a>
 								</li>
 								<li class="submenu-item">
-									<a href="/britglbl253adpnl/inbox-History">INBOX HISTORY</a>
+									<a href="/britglbl253adpnl/inbox-history">INBOX HISTORY</a>
 								</li>
 								<li class="submenu-item">
 									<a asp-controller="britglbl253adpnl" asp-action="outbox">OUTBOX</a>
@@ -345,97 +345,87 @@
 							</ul>
 						</li>
 
-						<li class="sidebar-item  has-sub">
+						<li class="sidebar-item has-sub">
 							<a href="#" class='sidebar-link'>
 								<i class="bi bi-stack"></i>
 								<span>PRIVACY</span>
 							</a>
-							<ul class="submenu ">
-								<li class="submenu-item ">
-									<a asp-controller="britglbl253adpnl" asp-action="Add-News">ADD NEWS</a>
+							<ul class="submenu">
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="add-news">ADD NEWS</a>
 								</li>
-								<li class="submenu-item ">
-									<a asp-controller="britglbl253adpnl" asp-action="News-List"> NEWS LIST </a>
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="news-list">NEWS LIST</a>
 								</li>
-
-
 							</ul>
 						</li>
 
-
-						@* <li class="sidebar-item  has-sub">
+						@* <li class="sidebar-item has-sub">
                         <a href="#" class='sidebar-link'>
                         <i class="bi bi-collection-fill"></i>
                         <span>WITHDRAWL CLOSING</span>
                         </a>
-                        <ul class="submenu ">
-                        <li class="submenu-item ">
-                        <a asp-area="Admin" asp-controller="Closing" asp-action="AutoWithdrawalROI"> CASHBACK </a>
+                        <ul class="submenu">
+                        <li class="submenu-item">
+                        <a asp-area="Admin" asp-controller="Closing" asp-action="AutoWithdrawalROI">CASHBACK</a>
                         </li>
-                        <li class="submenu-item ">
-                        <a asp-area="Admin" asp-controller="Closing" asp-action="AutoWithdrawalLVL"> LEVEL </a>
+                        <li class="submenu-item">
+                        <a asp-area="Admin" asp-controller="Closing" asp-action="AutoWithdrawalLVL">LEVEL</a>
                         </li>
                         </ul>
                         </li>*@
 
-						@*<li class="sidebar-item  has-sub">
+						@*<li class="sidebar-item has-sub">
                         <a href="#" class='sidebar-link'>
                         <i class="bi bi-stack"></i>
                         <span>KYC </span>
                         </a>
-                        <ul class="submenu ">
-                        <li class="submenu-item ">
-                        <a asp-area="Admin" asp-controller="AMember" asp-action="AKycStatus"> KYC STATUS </a>
+                        <ul class="submenu">
+                        <li class="submenu-item">
+                        <a asp-area="Admin" asp-controller="AMember" asp-action="AKycStatus">KYC STATUS</a>
                         </li>
-                        <li class="submenu-item ">
-                        <a asp-area="Admin" asp-controller="AMember" asp-action="AKycHistroy"> APPROVE LIST </a>
+                        <li class="submenu-item">
+                        <a asp-area="Admin" asp-controller="AMember" asp-action="AKycHistroy">APPROVE LIST</a>
                         </li>
                         </ul>
                         </li>*@
-						@*
-                        <li class="sidebar-item  ">
-                        <a  asp-controller="AWallet" asp-action="updateaddress" class='sidebar-link'>
+
+						@*<li class="sidebar-item">
+                        <a asp-controller="AWallet" asp-action="updateaddress" class='sidebar-link'>
                         <i class="bi bi-cash"></i>
                         <span>UPDATE ADDRESS</span>
                         </a>
-                        </li>
-                        *@
+                        </li>*@
 
-						<li class="sidebar-item  ">
-							<a asp-controller="britglbl253adpnl" asp-action="Change-Password" class='sidebar-link'>
+						<li class="sidebar-item">
+							<a asp-controller="britglbl253adpnl" asp-action="change-Password" class='sidebar-link'>
 								<i class="bi bi-cash"></i>
 								<span>CHANGE PASSWORD</span>
 							</a>
 						</li>
 
-						<li class="sidebar-item  ">
-							<a asp-controller="britglbl253adpnl" asp-action="Admin-Signout" class='sidebar-link'>
+						<li class="sidebar-item">
+							<a asp-controller="britglbl253adpnl" asp-action="admin-signout" class='sidebar-link'>
 								<i class="bi bi-file-earmark-medical-fill"></i>
 								<span> LOGOUT </span>
 							</a>
 						</li>
-
 					</ul>
 				</div>
 
 			</div>
 		</div>
-		<div id="main">
 
+		<div id="main">
 			<header class="mb-3">
 				<a href="#" class="burger-btn d-block d-xl-none">
 					<i class="bi bi-justify fs-3"></i>
 				</a>
 			</header>
-
 			<main>
-
 				@RenderBody()
-
 			</main>
-
 		</div>
-
 
 		@*  <footer>
         <div class="footer clearfix mb-0 text-muted">
@@ -451,28 +441,22 @@
         </footer>*@
 
 	</div>
+
 	<script src="~/adminassets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 	<script src="~/adminassets/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 	<script src="~/adminassets/js/pages/dashboard.js"></script>
 	<script src="~/adminassets/js/mazer.js"></script>
 
-
-
 	<script src="~/adminassets/vendors/jquery/jquery.min.js"></script>
 	<script src="~/adminassets/vendors/jquery-datatables/jquery.dataTables.min.js"></script>
 	<script src="~/adminassets/vendors/jquery-datatables/custom.jquery.dataTables.bootstrap5.min.js"></script>
 	<script src="~/adminassets/vendors/fontawesome/all.min.js"></script>
-	<!--- SweetAlert JS-->
+
 	<script src="~/SweetAlert/dist/sweetalert2.min.js"></script>
 	<script src="~/SCuteAlert/cute-alert.js"></script>
 
-
-
-
-	<!-- JS -->
 	<script src="https://cdn.jsdelivr.net/npm/cute-alert@1.0.1/cute-alert.js"></script>
-	<!-- javascript library for excel pdf and etc-->
 	<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>

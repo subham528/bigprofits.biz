@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Reflection;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Bigprofits.Areas.Admin.Controllers
 {
@@ -79,29 +80,32 @@ namespace Bigprofits.Areas.Admin.Controllers
             return Redirect($"/britglbl253adpnl/Daily-Closing/{type}");
         }
 
-        [HttpGet("Add-News")]
+        [HttpGet("add-news")]
         public IActionResult AddNews()
         {
             return View();
         }
 
-        [HttpPost("Add-News")]
+        [HttpPost("add-news")]
         public async Task<IActionResult> AddNews(TblNews model)
         {
             await context.AddAsync(model);
             await context.SaveChangesAsync();
             TempData["nwadd"] = "News Added Successfully..!";
+
+            await _auditRepository.LogActionAsync($"NEWS ADD BY ADMIN", 0, "Admin", $"A new news added by admin.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
             return RedirectToAction("AddNews");
         }
 
-        [HttpGet("News-List")]
+        [HttpGet("news-list")]
         public async Task<IActionResult> NewsList()
         {
             var data = await context.TblNews.ToListAsync();
             return View(data);
         }
 
-        [HttpGet("News-Update")]
+        [HttpGet("news-update")]
         public async Task<IActionResult> NewsUpdate(int newsid, int deleteid)
         {
             if (deleteid > 0)
@@ -109,6 +113,8 @@ namespace Bigprofits.Areas.Admin.Controllers
                 var result = await context.TblNews.Where(x => x.NewsId == deleteid).FirstOrDefaultAsync();
                 if (result != null)
                 {
+                    await _auditRepository.LogActionAsync($"NEWS DELETE BY ADMIN", 0, "Admin", $"A news is deleted by admin, news ID is {result.NewsId}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                     context.Remove(result);
                     await context.SaveChangesAsync();
                     TempData["nwupdate"] = "News Deleted Successfully..!";
@@ -126,7 +132,7 @@ namespace Bigprofits.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost("News-Update")]
+        [HttpPost("news-update")]
         public async Task<IActionResult> NewsUpdate(TblNews model)
         {
             var nid = Convert.ToInt32(TempData["nw"]!.ToString());
@@ -139,6 +145,8 @@ namespace Bigprofits.Areas.Admin.Controllers
                 context.Update(data);
                 await context.SaveChangesAsync();
 
+                await _auditRepository.LogActionAsync($"NEWS UPDATE BY ADMIN", 0, "Admin", $"A news is updated by admin, news ID is {data.NewsId}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 ViewBag.nwmsg = "News updated Successfully..!";
                 return View();
             }
@@ -148,15 +156,17 @@ namespace Bigprofits.Areas.Admin.Controllers
 
         [HttpGet]
         [Route("support-system")]
-        public async Task<IActionResult> Support([FromQuery] int? page, [FromQuery] string? userId, [FromQuery] string? date)
+        public async Task<IActionResult> Support(int? page, string? userId, string? date, string? date1)
         {
             ViewBag.userId = userId;
             ViewBag.date = date;
+            ViewBag.date1 = date1;
 
             List<SqlParameter> par = [];
             if (page != null && page > 0) par.Add(new SqlParameter("@index", page > 0 ? page : 0));
             if (userId != null) par.Add(new SqlParameter("@memberId", userId));
-            if (date != null) par.Add(new SqlParameter("@rdate", date));
+            if (date != null) par.Add(new SqlParameter("@fromDate", date));
+            if (date1 != null) par.Add(new SqlParameter("@toDate", date1));
 
             par.Add(new SqlParameter("@status", "0"));
             par.Add(new SqlParameter("@rtype", "SUPPORT REQUEST"));
@@ -167,6 +177,7 @@ namespace Bigprofits.Areas.Admin.Controllers
                 string url = $"/britglbl253adpnl/support-system?";
                 if (userId != null) url += $"userId={userId}&";
                 if (date != null) url += $"date={date}&";
+                if (date1 != null) url += $"date={date1}&";
                 url += $"page=";
 
                 ViewBag.pgnHtml = homeRepository.GetPaginationBtn(url, Convert.ToInt32(ds.Tables[1].Rows[0]["size"]), Convert.ToInt32(ds.Tables[1].Rows[0]["rCount"]), (int)(page == null ? 0 : page));
@@ -180,11 +191,13 @@ namespace Bigprofits.Areas.Admin.Controllers
         {
             ViewBag.id = id;
 
-            var data = await context.TableSupports.Where(x => x.Srno == id).FirstOrDefaultAsync();
+            var data = await context.TableSupports.Where(x => x.Srno == id && x.MyStatus == 0).FirstOrDefaultAsync();
             if (data != null)
             {
                 data.MyStatus = 1;
                 await context.SaveChangesAsync();
+
+                await _auditRepository.LogActionAsync($"MESSAGE SEEN BY ADMIN", 0, "Admin", $"A support message seen by admin, message ID is {data.Srno} and memberId is {data.FromBy}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
             }
 
             List<SqlParameter> par = [new SqlParameter("@memberId", id), new SqlParameter("@rtype", "INBOX VIEW")];
@@ -220,6 +233,8 @@ namespace Bigprofits.Areas.Admin.Controllers
                 await context.TableSupports.AddAsync(reply);
                 await context.SaveChangesAsync();
 
+                await _auditRepository.LogActionAsync($"MESSAGE REPLIED BY ADMIN", 0, "Admin", $"A support message is replied by admin, message ID is {data.Srno}, member ID is {data.FromBy} and reply ID is {reply.Srno}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 TempData["success"] = "Success! Reply has been sent successfullY.";
                 return Redirect($"/britglbl253adpnl/view-message/{id}");
             }
@@ -230,15 +245,17 @@ namespace Bigprofits.Areas.Admin.Controllers
 
         [HttpGet]
         [Route("outbox")]
-        public async Task<IActionResult> Oubox([FromQuery] int? page, [FromQuery] string? userId, [FromQuery] string? date)
+        public async Task<IActionResult> Oubox(int? page, string? userId, string? date, string? date1)
         {
             ViewBag.userId = userId;
             ViewBag.date = date;
+            ViewBag.date1 = date1;
 
             List<SqlParameter> par = [];
             if (page != null && page > 0) par.Add(new SqlParameter("@index", page > 0 ? page : 0));
             if (userId != null) par.Add(new SqlParameter("@memberId", userId));
-            if (date != null) par.Add(new SqlParameter("@rdate", date));
+            if (date != null) par.Add(new SqlParameter("@fromDate", date));
+            if (date1 != null) par.Add(new SqlParameter("@toDate", date1));
 
             par.Add(new SqlParameter("@rtype", "OUTBOX"));
             var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
@@ -248,6 +265,7 @@ namespace Bigprofits.Areas.Admin.Controllers
                 string url = $"/britglbl253adpnl/outbox?";
                 if (userId != null) url += $"userId={userId}&";
                 if (date != null) url += $"date={date}&";
+                if (date1 != null) url += $"date={date1}&";
                 url += $"page=";
 
                 ViewBag.pgnHtml = homeRepository.GetPaginationBtn(url, Convert.ToInt32(ds.Tables[1].Rows[0]["size"]), Convert.ToInt32(ds.Tables[1].Rows[0]["rCount"]), (int)(page == null ? 0 : page));
@@ -257,17 +275,19 @@ namespace Bigprofits.Areas.Admin.Controllers
 
         [HttpGet]
         [Route("inbox-history")]
-        public async Task<IActionResult> InboxHistory([FromQuery] int? page, [FromQuery] string? userId, [FromQuery] string? date)
+        public async Task<IActionResult> InboxHistory(int? page, string? userId, string? date, string? date1)
         {
             try
             {
                 ViewBag.userId = userId;
                 ViewBag.date = date;
+                ViewBag.date1 = date1;
 
                 List<SqlParameter> par = [];
                 if (page != null && page > 0) par.Add(new SqlParameter("@index", page > 0 ? page : 0));
                 if (userId != null) par.Add(new SqlParameter("@memberId", userId));
-                if (date != null) par.Add(new SqlParameter("@rdate", date));
+                if (date != null) par.Add(new SqlParameter("@fromDate", date));
+                if (date1 != null) par.Add(new SqlParameter("@toDate", date1));
 
                 par.Add(new SqlParameter("@status", "1"));
                 par.Add(new SqlParameter("@rtype", "SUPPORT REQUEST"));
@@ -278,6 +298,7 @@ namespace Bigprofits.Areas.Admin.Controllers
                     string url = $"/britglbl253adpnl/inbox-history?";
                     if (userId != null) url += $"userId={userId}&";
                     if (date != null) url += $"date={date}&";
+                    if (date1 != null) url += $"date={date1}&";
                     url += $"page=";
 
                     ViewBag.pgnHtml = homeRepository.GetPaginationBtn(url, Convert.ToInt32(ds.Tables[1].Rows[0]["size"]), Convert.ToInt32(ds.Tables[1].Rows[0]["rCount"]), (int)(page == null ? 0 : page));
@@ -346,7 +367,7 @@ namespace Bigprofits.Areas.Admin.Controllers
             return View(data);
         }
 
-        [HttpPost("poster-Delete")]
+        [HttpPost("poster-delete")]
         public async Task<IActionResult> PosterDelete(int id)
         {
             var poster = await context.Posters.FindAsync(id);
@@ -367,7 +388,7 @@ namespace Bigprofits.Areas.Admin.Controllers
             });
         }
 
-        [HttpGet("poster-Update/{id}")]
+        [HttpGet("poster-update/{id}")]
         public async Task<IActionResult> PosterUpdate(int id)
         {
             var data = await context.Posters.FindAsync(id);
@@ -379,7 +400,7 @@ namespace Bigprofits.Areas.Admin.Controllers
             return View(data);
         }
 
-        [HttpPost("Poster-Update")]
+        [HttpPost("poster-update")]
         public async Task<IActionResult> PosterUpdate(Poster model)
         {
             var data = await context.Posters.FindAsync(model.Id);
@@ -402,7 +423,7 @@ namespace Bigprofits.Areas.Admin.Controllers
             context.Posters.Update(data);
             await context.SaveChangesAsync();
             base.TempData["success"] = "Poster updated successfully!";
-            return RedirectToAction("poster-Update", new
+            return RedirectToAction("poster-update", new
             {
                 id = model.Id
             });

@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System;
 
 namespace Bigprofits.Areas.Admin.Controllers
 {
@@ -250,7 +251,7 @@ namespace Bigprofits.Areas.Admin.Controllers
                 }
 
                 TempData["msg"] = ds.Tables[0].Rows[0]["msg"].ToString();
-                // return Json(ds.Tables[0].Rows[0]["msg"].ToString());
+                //return Json(ds.Tables[0].Rows[0]["msg"].ToString());
                 return Redirect("/britglbl253adpnl/admin-topup");
             }
             catch (Exception)
@@ -355,32 +356,34 @@ namespace Bigprofits.Areas.Admin.Controllers
             return View(ds);
         }
 
-        [HttpGet("Change-Password")]
+        [HttpGet("change-Password")]
         public async Task<IActionResult> ChangePassword()
         {
             var adminInfo = await context.UserMasters.Where(x => x.UserId == admingo).FirstOrDefaultAsync();
             return View(adminInfo);
         }
 
-        [HttpPost("Change-Password")]
+        [HttpPost("change-Password")]
         public async Task<JsonResult> IsPasswordChanged(string op, string np, string cp)
         {
             try
             {
-                if (np != cp)
-                {
-                    return Json("New And Confirm Password Doesn't Match");
-                }
+                if (string.IsNullOrEmpty(op) || string.IsNullOrEmpty(np) || string.IsNullOrEmpty(cp)) return Json("Please enter all the fields");
+                if (np != cp) return Json("New And Confirm Password Doesn't Match");
 
                 var data = await context.UserMasters.Where(u => u.Role == "SuperAdmin" && u.UserPass == commonMethods.Encrypt(op.ToString().Trim())).FirstOrDefaultAsync();
                 if (data != null && data.Role!.Equals("superadmin", StringComparison.CurrentCultureIgnoreCase))
                 {
                     data.UserPass = commonMethods.Encrypt(cp.ToString().Trim());
                     context.SaveChanges();
-                    return Json("Congratulation!!  password changed successfully");
+
+                    await _auditRepository.LogActionAsync($"ADMIN PASSWORD CHANGE SUCCESSFULL", 0, "Admin", $"Admin login password changed successfully.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+                    return Json("Congratulation!! password changed successfully");
                 }
                 else
                 {
+                    await _auditRepository.LogActionAsync($"ADMIN PASSWORD CHANGE ATTEMP", 0, "Admin", $"Admin login password change attemmp.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                     return Json("Old password missmatch, Please try again..");
                 }
             }

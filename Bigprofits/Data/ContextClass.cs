@@ -2409,11 +2409,9 @@ namespace Bigprofits.Data
 
                 entity.Property(e => e.Img).HasColumnName("img");
 
-                entity.Property(e => e.MyDetails).HasColumnType("text");
+                entity.Property(e => e.MySubject).HasMaxLength(200);
 
-                entity.Property(e => e.MySubject).HasColumnType("text");
-
-                entity.Property(e => e.Reply).HasColumnType("text");
+                entity.Property(e => e.Reply).HasMaxLength(200);
 
                 entity.Property(e => e.Sdate)
                     .HasColumnType("datetime")

@@ -14,11 +14,12 @@ namespace Bigprofits.Areas.Admin.Controllers
     [Route("britglbl253adpnl")]
     [Route("admin/[controller]/[action]")]
     [Authorize(AuthenticationSchemes = "AdminAuth")]
-    public class AWithdrawalController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess) : Controller
+    public class AWithdrawalController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess, HomeRepository homeRepository) : Controller
     {
         private readonly ContextClass context = context;
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
+        private readonly HomeRepository homeRepository = homeRepository;
         private string admingo = "";
         public override void OnActionExecuting(ActionExecutingContext _context)
         {
@@ -127,12 +128,32 @@ namespace Bigprofits.Areas.Admin.Controllers
         }
 
         [HttpGet("withdrawal-history")]
-        public async Task<IActionResult> WithdrawalHistory()
+        public async Task<IActionResult> WithdrawalHistory(int? page, string? userId, string? date, string? date1)
         {
+            ViewBag.userId = userId;
+            ViewBag.date = date;
+            ViewBag.date1 = date1;
+
             List<SqlParameter> par = [];
+            if (page != null && page > 0) par.Add(new SqlParameter("@index", page > 0 ? page : 0));
+            if (userId != null) par.Add(new SqlParameter("@memberId", userId));
+            if (date != null) par.Add(new SqlParameter("@fromDate", date));
+            if (date1 != null) par.Add(new SqlParameter("@toDate", date1));
+
             par.Add(new SqlParameter("@rtype", "WITHDRAWAL HISTORY"));
             var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
             ViewBag.data = ds;
+
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                string url = $"/britglbl253adpnl/withdrawal-history?";
+                if (userId != null) url += $"userId={userId}&";
+                if (date != null) url += $"date={date}&";
+                if (date1 != null) url += $"date={date1}&";
+                url += $"page=";
+
+                ViewBag.pgnHtml = homeRepository.GetPaginationBtn(url, Convert.ToInt32(ds.Tables[1].Rows[0]["size"]), Convert.ToInt32(ds.Tables[1].Rows[0]["rCount"]), (int)(page == null ? 0 : page));
+            }
 
             return View(ds);
         }

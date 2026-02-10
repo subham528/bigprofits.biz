@@ -8,18 +8,20 @@ using System.Text.Json;
 using Bigprofits.Repository;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using System;
 
 namespace Bigprofits.Areas.Admin.Controllers
 {
     [Area("admin")]
     [Route("britglbl253adpnl")]
     [Route("admin/[controller]/[action]")]
-    public class AdminController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess, HomeRepository homeRepository) : Controller
+    public class AdminController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess, HomeRepository homeRepository, IAuditRepository auditRepository) : Controller
     {
         private readonly ContextClass context = context;
         private readonly HomeRepository homeRepository = homeRepository;
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
+        private readonly IAuditRepository _auditRepository = auditRepository;
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -55,16 +57,24 @@ namespace Bigprofits.Areas.Admin.Controllers
                 };
                 await HttpContext.SignInAsync("AdminAuth", principal, authProperties);
 
+                await _auditRepository.LogActionAsync($"ADMIN LOGIN SUCCESSFULL", 0, "Admin", $"Admin login successfull, enter login ID is {model.UserId!.Trim()} and login password is {model.UserPass!.Trim()}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 return Redirect(TempData["ReturnUrl"] == null ? "/britglbl253adpnl/home" : TempData["ReturnUrl"]!.ToString()!);
             }
+
+            await _auditRepository.LogActionAsync($"ADMIN LOGIN FAILED", 0, "Admin", $"Admin login failed, enter login ID is {model.UserId!.Trim()} and login password is {model.UserPass!.Trim()}.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
             TempData["error"] = "Invalid id Or Password";
             return Redirect("/britglbl253adpnl/sign-in");
         }
 
-        [HttpGet("Admin-Signout")]
+        [HttpGet("admin-signout")]
         public async Task<IActionResult> AdminLogout()
         {
             await HttpContext.SignOutAsync("AdminAuth");
+
+            await _auditRepository.LogActionAsync($"ADMIN LOGOUT", 0, "Admin", $"Admin successfully logout.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
             return Redirect("/britglbl253adpnl/sign-in");
         }
 
@@ -75,7 +85,7 @@ namespace Bigprofits.Areas.Admin.Controllers
         }
 
         [HttpPost("encrypt-data")]
-        public IActionResult Encrypt(string Edata)
+        public async Task<IActionResult> Encrypt(string Edata)
         {
             try
             {
@@ -83,6 +93,9 @@ namespace Bigprofits.Areas.Admin.Controllers
                 Edata ??= string.Empty;
 
                 var edata = commonMethods.Encrypt(Edata);
+
+                await _auditRepository.LogActionAsync($"TEXT ENCRYPTED", 0, "Admin", $"Some text encrypted by developer/admin/someone.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 TempData["EncryptedData"] = edata;
             }
             catch (Exception)
@@ -93,12 +106,15 @@ namespace Bigprofits.Areas.Admin.Controllers
         }
 
         [HttpPost("decrypt-data")]
-        public IActionResult Decrypt(string EncryptedData)
+        public async Task<IActionResult> Decrypt(string EncryptedData)
         {
             try
             {
                 TempData["msg"] = "";
                 var ddata = commonMethods.Decrypt(EncryptedData.Trim());
+
+                await _auditRepository.LogActionAsync($"TEXT DECRYPTED", 0, "Admin", $"Some text decrypted by developer/admin/someone.", HttpContext.Connection.RemoteIpAddress?.ToString()!);
+
                 TempData["DecryptedData"] = ddata;
             }
             catch (Exception)

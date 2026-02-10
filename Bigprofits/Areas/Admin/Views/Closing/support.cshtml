@@ -21,7 +21,20 @@
 
                 <form action="/britglbl253adpnl/support-system" method="get" class="searchForm">
                     <input name="userId" class="form-control" placeholder="Member ID" value="@ViewBag.userId">
-                    <input name="date" type="date" class="form-control" value="@ViewBag.date">
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">From</span>
+                        </div>
+                        <input name="date" type="date" class="form-control" value="@ViewBag.date">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">To</span>
+                        </div>
+                        <input name="date1" type="date" class="form-control" value="@ViewBag.date1">
+                    </div>
 
                     <button class="btn btn-outline-primary" type="submit">
                         <i class="bi bi-search"></i>
