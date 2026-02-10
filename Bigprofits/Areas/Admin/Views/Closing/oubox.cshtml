@@ -1,4 +1,4 @@
-﻿@using System.Data
+﻿﻿@using System.Data
 @model DataSet
 @using Bigprofits.Common;
 @{
@@ -11,9 +11,19 @@
     <section class="section">
         <div class="card">
             <div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
-               Outbox Histroy
+                Outbox Histroy
             </div>
             <div class="card-body mt-3 overflow-auto">
+                <form action="/britglbl253adpnl/outbox" method="get" class="searchForm">
+                    <input name="userId" class="form-control" placeholder="Member ID" value="@ViewBag.userId">
+                    <input name="date" type="date" class="form-control" value="@ViewBag.date">
+
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <a href="/britglbl253adpnl/outbox" class="btn btn-danger form-control">Clear Filter</a>
+                </form>
+
                 <table class="table table-responsive text-nowrap" id="datatable">
                     <thead>
                         <tr>
@@ -48,20 +58,23 @@
                         @foreach (DataRow row in Model.Tables[0].Rows)
                         {
                             <tr>
-                                <td>@sno2</td>
+                                <td>@row["srn"]</td>
                                 <td>@row["ToBy"]</td>
                                 <td>@row["memName"]</td>
                                 <td>@row["reply"]</td>
                                 <td>@row["MyDetails"]</td>
                                 <td>@row["Status"]</td>
                                 <td>@row["SDate"]</td>
-                           
                             </tr>
                             sno2++;
                         }
 
                     </tbody>
                 </table>
+
+                <ul class="pagination mt-3">
+                    @Html.Raw(ViewBag.pgnHtml)
+                </ul>
             </div>
         </div>
 

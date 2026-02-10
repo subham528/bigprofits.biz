@@ -17,13 +17,14 @@ namespace Bigprofits.Areas.Admin.Controllers
     [Route("britglbl253adpnl")]
     [Route("admin/[controller]/[action]")]
     [Authorize(AuthenticationSchemes = "AdminAuth")]
-    public class ClosingController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess, IWebHostEnvironment webHostEnvironment, IAuditRepository auditRepository) : Controller
+    public class ClosingController(ContextClass context, CommonMethods commonMethods, SqlConnectionClass dataAccess, IWebHostEnvironment webHostEnvironment, IAuditRepository auditRepository, HomeRepository homeRepository) : Controller
     {
         private readonly ContextClass context = context;
         private readonly CommonMethods commonMethods = commonMethods;
         private readonly SqlConnectionClass _dataAccess = dataAccess;
         private readonly IWebHostEnvironment webHostEnvironment = webHostEnvironment;
         private readonly IAuditRepository _auditRepository = auditRepository;
+        private readonly HomeRepository homeRepository = homeRepository;
         private string admingo = "";
         public override void OnActionExecuting(ActionExecutingContext _context)
         {
@@ -145,41 +146,143 @@ namespace Bigprofits.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpGet("Support-system")]
-        public async Task<IActionResult> Support()
+        [HttpGet]
+        [Route("support-system")]
+        public async Task<IActionResult> Support([FromQuery] int? page, [FromQuery] string? userId, [FromQuery] string? date)
         {
+            ViewBag.userId = userId;
+            ViewBag.date = date;
+
             List<SqlParameter> par = [];
+            if (page != null && page > 0) par.Add(new SqlParameter("@index", page > 0 ? page : 0));
+            if (userId != null) par.Add(new SqlParameter("@memberId", userId));
+            if (date != null) par.Add(new SqlParameter("@rdate", date));
+
+            par.Add(new SqlParameter("@status", "0"));
             par.Add(new SqlParameter("@rtype", "SUPPORT REQUEST"));
             var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
+            ViewBag.data = ds;
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                string url = $"/britglbl253adpnl/support-system?";
+                if (userId != null) url += $"userId={userId}&";
+                if (date != null) url += $"date={date}&";
+                url += $"page=";
 
+                ViewBag.pgnHtml = homeRepository.GetPaginationBtn(url, Convert.ToInt32(ds.Tables[1].Rows[0]["size"]), Convert.ToInt32(ds.Tables[1].Rows[0]["rCount"]), (int)(page == null ? 0 : page));
+            }
             return View(ds);
         }
 
-        [HttpGet("Support-system-outbox")]
-        public async Task<IActionResult> Oubox()
+        [HttpGet]
+        [Route("view-message/{id}")]
+        public async Task<IActionResult> SupportView(int id)
         {
+            ViewBag.id = id;
+
+            var data = await context.TableSupports.Where(x => x.Srno == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                data.MyStatus = 1;
+                await context.SaveChangesAsync();
+            }
+
+            List<SqlParameter> par = [new SqlParameter("@memberId", id), new SqlParameter("@rtype", "INBOX VIEW")];
+            var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
+            return View(ds);
+        }
+
+        [HttpPost]
+        [Route("send-reply/{id}")]
+        public async Task<IActionResult> SaveReply(int id)
+        {
+            string msg = Request.Form["txtReply"].ToString();
+            if (msg == "")
+            {
+                TempData["error"] = "Please enter a reply first.";
+                return Redirect($"/britglbl253adpnl/view-message/{id}");
+            }
+
+            var data = await context.TableSupports.Where(x => x.Srno == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                var reply = new TableSupport
+                {
+                    MySubject = data.MySubject,
+                    MyDetails = msg,
+                    FromBy = "ADIMIN",
+                    ToBy = data.FromBy,
+                    Sdate = DateTime.Now,
+                    MyStatus = 0,
+                    Reply = data.MyDetails
+                };
+
+                await context.TableSupports.AddAsync(reply);
+                await context.SaveChangesAsync();
+
+                TempData["success"] = "Success! Reply has been sent successfullY.";
+                return Redirect($"/britglbl253adpnl/view-message/{id}");
+            }
+
+            TempData["error"] = "Failed! Could not find the message. Please try again.";
+            return Redirect($"/britglbl253adpnl/view-message/{id}");
+        }
+
+        [HttpGet]
+        [Route("outbox")]
+        public async Task<IActionResult> Oubox([FromQuery] int? page, [FromQuery] string? userId, [FromQuery] string? date)
+        {
+            ViewBag.userId = userId;
+            ViewBag.date = date;
+
             List<SqlParameter> par = [];
+            if (page != null && page > 0) par.Add(new SqlParameter("@index", page > 0 ? page : 0));
+            if (userId != null) par.Add(new SqlParameter("@memberId", userId));
+            if (date != null) par.Add(new SqlParameter("@rdate", date));
+
             par.Add(new SqlParameter("@rtype", "OUTBOX"));
             var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
+            ViewBag.data = ds;
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                string url = $"/britglbl253adpnl/outbox?";
+                if (userId != null) url += $"userId={userId}&";
+                if (date != null) url += $"date={date}&";
+                url += $"page=";
 
+                ViewBag.pgnHtml = homeRepository.GetPaginationBtn(url, Convert.ToInt32(ds.Tables[1].Rows[0]["size"]), Convert.ToInt32(ds.Tables[1].Rows[0]["rCount"]), (int)(page == null ? 0 : page));
+            }
             return View(ds);
         }
 
-        [HttpGet("Inbox-History/{myStatus}")]
-        public async Task<IActionResult> InboxHistory(string myStatus)
+        [HttpGet]
+        [Route("inbox-history")]
+        public async Task<IActionResult> InboxHistory([FromQuery] int? page, [FromQuery] string? userId, [FromQuery] string? date)
         {
             try
             {
-                if (myStatus == "1")
-                {
-                    List<SqlParameter> par = [];
-                    par.Add(new SqlParameter("@status", myStatus));
-                    par.Add(new SqlParameter("@rtype", "SUPPORT REQUEST"));
-                    var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
+                ViewBag.userId = userId;
+                ViewBag.date = date;
 
-                    ViewBag.Text = ds.Tables[1].Rows[0]["rcount"].ToString();
-                    return View(ds);
-                }   
+                List<SqlParameter> par = [];
+                if (page != null && page > 0) par.Add(new SqlParameter("@index", page > 0 ? page : 0));
+                if (userId != null) par.Add(new SqlParameter("@memberId", userId));
+                if (date != null) par.Add(new SqlParameter("@rdate", date));
+
+                par.Add(new SqlParameter("@status", "1"));
+                par.Add(new SqlParameter("@rtype", "SUPPORT REQUEST"));
+                var ds = await _dataAccess.FnRetriveByPro("[SP_ShowHistory]", par);
+                ViewBag.data = ds;
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+                    string url = $"/britglbl253adpnl/inbox-history?";
+                    if (userId != null) url += $"userId={userId}&";
+                    if (date != null) url += $"date={date}&";
+                    url += $"page=";
+
+                    ViewBag.pgnHtml = homeRepository.GetPaginationBtn(url, Convert.ToInt32(ds.Tables[1].Rows[0]["size"]), Convert.ToInt32(ds.Tables[1].Rows[0]["rCount"]), (int)(page == null ? 0 : page));
+                }
+                return View(ds);
             }
             catch (Exception)
             {

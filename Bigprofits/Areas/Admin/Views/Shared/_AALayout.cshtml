@@ -332,18 +332,16 @@
 								<i class="bi bi-stack"></i>
 								<span>SUPPORT</span>
 							</a>
-							<ul class="submenu ">
-								<li class="submenu-item ">
-									<a asp-controller="britglbl253adpnl" asp-action="Support-system">INBOX</a>
+							<ul class="submenu">
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="support-system">INBOX</a>
 								</li>
-								<li class="submenu-item ">
-									<a href="/britglbl253adpnl/Inbox-History/1"> INBOX HISTORY </a>
-
+								<li class="submenu-item">
+									<a href="/britglbl253adpnl/inbox-History">INBOX HISTORY</a>
 								</li>
-								<li class="submenu-item ">
-									<a asp-controller="britglbl253adpnl" asp-action="Support-system-outbox">OUTBOX</a>
+								<li class="submenu-item">
+									<a asp-controller="britglbl253adpnl" asp-action="outbox">OUTBOX</a>
 								</li>
-
 							</ul>
 						</li>
 
@@ -484,6 +482,11 @@
 
 	<script>
 		let jquery_datatable = $("#table1").DataTable()
+
+		function MM_openBrWindow(theURL, winName, features) {
+			//window.parent.open(theURL, winName, features);
+			window.open(theURL, '_blank');
+		}
 
 		$("form").on("submit", function(){
 			$(this).find("input[type='submit']").prop("disabled", true).val("loading...")

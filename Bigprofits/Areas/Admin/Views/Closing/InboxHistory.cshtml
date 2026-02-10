@@ -1,4 +1,4 @@
-﻿@using System.Data
+﻿﻿@using System.Data
 @model DataSet
 @using Bigprofits.Common;
 @{
@@ -14,51 +14,51 @@
                 Inbox Histroy
             </div>
             <div class="card-body mt-3 overflow-auto">
+                <form action="/britglbl253adpnl/inbox-history" method="get" class="searchForm">
+                    <input name="userId" class="form-control" placeholder="Member ID" value="@ViewBag.userId">
+                    <input name="date" type="date" class="form-control" value="@ViewBag.date">
+
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <a href="/britglbl253adpnl/inbox-history" class="btn btn-danger form-control">Clear Filter</a>
+                </form>
+
                 <table class="table table-responsive text-nowrap" id="datatable">
                     <thead>
                         <tr>
-                            <th>
-                                Sno
-                            </th>
-                            <th>
-                                FromBy
-                            </th>
-                            <th>
-                               Member Name
-                            </th>
-                            <th>
-                                Subject
-                            </th>
-                            <th>
-                                Status
-                            </th>
-                            <th>
-                                Request Date
-                            </th>
-                           
+                            <th>Sno</th>
+                            <th>Memberid</th>
+                            <th>Name</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Request Date</th>
+                            <th>READ</th>
                     </thead>
                     <tbody>
                         @{
                             int sno2 = 1;
                         }
-
                         @foreach (DataRow row in Model.Tables[0].Rows)
                         {
                             <tr>
-                                <td>@sno2</td>
+                                <td>@row["srN"]</td>
                                 <td>@row["FromBy"]</td>
                                 <td>@row["memName"]</td>
                                 <td>@row["MySubject"]</td>
                                 <td>@row["Status"]</td>
                                 <td>@row["SDate"]</td>
-                                
-
+                                <td><a href="javascript:;" onclick="MM_openBrWindow('/britglbl253adpnl/view-message/@row["srno"]','_blank','resizable=No,width=800,height=500,scrollbars=No,left=250,top=50')" class="btn btn-primary">View</a></td>
                             </tr>
                             sno2++;
                         }
 
                     </tbody>
                 </table>
+
+                <ul class="pagination mt-3">
+                    @Html.Raw(ViewBag.pgnHtml)
+                </ul>
             </div>
         </div>
 

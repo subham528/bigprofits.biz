@@ -1,0 +1,60 @@
+﻿@using System.Data
+@model DataSet
+@using Bigprofits.Common;
+@{
+    ViewData["Title"] = "View Message";
+    Layout = "~/Areas/Admin/Views/Shared/_AALayout.cshtml";
+
+    var data = Model.Tables[0].Rows[0];
+}
+
+<div class="page-heading">
+    <section class="section">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                @if (TempData["success"] != null)
+                {
+                    <div class="alert alert-success mb-3">@TempData["success"]</div>
+                    @* <script>
+                        setTimeout(function () {
+                            window.close();
+                            window.opener.location.reload(true);
+                        }, 2000)
+                    </script> *@
+                }
+
+                @if (TempData["error"] != null)
+                {
+                    <div class="alert alert-danger mb-3">@TempData["error"]</div>
+                    @* <script>
+                        setTimeout(function () {
+                            window.close();
+                            window.opener.location.reload(true);
+                        }, 2000)
+                    </script> *@
+                }
+                
+                <div class="card">
+                    <div class="card-header bg-primary" style="background: #435ebe;color: white;padding: 15px;">
+                        @data["memName"] / @data["memLogId"]
+                    </div>
+                    <div class="card-body mt-3 overflow-auto">
+                        <p><b>Date</b> <br> @string.Format("{0:dd/MMM/yyyy hh:mm tt}", data["SDate"])</p>
+                        <p><b>Subject</b> <br> @data["MySubject"]</p>
+                        <p><b>Message</b> <br> @data["MyDetails"]</p>
+                        <hr />
+
+                        <form action="/britglbl253adpnl/send-reply/@ViewBag.id" method="post">
+                            <div class="form-group">
+                                <label class="form-label">Reply</label>
+                                <textarea id="txtReply" name="txtReply" class="form-control" rows="4" placeholder="Write your reply here"></textarea>
+                            </div>
+                            <p class="text-center"><input type="submit" value="Send Reply" class="btn btn-primary" /></p>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
